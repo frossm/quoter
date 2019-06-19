@@ -1,0 +1,9 @@
+\.orig$
+\.orig\..*$
+\.chg\..*$
+\.rej$
+\.conflict\~$
+build\.*
+dist\.*
+dist.jar\.*
+target\.*

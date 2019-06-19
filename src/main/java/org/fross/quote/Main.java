@@ -1,0 +1,137 @@
+package org.fross.quote;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.Scanner;
+import org.fross.quote.Prefs;
+import com.diogonunes.jcdp.color.api.Ansi.FColor;
+import gnu.getopt.Getopt;
+
+/**
+ * Main execution class
+ *
+ */
+public class Main {
+	// Class Constants
+	public static String VERSION;
+	public static final String PROPERTIES_FILE = "quote.properties";
+
+	public static void main(String[] args) {
+		int optionEntry;
+		String iexCloudToken;
+
+		// Process application level properties file
+		// Update properties from Maven at build time:
+		// https://stackoverflow.com/questions/3697449/retrieve-version-from-maven-pom-xml-in-code
+		try {
+			InputStream iStream = Main.class.getClassLoader().getResourceAsStream(PROPERTIES_FILE);
+			Properties prop = new Properties();
+			prop.load(iStream);
+			VERSION = prop.getProperty("Application.version");
+		} catch (IOException ex) {
+			Output.fatalerror("Unable to read property file '" + PROPERTIES_FILE + "'", 3);
+		}
+
+		// Process Command Line Options and set flags where needed
+		Getopt optG = new Getopt("rpn", args, "Dce:h?");
+		while ((optionEntry = optG.getopt()) != -1) {
+			switch (optionEntry) {
+			case 'D': // Debug Mode
+				Debug.Enable();
+				break;
+			case 'c': // Configure
+				Scanner scanner = new Scanner(System.in);
+				System.out.print("Enter the IEXcloud.io Secret Token: ");
+				iexCloudToken = scanner.next();
+				Debug.Print("Setting Peference iexcloudtoken: " + iexCloudToken);
+				Prefs.Set("iexcloudtoken", iexCloudToken);
+				Output.printColorln(FColor.YELLOW,
+						"IEXCloud.io Secret Token Set To: '" + Prefs.QueryString("iexcloudtoken") + "'");
+				break;
+			case 'e':
+				Output.println("Export Results - COMPLETE LATER");
+				break;
+			case '?': // Help
+			case 'h':
+				Help.Display();
+				System.exit(0);
+				break;
+			default:
+				Output.printError("Unknown Command Line Option: '" + (char) optionEntry + "'");
+				Help.Display();
+				System.exit(0);
+				break;
+			}
+		}
+
+		// Read the prefs and make sure that an API key has been entered with the -c
+		// option
+		iexCloudToken = Prefs.QueryString("iexcloudtoken");
+		if (iexCloudToken == "Error") {
+			Output.fatalerror("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
+		}
+
+		// Display the header
+		Output.printColorln(FColor.CYAN, "\nQuote v" + VERSION + "  by Michael Fross");
+		Output.printColorln(FColor.CYAN, "-------------------------------------------------------------------------------");
+		Output.printColorln(FColor.YELLOW, "Symbol   Current      Change      DayHigh   Daylow  52WHigh   52WLow     YTD");
+		Output.printColorln(FColor.CYAN, "-------------------------------------------------------------------------------");
+
+		// Build an array list of symbols entered in on the command line
+		Debug.Print("Number of Symbols entered: " + (args.length - optG.getOptind()));
+		ArrayList<String> symbolList = new ArrayList<String>();
+		for (int i = optG.getOptind(); i < args.length; i++) {
+			Debug.Print("Symbol entered on commandline: " + args[i]);
+			symbolList.add(args[i]);
+		}
+
+		// If no symbols were entered, just display the index data
+		if (symbolList.isEmpty()) {
+			// process index data
+		} else {
+			// Loops through each entered symbol and display it's data
+			Iterator<String> j = symbolList.iterator();
+			while (j.hasNext()) {
+				String[] result = QuoteOps.GetQuote((String) j.next(), Prefs.QueryString("iexcloudtoken"));
+				String[] outString = new String[9];
+
+				// Format the Output
+				// Symbol
+				outString[0] = String.format("%-8s", result[0]);
+				// Current
+				outString[1] = String.format("%,8.2f", Float.valueOf(result[1]));
+				// Change Amount
+				outString[2] = String.format("%+,8.2f", Float.valueOf(result[2]));
+				// Change Percentage
+				outString[3] = String.format("%+,7.2f%%", Float.valueOf(result[3]));
+				// Day High
+				outString[4] = String.format("%,9.2f", Float.valueOf(result[4]));
+				// Day Low
+				outString[5] = String.format("%,9.2f", Float.valueOf(result[5]));
+				// 52 Week High
+				outString[6] = String.format("%,9.2f", Float.valueOf(result[6]));
+				// 52 Week Low
+				outString[7] = String.format("%,9.2f", Float.valueOf(result[7]));
+				// Year to date
+				outString[8] = String.format("%+,9.2f%%", (Float.valueOf(result[8]) * 100));
+
+				// Determine the color based on the change amount
+				FColor outputColor = FColor.WHITE;
+				if (Float.valueOf(result[2]) < 0) {
+					outputColor = FColor.RED;
+				}
+
+				// Write the output to the screen
+				for (int k = 0; k < outString.length; k++) {
+					Output.printColor(outputColor, outString[k]);
+				}
+				// Start a new line for the next security
+				Output.println("");
+			}
+		}
+
+	}
+}
