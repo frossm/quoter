@@ -32,7 +32,7 @@ public class Main {
 			prop.load(iStream);
 			VERSION = prop.getProperty("Application.version");
 		} catch (IOException ex) {
-			Output.fatalerror("Unable to read property file '" + PROPERTIES_FILE + "'", 3);
+			Output.FatalError("Unable to read property file '" + PROPERTIES_FILE + "'", 3);
 		}
 
 		// Process Command Line Options and set flags where needed
@@ -44,15 +44,15 @@ public class Main {
 				break;
 			case 'c': // Configure
 				Scanner scanner = new Scanner(System.in);
-				System.out.print("Enter the IEXcloud.io Secret Token: ");
+				Output.PrintColorln(FColor.WHITE, "Enter the IEXcloud.io Secret Token: ");
 				iexCloudToken = scanner.next();
 				Debug.Print("Setting Peference iexcloudtoken: " + iexCloudToken);
 				Prefs.Set("iexcloudtoken", iexCloudToken);
-				Output.printColorln(FColor.YELLOW,
+				Output.PrintColorln(FColor.YELLOW,
 						"IEXCloud.io Secret Token Set To: '" + Prefs.QueryString("iexcloudtoken") + "'");
 				break;
 			case 'e':
-				Output.println("Export Results - COMPLETE LATER");
+				Output.Println("Export Results - COMPLETE LATER");
 				break;
 			case '?': // Help
 			case 'h':
@@ -60,7 +60,7 @@ public class Main {
 				System.exit(0);
 				break;
 			default:
-				Output.printError("Unknown Command Line Option: '" + (char) optionEntry + "'");
+				Output.PrintError("Unknown Command Line Option: '" + (char) optionEntry + "'");
 				Help.Display();
 				System.exit(0);
 				break;
@@ -71,14 +71,17 @@ public class Main {
 		// option
 		iexCloudToken = Prefs.QueryString("iexcloudtoken");
 		if (iexCloudToken == "Error") {
-			Output.fatalerror("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
+			Output.FatalError("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
 		}
 
 		// Display the header
-		Output.printColorln(FColor.CYAN, "\nQuote v" + VERSION + "  by Michael Fross");
-		Output.printColorln(FColor.CYAN, "-------------------------------------------------------------------------------");
-		Output.printColorln(FColor.YELLOW, "Symbol   Current      Change      DayHigh   Daylow  52WHigh   52WLow     YTD");
-		Output.printColorln(FColor.CYAN, "-------------------------------------------------------------------------------");
+		Output.PrintColorln(FColor.CYAN, "\nQuote v" + VERSION + " Copyright 2019 by Michael Fross");
+		Output.PrintColorln(FColor.CYAN,
+				"-------------------------------------------------------------------------------");
+		Output.PrintColorln(FColor.YELLOW,
+				"Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow     YTD");
+		Output.PrintColorln(FColor.CYAN,
+				"-------------------------------------------------------------------------------");
 
 		// Build an array list of symbols entered in on the command line
 		Debug.Print("Number of Symbols entered: " + (args.length - optG.getOptind()));
@@ -88,17 +91,16 @@ public class Main {
 			symbolList.add(args[i]);
 		}
 
-		// If no symbols were entered, just display the index data
-		if (symbolList.isEmpty()) {
-			// process index data
-		} else {
-			// Loops through each entered symbol and display it's data
+		// Display the data for the symbols entered. If no symbols were entered, just
+		// display the index data
+		if (!symbolList.isEmpty()) {
+			// Loop through each entered symbol and display it's data
 			Iterator<String> j = symbolList.iterator();
 			while (j.hasNext()) {
 				String[] result = QuoteOps.GetQuote((String) j.next(), Prefs.QueryString("iexcloudtoken"));
 				String[] outString = new String[9];
 
-				// Format the Output
+				// Format the Output into an array
 				// Symbol
 				outString[0] = String.format("%-8s", result[0]);
 				// Current
@@ -126,12 +128,54 @@ public class Main {
 
 				// Write the output to the screen
 				for (int k = 0; k < outString.length; k++) {
-					Output.printColor(outputColor, outString[k]);
+					Output.PrintColor(outputColor, outString[k]);
 				}
+
 				// Start a new line for the next security
-				Output.println("");
+				Output.Println("");
 			}
+			Output.Println("");
 		}
 
+		// Display Index Output Header
+		Output.PrintColorln(FColor.CYAN,
+				"-------------------------------------------------------------------------------");
+		Output.PrintColorln(FColor.YELLOW, "Symbol       Current      Chng      Chng%");
+		Output.PrintColorln(FColor.CYAN,
+				"-------------------------------------------------------------------------------");
+
+		// Loop through the three indexes and display the resul ts
+		String[] indexList = { "DOW", "NASDAQ", "S&P" };
+		for (int i = 0; i < indexList.length; i++) {
+
+			// Download the web page and return the results array
+			Debug.Print("Getting Index data for: " + indexList[i]);
+			String[] result = QuoteOps.GetIndex(indexList[i]);
+
+			// Determine the color based on the change amount
+			FColor outputColor = FColor.WHITE;
+			if (Float.valueOf(result[2]) < 0) {
+				outputColor = FColor.RED;
+			}
+
+			// Format the Output
+			// Index Name
+			String[] outString = new String[4];
+			outString[0] = String.format("%-10s", result[0]);
+			// Current
+			outString[1] = String.format("%,10.2f", Float.valueOf(result[1]));
+			// Change Amount
+			outString[2] = String.format("%+,10.2f", Float.valueOf(result[2]));
+			// Change Percentage
+			outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3]));
+
+			// Display Index results to the string
+			for (int k = 0; k < outString.length; k++) {
+				Output.PrintColor(outputColor, outString[k]);
+			}
+
+			// Start a new line for the next index
+			Output.Println("");
+		}
 	}
 }

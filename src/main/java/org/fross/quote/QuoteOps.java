@@ -1,5 +1,6 @@
 package org.fross.quote;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
 
@@ -29,7 +30,7 @@ public class QuoteOps {
 		try {
 			quoteDetail = URLOps.ReadURL(quoteURL);
 		} catch (Exception ex) {
-			Output.fatalerror("Could not contact iexapis.com to retrieve quote: '" + symb + "'\n" + ex.getMessage(), 2);
+			Output.FatalError("Could not contact iexapis.com to retrieve quote: '" + symb + "'\n" + ex.getMessage(), 2);
 		}
 
 		// Display the returned JSON data
@@ -60,7 +61,58 @@ public class QuoteOps {
 			}
 
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			Output.PrintError(ex.getMessage());
+		}
+
+		return retArray;
+	}
+
+	/**
+	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P
+	 * data. Unfortunately I have to scrape a web page for this information as IEX
+	 * Cloud does not contain index data.
+	 * 
+	 * @param idx
+	 * @return
+	 */
+	public static String[] GetIndex(String idx) {
+		String[] retArray = new String[4];
+		String idxPage;
+		String URLTEMPLATE = "https://www.cnbc.com/quotes/?symbol=SYMBOLHERE";
+		String URL="ERROR";
+
+		// Ensure a valid value was passed
+		if (idx.toUpperCase() == "DOW") {
+			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", ".dji");
+		} else if (idx.toUpperCase() == "NASDAQ") {
+			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", ".ixic");
+		} else if (idx.toUpperCase() == "S&P") {
+			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", ".inx");
+		} else {
+			Output.FatalError("Call to GetIndex must be 'DOW', 'NASDAQ', or 'S&P'", 4);
+		}
+
+		Debug.Print("Index URL rewritten to: " + URL);
+
+		try {
+			// Download the web page with
+			idxPage = URLOps.ReadURL(URL);
+
+			retArray[0] = idx;
+			retArray[1] = StringUtils.substringBetween(idxPage, "\"last\":\"", "\"");
+			retArray[2] = StringUtils.substringBetween(idxPage, "\"change\":\"", "\"");
+			retArray[3] = StringUtils.substringBetween(idxPage, "\"change_pct\":\"", "\"");
+
+			// If we are in debug mode, display the values we are returning
+			if (Debug.Query() == true) {
+				Debug.Print("Index Data Returned from Web:");
+				for (int i = 0; i < retArray.length; i++) {
+					Debug.Print("    " + i + ": " + retArray[i]);
+				}
+			}
+
+		} catch (Exception ex) {
+			Output.PrintError(ex.getMessage());
 		}
 
 		return retArray;

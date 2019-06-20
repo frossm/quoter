@@ -44,7 +44,7 @@ public class Debug {
 	 */
 	public static void Print(String msg) {
 		if (clDebug == true) {
-			Output.printColorln(FColor.RED, "DEBUG:  " + msg);
+			Output.PrintColorln(FColor.RED, "DEBUG:  " + msg);
 		}
 	}
 }

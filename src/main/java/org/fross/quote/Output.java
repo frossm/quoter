@@ -23,7 +23,7 @@ public class Output {
 	 * @param Color
 	 * @param msg
 	 */
-	public static void printColorln(FColor clr, String msg) {
+	public static void PrintColorln(FColor clr, String msg) {
 		ColoredPrinter cp = new ColoredPrinter.Builder(1, false).foreground(clr).build();
 		cp.setAttribute(Attribute.LIGHT);
 		cp.println(msg);
@@ -38,7 +38,7 @@ public class Output {
 	 * @param Color
 	 * @param msg
 	 */
-	public static void printColor(FColor clr, String msg) {
+	public static void PrintColor(FColor clr, String msg) {
 		ColoredPrinter cp = new ColoredPrinter.Builder(1, false).foreground(clr).build();
 		cp.setAttribute(Attribute.LIGHT);
 		cp.print(msg);
@@ -51,7 +51,7 @@ public class Output {
 	 * 
 	 * @param msg
 	 */
-	public static void println(String msg) {
+	public static void Println(String msg) {
 		System.out.println(msg);
 	}
 
@@ -61,7 +61,7 @@ public class Output {
 	 * 
 	 * @param msg
 	 */
-	public static void print(String msg) {
+	public static void Print(String msg) {
 		System.out.print(msg);
 	}
 
@@ -70,7 +70,7 @@ public class Output {
 	 * 
 	 * @param msg
 	 */
-	public static void printError(String msg) {
+	public static void PrintError(String msg) {
 		ColoredPrinter cp = new ColoredPrinter.Builder(1, false).foreground(FColor.RED).build();
 		cp.setAttribute(Attribute.LIGHT);
 		cp.println("ERROR:  " + msg);
@@ -84,8 +84,8 @@ public class Output {
 	 * @param msg
 	 * @param errorcode
 	 */
-	public static void fatalerror(String msg, int errorcode) {
-		Output.printColorln(FColor.RED, "\nFATAL ERROR: " + msg);
+	public static void FatalError(String msg, int errorcode) {
+		Output.PrintColorln(FColor.RED, "\nFATAL ERROR: " + msg);
 		System.exit(errorcode);
 	}
 }

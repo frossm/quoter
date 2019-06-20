@@ -5,7 +5,7 @@
 
 	<groupId>org.fross.quote</groupId>
 	<artifactId>quote</artifactId>
-	<version>2019.06.19</version>
+	<version>2019.06.20</version>
 	<packaging>jar</packaging>
 
 	<name>quote</name>
@@ -69,7 +69,7 @@
 						<configuration>
 							<archive>
 								<manifest>
-									<mainClass>org.fross.quote.Main</mainClass>
+									<mainClass>org.fross.${project.name}.Main</mainClass>
 								</manifest>
 							</archive>
 							<descriptorRefs>
@@ -84,12 +84,6 @@
 	</build>
 
 	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>3.8.1</version>
-			<scope>test</scope>
-		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/gnu.getopt/java-getopt -->
 		<dependency>
@@ -110,6 +104,13 @@
 			<groupId>com.googlecode.json-simple</groupId>
 			<artifactId>json-simple</artifactId>
 			<version>1.1.1</version>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.9</version>
 		</dependency>
 
 	</dependencies>
