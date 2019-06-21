@@ -30,15 +30,15 @@ public class QuoteOps {
 		try {
 			quoteDetail = URLOps.ReadURL(quoteURL);
 		} catch (Exception ex) {
-			Output.FatalError("Could not contact iexapis.com to retrieve quote: '" + symb + "'\n" + ex.getMessage(), 2);
+			Output.FatalError("Could not retrieve quote for symbol: '" + symb + "'\n", 2);
 		}
 
 		// Display the returned JSON data
-		// Debug.Print(quoteDetail);
+		Debug.Print("\nRaw Data from REST API call:\n" + quoteDetail + "\n");
 
 		// Decode the JSON and extract the desired data
-		JSONParser jp = new JSONParser();
 		try {
+			JSONParser jp = new JSONParser();
 			Object obj = jp.parse(quoteDetail);
 			JSONObject jo = (JSONObject) obj;
 
@@ -61,7 +61,7 @@ public class QuoteOps {
 			}
 
 		} catch (Exception ex) {
-			Output.PrintError(ex.getMessage());
+			Output.PrintError("Error parsing JSON from IEX Cloud:\n" + ex.getMessage());
 		}
 
 		return retArray;
@@ -79,7 +79,7 @@ public class QuoteOps {
 		String[] retArray = new String[4];
 		String idxPage;
 		String URLTEMPLATE = "https://www.cnbc.com/quotes/?symbol=SYMBOLHERE";
-		String URL="ERROR";
+		String URL = "ERROR";
 
 		// Ensure a valid value was passed
 		if (idx.toUpperCase() == "DOW") {
@@ -112,7 +112,7 @@ public class QuoteOps {
 			}
 
 		} catch (Exception ex) {
-			Output.PrintError(ex.getMessage());
+			Output.PrintError("Unable to get Index data for " + idx + "\n" + ex.getMessage());
 		}
 
 		return retArray;

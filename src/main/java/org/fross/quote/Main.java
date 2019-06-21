@@ -96,44 +96,49 @@ public class Main {
 		if (!symbolList.isEmpty()) {
 			// Loop through each entered symbol and display it's data
 			Iterator<String> j = symbolList.iterator();
-			while (j.hasNext()) {
-				String[] result = QuoteOps.GetQuote((String) j.next(), Prefs.QueryString("iexcloudtoken"));
-				String[] outString = new String[9];
+			try {
+				while (j.hasNext()) {
+					String[] result = QuoteOps.GetQuote((String) j.next(), Prefs.QueryString("iexcloudtoken"));
+					String[] outString = new String[9];
 
-				// Format the Output into an array
-				// Symbol
-				outString[0] = String.format("%-8s", result[0]);
-				// Current
-				outString[1] = String.format("%,8.2f", Float.valueOf(result[1]));
-				// Change Amount
-				outString[2] = String.format("%+,8.2f", Float.valueOf(result[2]));
-				// Change Percentage
-				outString[3] = String.format("%+,7.2f%%", Float.valueOf(result[3]));
-				// Day High
-				outString[4] = String.format("%,9.2f", Float.valueOf(result[4]));
-				// Day Low
-				outString[5] = String.format("%,9.2f", Float.valueOf(result[5]));
-				// 52 Week High
-				outString[6] = String.format("%,9.2f", Float.valueOf(result[6]));
-				// 52 Week Low
-				outString[7] = String.format("%,9.2f", Float.valueOf(result[7]));
-				// Year to date
-				outString[8] = String.format("%+,9.2f%%", (Float.valueOf(result[8]) * 100));
+					// Format the Output into an array
+					// Symbol
+					outString[0] = String.format("%-8s", result[0]);
+					// Current
+					outString[1] = String.format("%,8.2f", Float.valueOf(result[1]));
+					// Change Amount
+					outString[2] = String.format("%+,8.2f", Float.valueOf(result[2]));
+					// Change Percentage
+					outString[3] = String.format("%+,7.2f%%", (Float.valueOf(result[3]) * 100));
+					// Day High
+					outString[4] = String.format("%,9.2f", Float.valueOf(result[4]));
+					// Day Low
+					outString[5] = String.format("%,9.2f", Float.valueOf(result[5]));
+					// 52 Week High
+					outString[6] = String.format("%,9.2f", Float.valueOf(result[6]));
+					// 52 Week Low
+					outString[7] = String.format("%,9.2f", Float.valueOf(result[7]));
+					// Year to date
+					outString[8] = String.format("%+,9.2f%%", (Float.valueOf(result[8]) * 100));
 
-				// Determine the color based on the change amount
-				FColor outputColor = FColor.WHITE;
-				if (Float.valueOf(result[2]) < 0) {
-					outputColor = FColor.RED;
+					// Determine the color based on the change amount
+					FColor outputColor = FColor.WHITE;
+					if (Float.valueOf(result[2]) < 0) {
+						outputColor = FColor.RED;
+					}
+
+					// Write the output to the screen
+					for (int k = 0; k < outString.length; k++) {
+						Output.PrintColor(outputColor, outString[k]);
+					}
+
+					// Start a new line for the next security
+					Output.Println("");
 				}
-
-				// Write the output to the screen
-				for (int k = 0; k < outString.length; k++) {
-					Output.PrintColor(outputColor, outString[k]);
-				}
-
-				// Start a new line for the next security
-				Output.Println("");
+			} catch (Exception Ex) {
+				Output.PrintColor(FColor.RED, "No Data");
 			}
+
 			Output.Println("");
 		}
 
@@ -146,36 +151,42 @@ public class Main {
 
 		// Loop through the three indexes and display the resul ts
 		String[] indexList = { "DOW", "NASDAQ", "S&P" };
-		for (int i = 0; i < indexList.length; i++) {
+		try {
+			for (int i = 0; i < indexList.length; i++) {
 
-			// Download the web page and return the results array
-			Debug.Print("Getting Index data for: " + indexList[i]);
-			String[] result = QuoteOps.GetIndex(indexList[i]);
+				// Download the web page and return the results array
+				Debug.Print("Getting Index data for: " + indexList[i]);
+				String[] result = QuoteOps.GetIndex(indexList[i]);
 
-			// Determine the color based on the change amount
-			FColor outputColor = FColor.WHITE;
-			if (Float.valueOf(result[2]) < 0) {
-				outputColor = FColor.RED;
+				// Determine the color based on the change amount
+				FColor outputColor = FColor.WHITE;
+				if (Float.valueOf(result[2]) < 0) {
+					outputColor = FColor.RED;
+				}
+
+				// Format the Output
+				// Index Name
+				String[] outString = new String[4];
+				outString[0] = String.format("%-10s", result[0]);
+				// Current
+				outString[1] = String.format("%,10.2f", Float.valueOf(result[1]));
+				// Change Amount
+				outString[2] = String.format("%+,10.2f", Float.valueOf(result[2]));
+				// Change Percentage
+				outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3]));
+
+				// Display Index results to the string
+				for (int k = 0; k < outString.length; k++) {
+					Output.PrintColor(outputColor, outString[k]);
+				}
+
+				// Start a new line for the next index
+				Output.Println("");
 			}
 
-			// Format the Output
-			// Index Name
-			String[] outString = new String[4];
-			outString[0] = String.format("%-10s", result[0]);
-			// Current
-			outString[1] = String.format("%,10.2f", Float.valueOf(result[1]));
-			// Change Amount
-			outString[2] = String.format("%+,10.2f", Float.valueOf(result[2]));
-			// Change Percentage
-			outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3]));
-
-			// Display Index results to the string
-			for (int k = 0; k < outString.length; k++) {
-				Output.PrintColor(outputColor, outString[k]);
-			}
-
-			// Start a new line for the next index
-			Output.Println("");
+		} catch (Exception Ex) {
+			Output.PrintColor(FColor.RED, "No Data");
 		}
+
 	}
 }
