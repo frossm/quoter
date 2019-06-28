@@ -22,6 +22,8 @@ This will prompt you for the key which will be stored in the java preferences sy
 |-D | Start in Debug Mode which will display additional debugging data. Normally not used|
 |-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key|
 |-e | Export the results into a CSV file|
+|-v | Display the version and exit|
+|-k | Display the configured IEX secret API key and exit|
 |-h or -?| Display the help page|
 
 **Parameters**
