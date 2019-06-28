@@ -30,7 +30,8 @@ public class QuoteOps {
 		try {
 			quoteDetail = URLOps.ReadURL(quoteURL);
 		} catch (Exception ex) {
-			Output.FatalError("Could not retrieve quote for symbol: '" + symb + "'\n", 2);
+			String[] errorReturn = {symb, "Error", "Retrieving", "Quote", "", "", "", "", ""};
+			return errorReturn;
 		}
 
 		// Display the returned JSON data

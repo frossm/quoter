@@ -6,8 +6,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Scanner;
-import org.fross.quote.Prefs;
+
 import com.diogonunes.jcdp.color.api.Ansi.FColor;
+
 import gnu.getopt.Getopt;
 
 /**
@@ -36,7 +37,7 @@ public class Main {
 		}
 
 		// Process Command Line Options and set flags where needed
-		Getopt optG = new Getopt("rpn", args, "Dce:h?");
+		Getopt optG = new Getopt("rpn", args, "Dcke:h?v");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			case 'D': // Debug Mode
@@ -53,7 +54,15 @@ public class Main {
 				break;
 			case 'e':
 				Output.Println("Export Results - COMPLETE LATER");
+				System.exit(0);
 				break;
+			case 'k':
+				Output.Println("The Configured IEXCloud Secret Key: " + Prefs.QueryString("iexcloudtoken"));
+				System.exit(0);
+				break;
+			case 'v':
+				Output.Println("This version of Quote is: " + VERSION);
+				System.exit(0);
 			case '?': // Help
 			case 'h':
 				Help.Display();
@@ -96,13 +105,16 @@ public class Main {
 		if (!symbolList.isEmpty()) {
 			// Loop through each entered symbol and display it's data
 			Iterator<String> j = symbolList.iterator();
-			try {
-				while (j.hasNext()) {
-					String[] result = QuoteOps.GetQuote((String) j.next(), Prefs.QueryString("iexcloudtoken"));
-					String[] outString = new String[9];
+			String currentSymbol = "";
 
-					// Format the Output into an array
-					// Symbol
+			while (j.hasNext()) {
+				currentSymbol = j.next();
+				String[] result = QuoteOps.GetQuote(currentSymbol, Prefs.QueryString("iexcloudtoken"));
+				String[] outString = new String[9];
+
+				// Format the Output into an array
+				// Symbol
+				try {
 					outString[0] = String.format("%-8s", result[0]);
 					// Current
 					outString[1] = String.format("%,8.2f", Float.valueOf(result[1]));
@@ -134,9 +146,12 @@ public class Main {
 
 					// Start a new line for the next security
 					Output.Println("");
+
+				} catch (NumberFormatException Ex) {
+					Output.PrintColorln(FColor.RED, "Could not process symbol: '" + currentSymbol + "'");
+				} catch (Exception Ex) {
+					Output.PrintColorln(FColor.RED, "Unknown Error Occured");
 				}
-			} catch (Exception Ex) {
-				Output.PrintColor(FColor.RED, "No Data");
 			}
 
 			Output.Println("");
