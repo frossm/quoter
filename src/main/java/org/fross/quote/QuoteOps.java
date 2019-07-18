@@ -61,6 +61,8 @@ public class QuoteOps {
 				}
 			}
 
+		} catch (NullPointerException Ex) {
+			// If the data returned is not completed, just skip what we don't have
 		} catch (Exception ex) {
 			Output.PrintError("Error parsing JSON from IEX Cloud:\n" + ex.getMessage());
 		}

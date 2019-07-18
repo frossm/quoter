@@ -133,25 +133,32 @@ public class Main {
 					// Year to date
 					outString[8] = String.format("%+,9.2f%%", (Float.valueOf(result[8]) * 100));
 
-					// Determine the color based on the change amount
-					FColor outputColor = FColor.WHITE;
-					if (Float.valueOf(result[2]) < 0) {
-						outputColor = FColor.RED;
-					}
-
-					// Write the output to the screen
-					for (int k = 0; k < outString.length; k++) {
-						Output.PrintColor(outputColor, outString[k]);
-					}
-
-					// Start a new line for the next security
-					Output.Println("");
-
 				} catch (NumberFormatException Ex) {
 					Output.PrintColorln(FColor.RED, "Could not process symbol: '" + currentSymbol + "'");
+				} catch (NullPointerException Ex) {
+					// Skip if we don't have a full set of data. Handle it during the output below
 				} catch (Exception Ex) {
 					Output.PrintColorln(FColor.RED, "Unknown Error Occured");
 				}
+
+				// Determine the color based on the change amount
+				FColor outputColor = FColor.WHITE;
+				if (Float.valueOf(result[2]) < 0) {
+					outputColor = FColor.RED;
+				}
+
+				// Write the output to the screen
+				for (int k = 0; k < outString.length; k++) {
+					if (outString[k] != null) {
+						Output.PrintColor(outputColor, outString[k]);
+					} else {
+						Output.PrintColor(outputColor, String.format("%8s", "-"));
+					}
+				}
+
+				// Start a new line for the next security
+				Output.Println("");
+
 			}
 
 			Output.Println("");
