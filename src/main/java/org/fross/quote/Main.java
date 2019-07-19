@@ -115,28 +115,65 @@ public class Main {
 				// Format the Output into an array
 				// Symbol
 				try {
+					// Symbol
 					outString[0] = String.format("%-8s", result[0]);
-					// Current
-					outString[1] = String.format("%,8.2f", Float.valueOf(result[1]));
-					// Change Amount
-					outString[2] = String.format("%+,8.2f", Float.valueOf(result[2]));
-					// Change Percentage
-					outString[3] = String.format("%+,7.2f%%", (Float.valueOf(result[3]) * 100));
-					// Day High
-					outString[4] = String.format("%,9.2f", Float.valueOf(result[4]));
-					// Day Low
-					outString[5] = String.format("%,9.2f", Float.valueOf(result[5]));
-					// 52 Week High
-					outString[6] = String.format("%,9.2f", Float.valueOf(result[6]));
-					// 52 Week Low
-					outString[7] = String.format("%,9.2f", Float.valueOf(result[7]));
-					// Year to date
-					outString[8] = String.format("%+,9.2f%%", (Float.valueOf(result[8]) * 100));
 
-				} catch (NumberFormatException Ex) {
-					Output.PrintColorln(FColor.RED, "Could not process symbol: '" + currentSymbol + "'");
-				} catch (NullPointerException Ex) {
-					// Skip if we don't have a full set of data. Handle it during the output below
+					// Current
+					try {
+						outString[1] = String.format("%,8.2f", Float.valueOf(result[1]));
+					} catch (NumberFormatException Ex) {
+						outString[1] = String.format("%8s", "-");
+					}
+
+					// Change Amount
+					try {
+						outString[2] = String.format("%+,8.2f", Float.valueOf(result[2]));
+					} catch (NumberFormatException Ex) {
+						outString[2] = String.format("%8s", "-");
+					}
+
+					// Change Percentage
+					try {
+						outString[3] = String.format("%+,7.2f%%", (Float.valueOf(result[3]) * 100));
+					} catch (NumberFormatException Ex) {
+						outString[3] = String.format("%8s", "-");
+					}
+
+					// Day High
+					try {
+						outString[4] = String.format("%,9.2f", Float.valueOf(result[4]));
+					} catch (NumberFormatException Ex) {
+						outString[4] = String.format("%8s", "-");
+					}
+
+					// Day Low
+					try {
+						outString[5] = String.format("%,9.2f", Float.valueOf(result[5]));
+					} catch (NumberFormatException Ex) {
+						outString[5] = String.format("%8s", "-");
+					}
+
+					// 52 Week High
+					try {
+						outString[6] = String.format("%,9.2f", Float.valueOf(result[6]));
+					} catch (NumberFormatException Ex) {
+						outString[6] = String.format("%8s", "-");
+					}
+
+					// 52 Week Low
+					try {
+						outString[7] = String.format("%,9.2f", Float.valueOf(result[7]));
+					} catch (NumberFormatException Ex) {
+						outString[7] = String.format("%8s", "-");
+					}
+
+					// Year to date
+					try {
+						outString[8] = String.format("%+,9.2f%%", (Float.valueOf(result[8]) * 100));
+					} catch (NumberFormatException Ex) {
+						outString[8] = String.format("%8s", "-");
+					}
+
 				} catch (Exception Ex) {
 					Output.PrintColorln(FColor.RED, "Unknown Error Occured");
 				}
@@ -149,11 +186,7 @@ public class Main {
 
 				// Write the output to the screen
 				for (int k = 0; k < outString.length; k++) {
-					if (outString[k] != null) {
-						Output.PrintColor(outputColor, outString[k]);
-					} else {
-						Output.PrintColor(outputColor, String.format("%8s", "-"));
-					}
+					Output.PrintColor(outputColor, outString[k]);
 				}
 
 				// Start a new line for the next security

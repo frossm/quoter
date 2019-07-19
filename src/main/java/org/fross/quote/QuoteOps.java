@@ -30,7 +30,7 @@ public class QuoteOps {
 		try {
 			quoteDetail = URLOps.ReadURL(quoteURL);
 		} catch (Exception ex) {
-			String[] errorReturn = {symb, "Error", "Retrieving", "Quote", "", "", "", "", ""};
+			String[] errorReturn = { symb, "Error", "Retrieving", "Quote", "", "", "", "", "" };
 			return errorReturn;
 		}
 
@@ -43,16 +43,69 @@ public class QuoteOps {
 			Object obj = jp.parse(quoteDetail);
 			JSONObject jo = (JSONObject) obj;
 
-			retArray[0] = jo.get("symbol").toString();
+			// Symbol
+			try {
+				retArray[0] = jo.get("symbol").toString();
+			} catch (NullPointerException Ex) {
+				retArray[0] = "-";
+			}
+			
+			// LatestPrice
+			try {
 			retArray[1] = jo.get("latestPrice").toString();
+			} catch (NullPointerException Ex) {
+				retArray[1] = "-";
+			}
+			
+			// Change
+			try {
 			retArray[2] = jo.get("change").toString();
+			} catch (NullPointerException Ex) {
+				retArray[2] = "-";
+			}
+			
+			// ChangePercent
+			try {
 			retArray[3] = jo.get("changePercent").toString();
+			} catch (NullPointerException Ex) {
+				retArray[3] = "-";
+			}
+			
+			// High
+			try {
 			retArray[4] = jo.get("high").toString();
+			} catch (NullPointerException Ex) {
+				retArray[4] = "-";
+			}
+			
+			// Low
+			try {
 			retArray[5] = jo.get("low").toString();
+			} catch (NullPointerException Ex) {
+				retArray[5] = "-";
+			}
+			
+			// 52 Week High
+			try {
 			retArray[6] = jo.get("week52High").toString();
+			} catch (NullPointerException Ex) {
+				retArray[6] = "-";
+			}
+			
+			// 52 Week Low
+			try {
 			retArray[7] = jo.get("week52Low").toString();
+			} catch (NullPointerException Ex) {
+				retArray[7] = "-";
+			}
+			
+			// YTD Change
+			try {
 			retArray[8] = jo.get("ytdChange").toString();
-
+			} catch (NullPointerException Ex) {
+				retArray[8] = "-";
+			}
+			
 			// If we are in debug mode, display the values we are returning
 			if (Debug.Query() == true) {
 				Debug.Print("Data Returned from Web:");
@@ -61,8 +114,6 @@ public class QuoteOps {
 				}
 			}
 
-		} catch (NullPointerException Ex) {
-			// If the data returned is not completed, just skip what we don't have
 		} catch (Exception ex) {
 			Output.PrintError("Error parsing JSON from IEX Cloud:\n" + ex.getMessage());
 		}
