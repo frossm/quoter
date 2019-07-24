@@ -1,3 +1,15 @@
+/**************************************************************************************************************
+ * Quote.jar
+ * Copyright 2019 Michael Fross, all rights reserved
+ * 
+ * Quote is a command line program that display stock quotes and index data.
+ * 
+ * License:  
+ *   GNU General Public License v3
+ *   http://www.gnu.org/licenses/gpl-3.0.html
+ *   
+ ***************************************************************************************************************/
+
 package org.fross.quote;
 
 import org.apache.commons.lang3.StringUtils;

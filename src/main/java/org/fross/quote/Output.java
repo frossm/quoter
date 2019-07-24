@@ -1,12 +1,21 @@
+/**************************************************************************************************************
+ * Quote.jar
+ * Copyright 2019 Michael Fross, all rights reserved
+ * 
+ * Quote is a command line program that display stock quotes and index data.
+ * 
+ * License:  
+ *   GNU General Public License v3
+ *   http://www.gnu.org/licenses/gpl-3.0.html
+ *   
+ ***************************************************************************************************************/
 
 /******************************************************************************
- *           
- ******************************************************************************/
 /* Leverages the JCDP Color library:  
  *   https://github.com/dialex/JCDP
  *   http://dialex.github.io/JCDP/javadoc/
  *   <!-- https://mvnrepository.com/artifact/com.diogonunes/JCDP -->
-*/
+******************************************************************************/
 
 package org.fross.quote;
 

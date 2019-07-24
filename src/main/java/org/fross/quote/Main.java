@@ -1,8 +1,23 @@
+/**************************************************************************************************************
+ * Quote.jar
+ * Copyright 2019 Michael Fross, all rights reserved
+ * 
+ * Quote is a command line program that display stock quotes and index data.
+ * 
+ * License:  
+ *   GNU General Public License v3
+ *   http://www.gnu.org/licenses/gpl-3.0.html
+ *   
+ ***************************************************************************************************************/
+
 package org.fross.quote;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Scanner;
@@ -37,7 +52,7 @@ public class Main {
 		}
 
 		// Process Command Line Options and set flags where needed
-		Getopt optG = new Getopt("rpn", args, "Dcke:h?v");
+		Getopt optG = new Getopt("quote", args, "Dcke:h?v");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			case 'D': // Debug Mode
@@ -204,7 +219,7 @@ public class Main {
 		Output.PrintColorln(FColor.CYAN,
 				"-------------------------------------------------------------------------------");
 
-		// Loop through the three indexes and display the resul ts
+		// Loop through the three indexes and display the results
 		String[] indexList = { "DOW", "NASDAQ", "S&P" };
 		try {
 			for (int i = 0; i < indexList.length; i++) {
@@ -238,6 +253,11 @@ public class Main {
 				// Start a new line for the next index
 				Output.Println("");
 			}
+			
+			// Display
+			DateFormat sdf = new SimpleDateFormat("MM-dd-yyyy  HH:mm:ss");
+			Output.PrintColorln(FColor.CYAN, "\nTime of execution:  " + sdf.format(new Date()));
+			
 
 		} catch (Exception Ex) {
 			Output.PrintColor(FColor.RED, "No Data");
