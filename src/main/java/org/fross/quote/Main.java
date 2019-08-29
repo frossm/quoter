@@ -255,7 +255,7 @@ public class Main {
 			}
 			
 			// Display
-			DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss");
+			DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss zzz");
 			Output.PrintColorln(FColor.CYAN, "\nExecuted:  " + sdf.format(new Date()));
 			
 
