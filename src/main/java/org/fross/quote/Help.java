@@ -31,7 +31,7 @@ public class Help {
 				"+                   Quote v" + Main.VERSION + "  Help Document                   +");
 		Output.PrintColorln(FColor.YELLOW, "+----------------------------------------------------------------------+");
 		Output.PrintColorln(FColor.WHITE, "         Quote is a tool to display stock quotes and index data");
-		Output.PrintColorln(FColor.WHITE, "                   https://bitbucket.org/frossm/quote\n");
+		Output.PrintColorln(FColor.WHITE, "                    https://github.com/frossm/quote\n");
 
 		Output.PrintColorln(FColor.YELLOW, "Command Line Options:");
 		Output.PrintColorln(FColor.WHITE, " -c        Configure the IEXCloud secret key. See link above for details.");
