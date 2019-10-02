@@ -127,6 +127,11 @@ public class Main {
 				String[] result = QuoteOps.GetQuote(currentSymbol, Prefs.QueryString("iexcloudtoken"));
 				String[] outString = new String[9];
 
+				// Validate the provided quote is valid
+				if (result[1] == "Error") {
+					Output.FatalError("'"+result[0]+"' is not a valid symbol", 4);
+				}
+								
 				// Format the Output into an array
 				// Symbol
 				try {
