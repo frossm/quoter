@@ -5,8 +5,8 @@
  * Quote is a command line program that display stock quotes and index data.
  * 
  * License:  
- *   GNU General Public License v3
- *   http://www.gnu.org/licenses/gpl-3.0.html
+ *  MIT License / https://opensource.org/licenses/MIT
+ *  Please see included LICENSE.txt file for additional details
  *   
  ***************************************************************************************************************/
 
