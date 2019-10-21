@@ -1,5 +1,5 @@
 
-# cal - The Console Calendar Generator
+# quote - The Console Based Stock Quote Tool
 
 I wanted a small command line program to check stock and index prices throughout the day.  In order to minimize HTML scraping, I decided to use the quotes from IEXCloud.IO.  You can signup for free and get 500k stock quotes per month for free.  Please check their usage agreements prior to signing up and ensure you are allowed to user their service.
 
