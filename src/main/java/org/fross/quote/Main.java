@@ -129,9 +129,11 @@ public class Main {
 
 				// Validate the provided quote is valid
 				if (result[1] == "Error") {
-					Output.FatalError("'"+result[0]+"' is not a valid symbol", 4);
+					// Display error and skip to the next iteration
+					Output.PrintColorln(FColor.BLUE, "'" + result[0] + "' is invalid");
+					continue;
 				}
-								
+
 				// Format the Output into an array
 				// Symbol
 				try {
@@ -258,11 +260,10 @@ public class Main {
 				// Start a new line for the next index
 				Output.Println("");
 			}
-			
+
 			// Display
 			DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss zzz");
 			Output.PrintColorln(FColor.CYAN, "\nExecuted:  " + sdf.format(new Date()));
-			
 
 		} catch (Exception Ex) {
 			Output.PrintColor(FColor.RED, "No Data");
