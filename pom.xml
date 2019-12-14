@@ -105,6 +105,12 @@
 	</build>
 
 	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.13-rc-2</version>
+			<scope>test</scope>
+		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/gnu.getopt/java-getopt -->
 		<dependency>
@@ -117,7 +123,7 @@
 		<dependency>
 			<groupId>com.diogonunes</groupId>
 			<artifactId>JCDP</artifactId>
-			<version>2.0.3.1</version>
+			<version>3.0.0</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
