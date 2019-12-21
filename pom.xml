@@ -40,8 +40,6 @@
 	</properties>
 
 	<build>
-		<sourceDirectory>src</sourceDirectory>
-
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
@@ -133,5 +131,10 @@
 			<version>3.9</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.fross</groupId>
+			<artifactId>library</artifactId>
+			<version>2019-12-20</version>
+		</dependency>
 	</dependencies>
 </project>

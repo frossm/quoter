@@ -15,6 +15,9 @@ package org.fross.quote;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
+import org.fross.library.Output;
+import org.fusesource.jansi.Ansi;
+import org.fross.library.Debug;
 
 public class QuoteOps {
 
@@ -34,10 +37,10 @@ public class QuoteOps {
 		String[] retArray = new String[9];
 
 		// Get the quote data in JSON format
-		Debug.Print("Processing Symbol: '" + symb + "'");
+		Output.debugPrint("Processing Symbol: '" + symb + "'");
 		quoteURL = QUOTEURLTEMPLATE.replaceAll("SYMBOLHERE", symb);
 		quoteURL = quoteURL.replaceAll("TOKENHERE", token);
-		Debug.Print("Rewritten URL: " + quoteURL);
+		Output.debugPrint("Rewritten URL: " + quoteURL);
 
 		try {
 			quoteDetail = URLOps.ReadURL(quoteURL);
@@ -47,7 +50,7 @@ public class QuoteOps {
 		}
 
 		// Display the returned JSON data
-		Debug.Print("\nRaw Data from REST API call:\n" + quoteDetail + "\n");
+		Output.debugPrint("\nRaw Data from REST API call:\n" + quoteDetail + "\n");
 
 		// Decode the JSON and extract the desired data
 		try {
@@ -61,73 +64,73 @@ public class QuoteOps {
 			} catch (NullPointerException Ex) {
 				retArray[0] = "-";
 			}
-			
+
 			// LatestPrice
 			try {
-			retArray[1] = jo.get("latestPrice").toString();
+				retArray[1] = jo.get("latestPrice").toString();
 			} catch (NullPointerException Ex) {
 				retArray[1] = "-";
 			}
-			
+
 			// Change
 			try {
-			retArray[2] = jo.get("change").toString();
+				retArray[2] = jo.get("change").toString();
 			} catch (NullPointerException Ex) {
 				retArray[2] = "-";
 			}
-			
+
 			// ChangePercent
 			try {
-			retArray[3] = jo.get("changePercent").toString();
+				retArray[3] = jo.get("changePercent").toString();
 			} catch (NullPointerException Ex) {
 				retArray[3] = "-";
 			}
-			
+
 			// High
 			try {
-			retArray[4] = jo.get("high").toString();
+				retArray[4] = jo.get("high").toString();
 			} catch (NullPointerException Ex) {
 				retArray[4] = "-";
 			}
-			
+
 			// Low
 			try {
-			retArray[5] = jo.get("low").toString();
+				retArray[5] = jo.get("low").toString();
 			} catch (NullPointerException Ex) {
 				retArray[5] = "-";
 			}
-			
+
 			// 52 Week High
 			try {
-			retArray[6] = jo.get("week52High").toString();
+				retArray[6] = jo.get("week52High").toString();
 			} catch (NullPointerException Ex) {
 				retArray[6] = "-";
 			}
-			
+
 			// 52 Week Low
 			try {
-			retArray[7] = jo.get("week52Low").toString();
+				retArray[7] = jo.get("week52Low").toString();
 			} catch (NullPointerException Ex) {
 				retArray[7] = "-";
 			}
-			
+
 			// YTD Change
 			try {
-			retArray[8] = jo.get("ytdChange").toString();
+				retArray[8] = jo.get("ytdChange").toString();
 			} catch (NullPointerException Ex) {
 				retArray[8] = "-";
 			}
-			
+
 			// If we are in debug mode, display the values we are returning
-			if (Debug.Query() == true) {
-				Debug.Print("Data Returned from Web:");
+			if (Debug.query() == true) {
+				Output.debugPrint("Data Returned from Web:");
 				for (int i = 0; i < retArray.length; i++) {
-					Debug.Print("    " + i + ": " + retArray[i]);
+					Output.debugPrint("    " + i + ": " + retArray[i]);
 				}
 			}
 
 		} catch (Exception ex) {
-			Output.PrintError("Error parsing JSON from IEX Cloud:\n" + ex.getMessage());
+			Output.printColorln(Ansi.Color.RED, "Error parsing JSON from IEX Cloud:\n" + ex.getMessage());
 		}
 
 		return retArray;
@@ -155,10 +158,10 @@ public class QuoteOps {
 		} else if (idx.toUpperCase() == "S&P") {
 			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", ".inx");
 		} else {
-			Output.FatalError("Call to GetIndex must be 'DOW', 'NASDAQ', or 'S&P'", 4);
+			Output.fatalError("Call to GetIndex must be 'DOW', 'NASDAQ', or 'S&P'", 4);
 		}
 
-		Debug.Print("Index URL rewritten to: " + URL);
+		Output.debugPrint("Index URL rewritten to: " + URL);
 
 		try {
 			// Download the web page with
@@ -170,15 +173,15 @@ public class QuoteOps {
 			retArray[3] = StringUtils.substringBetween(idxPage, "\"change_pct\":\"", "\"");
 
 			// If we are in debug mode, display the values we are returning
-			if (Debug.Query() == true) {
-				Debug.Print("Index Data Returned from Web:");
+			if (Debug.query() == true) {
+				Output.debugPrint("Index Data Returned from Web:");
 				for (int i = 0; i < retArray.length; i++) {
-					Debug.Print("    " + i + ": " + retArray[i]);
+					Output.debugPrint("    " + i + ": " + retArray[i]);
 				}
 			}
 
 		} catch (Exception ex) {
-			Output.PrintError("Unable to get Index data for " + idx + "\n" + ex.getMessage());
+			Output.printColorln(Ansi.Color.RED, "Unable to get Index data for " + idx + "\n" + ex.getMessage());
 		}
 
 		return retArray;
