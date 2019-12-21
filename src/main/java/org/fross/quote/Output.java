@@ -19,39 +19,39 @@
 
 package org.fross.quote;
 
-import com.diogonunes.jcdp.color.ColoredPrinter;
-import com.diogonunes.jcdp.color.api.Ansi.Attribute;
-import com.diogonunes.jcdp.color.api.Ansi.FColor;
+import static org.fusesource.jansi.Ansi.*;
+import org.fusesource.jansi.Ansi;
 
 public class Output {
 	/**
-	 * printColorln: Print to the console with the provided foreground color
-	 * Acceptable ColorNames: FColor.BLUE, FColor.CYAN, FColor.GREEN,
-	 * FColor.MAGENTA, FColor.NONE, FColor.RED, FColor.WHITE, FColor.YELLOW
+	 * PrintColorln(): Print to the console with the provided foreground color
+	 * 
+	 * Allowable colors are:
+	 * - Ansi.Color.BLACK
+	 * - Ansi.Color.RED
+	 * - Ansi.Color.GREEN
+	 * - Ansi.Color.YELLOW
+	 * - Ansi.Color.BLUE
+	 * - Ansi.Color.MAGENTA
+	 * - Ansi.Color.CYAN
+	 * - Ansi.Color.WHITE
+	 * - Ansi.Color.DEFAULT
 	 * 
 	 * @param Color
 	 * @param msg
 	 */
-	public static void PrintColorln(FColor clr, String msg) {
-		ColoredPrinter cp = new ColoredPrinter.Builder(1, false).foreground(clr).build();
-		cp.setAttribute(Attribute.LIGHT);
-		cp.println(msg);
-		cp.clear();
+	public static void PrintColorln(Ansi.Color clr, String msg) {
+		System.out.println(ansi().a(Attribute.INTENSITY_BOLD).fg(clr).a(msg).reset());
 	}
 
 	/**
-	 * printColor: Print to the console with NoNewLine. The provided foreground
-	 * color Acceptable ColorNames: FColor.BLUE, FColor.CYAN, FColor.GREEN,
-	 * FColor.MAGENTA, FColor.NONE, FColor.RED, FColor.WHITE, FColor.YELLOW
+	 * Printcolor(): Print to the console without a newline
 	 * 
 	 * @param Color
 	 * @param msg
 	 */
-	public static void PrintColor(FColor clr, String msg) {
-		ColoredPrinter cp = new ColoredPrinter.Builder(1, false).foreground(clr).build();
-		cp.setAttribute(Attribute.LIGHT);
-		cp.print(msg);
-		cp.clear();
+	public static void PrintColor(Ansi.Color clr, String msg) {
+		System.out.print(ansi().a(Attribute.INTENSITY_BOLD).fg(clr).a(msg).reset());
 	}
 
 	/**
@@ -65,7 +65,7 @@ public class Output {
 	}
 
 	/**
-	 * print: Basic System.out.print call. It's here so out text output can go
+	 * Print(): Basic System.out.print call. It's here so out text output can go
 	 * through this function.
 	 * 
 	 * @param msg
@@ -75,26 +75,23 @@ public class Output {
 	}
 
 	/**
-	 * printError: Display an error message in RED preceded by "ERROR:"
+	 * PrintError(): Display an error message in RED preceded by "ERROR:"
 	 * 
 	 * @param msg
 	 */
 	public static void PrintError(String msg) {
-		ColoredPrinter cp = new ColoredPrinter.Builder(1, false).foreground(FColor.RED).build();
-		cp.setAttribute(Attribute.LIGHT);
-		cp.println("ERROR:  " + msg);
-		cp.clear();
+		PrintColorln(Ansi.Color.RED, "ERROR:  " + msg);
 	}
 
 	/**
-	 * fatalerror(): Print the provided string in RED and exit the program with the
+	 * FatalError(): Print the provided string in RED and exit the program with the
 	 * error code given
 	 * 
 	 * @param msg
 	 * @param errorcode
 	 */
 	public static void FatalError(String msg, int errorcode) {
-		Output.PrintColorln(FColor.RED, "\nFATAL ERROR: " + msg);
+		Output.PrintColorln(Ansi.Color.RED, "\nFATAL ERROR: " + msg);
 		System.exit(errorcode);
 	}
 }

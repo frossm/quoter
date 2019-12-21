@@ -12,7 +12,7 @@
 
 package org.fross.quote;
 
-import com.diogonunes.jcdp.color.api.Ansi.FColor;
+import org.fusesource.jansi.Ansi;
 
 /**
  * Debug contains static methods to maintain the debug state and display
@@ -56,7 +56,7 @@ public class Debug {
 	 */
 	public static void Print(String msg) {
 		if (clDebug == true) {
-			Output.PrintColorln(FColor.RED, "DEBUG:  " + msg);
+			Output.PrintColorln(Ansi.Color.RED, "DEBUG:  " + msg);
 		}
 	}
 }

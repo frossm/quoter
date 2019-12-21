@@ -21,9 +21,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Scanner;
-
-import com.diogonunes.jcdp.color.api.Ansi.FColor;
-
+import org.fusesource.jansi.Ansi;
 import gnu.getopt.Getopt;
 
 /**
@@ -60,12 +58,11 @@ public class Main {
 				break;
 			case 'c': // Configure
 				Scanner scanner = new Scanner(System.in);
-				Output.PrintColorln(FColor.WHITE, "Enter the IEXcloud.io Secret Token: ");
+				Output.PrintColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
 				iexCloudToken = scanner.next();
 				Debug.Print("Setting Peference iexcloudtoken: " + iexCloudToken);
 				Prefs.Set("iexcloudtoken", iexCloudToken);
-				Output.PrintColorln(FColor.YELLOW,
-						"IEXCloud.io Secret Token Set To: '" + Prefs.QueryString("iexcloudtoken") + "'");
+				Output.PrintColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Token Set To: '" + Prefs.QueryString("iexcloudtoken") + "'");
 				break;
 			case 'e':
 				Output.Println("Export Results - COMPLETE LATER");
@@ -99,13 +96,10 @@ public class Main {
 		}
 
 		// Display the header
-		Output.PrintColorln(FColor.CYAN, "\nQuote v" + VERSION + " Copyright 2019 by Michael Fross");
-		Output.PrintColorln(FColor.CYAN,
-				"-------------------------------------------------------------------------------");
-		Output.PrintColorln(FColor.YELLOW,
-				"Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow     YTD");
-		Output.PrintColorln(FColor.CYAN,
-				"-------------------------------------------------------------------------------");
+		Output.PrintColorln(Ansi.Color.CYAN, "\nQuote v" + VERSION + " Copyright 2019 by Michael Fross");
+		Output.PrintColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
+		Output.PrintColorln(Ansi.Color.YELLOW, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow     YTD");
+		Output.PrintColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 		// Build an array list of symbols entered in on the command line
 		Debug.Print("Number of Symbols entered: " + (args.length - optG.getOptind()));
@@ -130,7 +124,7 @@ public class Main {
 				// Validate the provided quote is valid
 				if (result[1] == "Error") {
 					// Display error and skip to the next iteration
-					Output.PrintColorln(FColor.BLUE, "'" + result[0] + "' is invalid");
+					Output.PrintColorln(Ansi.Color.BLUE, "'" + result[0] + "' is invalid");
 					continue;
 				}
 
@@ -197,13 +191,13 @@ public class Main {
 					}
 
 				} catch (Exception Ex) {
-					Output.PrintColorln(FColor.RED, "Unknown Error Occured");
+					Output.PrintColorln(Ansi.Color.RED, "Unknown Error Occured");
 				}
 
 				// Determine the color based on the change amount
-				FColor outputColor = FColor.WHITE;
+				Ansi.Color outputColor = Ansi.Color.WHITE;
 				if (Float.valueOf(result[2]) < 0) {
-					outputColor = FColor.RED;
+					outputColor = Ansi.Color.RED;
 				}
 
 				// Write the output to the screen
@@ -220,11 +214,9 @@ public class Main {
 		}
 
 		// Display Index Output Header
-		Output.PrintColorln(FColor.CYAN,
-				"-------------------------------------------------------------------------------");
-		Output.PrintColorln(FColor.YELLOW, "Symbol       Current      Chng      Chng%");
-		Output.PrintColorln(FColor.CYAN,
-				"-------------------------------------------------------------------------------");
+		Output.PrintColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
+		Output.PrintColorln(Ansi.Color.YELLOW, "Symbol       Current      Chng      Chng%");
+		Output.PrintColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 		// Loop through the three indexes and display the results
 		String[] indexList = { "DOW", "NASDAQ", "S&P" };
@@ -236,9 +228,9 @@ public class Main {
 				String[] result = QuoteOps.GetIndex(indexList[i]);
 
 				// Determine the color based on the change amount
-				FColor outputColor = FColor.WHITE;
+				Ansi.Color outputColor = Ansi.Color.WHITE;
 				if (Float.valueOf(result[2]) < 0) {
-					outputColor = FColor.RED;
+					outputColor = Ansi.Color.RED;
 				}
 
 				// Format the Output
@@ -263,10 +255,10 @@ public class Main {
 
 			// Display
 			DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss zzz");
-			Output.PrintColorln(FColor.CYAN, "\nExecuted:  " + sdf.format(new Date()));
+			Output.PrintColorln(Ansi.Color.CYAN, "\nExecuted:  " + sdf.format(new Date()));
 
 		} catch (Exception Ex) {
-			Output.PrintColor(FColor.RED, "No Data");
+			Output.PrintColor(Ansi.Color.RED, "No Data");
 		}
 
 	}
