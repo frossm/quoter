@@ -266,7 +266,13 @@ public class Main {
 			Output.printColor(Ansi.Color.RED, "No Data");
 		}
 
-		// Display
+		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
+		// just index data is displayed, grab a security in order to get the date
+		if (symbolList.isEmpty()) {
+			latestTime = QuoteOps.GetQuote("IBM", Prefs.QueryString("iexcloudtoken"))[9];
+		}
 		Output.printColorln(Ansi.Color.CYAN, "\nLatest data as of " + latestTime);
 	}
+
+	// Program End
 }
