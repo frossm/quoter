@@ -14,10 +14,7 @@ package org.fross.quote;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Scanner;
@@ -38,6 +35,7 @@ public class Main {
 	public static void main(String[] args) {
 		int optionEntry;
 		String iexCloudToken;
+		String latestTime = "None";
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -198,14 +196,23 @@ public class Main {
 
 				// Determine the color based on the change amount
 				Ansi.Color outputColor = Ansi.Color.WHITE;
-				if (Float.valueOf(result[2]) < 0) {
-					outputColor = Ansi.Color.RED;
+				try {
+					if (Float.valueOf(result[2]) < 0) {
+						outputColor = Ansi.Color.RED;
+					}
+
+					// Write the output to the screen
+					for (int k = 0; k < outString.length; k++) {
+						Output.printColor(outputColor, outString[k]);
+					}
+
+				} catch (NumberFormatException Ex) {
+					Output.printColor(Ansi.Color.RED, "Error Retrieving Data for Symbol:\t" + outString[0]);
 				}
 
-				// Write the output to the screen
-				for (int k = 0; k < outString.length; k++) {
-					Output.printColor(outputColor, outString[k]);
-				}
+				// Set the latest time for output later. Since they should all be the same, just keep that last
+				// symbol's data
+				latestTime = result[9];
 
 				// Start a new line for the next security
 				Output.println("");
@@ -255,13 +262,11 @@ public class Main {
 				Output.println("");
 			}
 
-			// Display
-			DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy  HH:mm:ss zzz");
-			Output.printColorln(Ansi.Color.CYAN, "\nExecuted:  " + sdf.format(new Date()));
-
 		} catch (Exception Ex) {
 			Output.printColor(Ansi.Color.RED, "No Data");
 		}
 
+		// Display
+		Output.printColorln(Ansi.Color.CYAN, "\nLatest data as of " + latestTime);
 	}
 }

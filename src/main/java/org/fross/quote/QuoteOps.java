@@ -12,6 +12,9 @@
 
 package org.fross.quote;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.*;
@@ -22,9 +25,7 @@ import org.fross.library.Debug;
 public class QuoteOps {
 
 	/**
-	 * GetQuote: Get a stock quote from IEXCloud.io and return an array of key data:
-	 * 0 = symbol; 1 = latest realtime price; 2 = change; 3 = changePercent; 4 =
-	 * dayhigh; 5 = daylow; 6 = year to date change percentage;
+	 * GetQuote: Get a stock quote from IEXCloud.io and return an array of key data
 	 * 
 	 * @param symb
 	 * @param Token
@@ -34,7 +35,7 @@ public class QuoteOps {
 		String QUOTEURLTEMPLATE = "https://cloud.iexapis.com/stable/stock/SYMBOLHERE/quote?token=TOKENHERE";
 		String quoteURL = "";
 		String quoteDetail = "";
-		String[] retArray = new String[9];
+		String[] retArray = new String[10];
 
 		// Get the quote data in JSON format
 		Output.debugPrint("Processing Symbol: '" + symb + "'");
@@ -121,6 +122,16 @@ public class QuoteOps {
 				retArray[8] = "-";
 			}
 
+			// Latest Date
+			try {
+				long epochTime = Long.parseLong(jo.get("latestUpdate").toString());
+				Date d = new Date(epochTime);
+				DateFormat dFormat = new SimpleDateFormat("EEEEE MMMMM dd, yyyy hh:mma");
+				retArray[9] = dFormat.format(d);
+			} catch (NullPointerException Ex) {
+				retArray[9] = "-";
+			}
+
 			// If we are in debug mode, display the values we are returning
 			if (Debug.query() == true) {
 				Output.debugPrint("Data Returned from Web:");
@@ -137,9 +148,8 @@ public class QuoteOps {
 	}
 
 	/**
-	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P
-	 * data. Unfortunately I have to scrape a web page for this information as IEX
-	 * Cloud does not contain index data.
+	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P data. Unfortunately
+	 * I have to scrape a web page for this information as IEX Cloud does not contain index data.
 	 * 
 	 * @param idx
 	 * @return
