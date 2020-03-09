@@ -134,7 +134,7 @@
 		<dependency>
 			<groupId>org.fross</groupId>
 			<artifactId>library</artifactId>
-			<version>2020-02-26</version>
+			<version>2020.02.26</version>
 		</dependency>
 	</dependencies>
 </project>
