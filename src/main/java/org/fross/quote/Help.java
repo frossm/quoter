@@ -28,6 +28,7 @@ public class Help {
 	public static void Display() {
 		Output.printColorln(Ansi.Color.YELLOW, "\n+----------------------------------------------------------------------+");
 		Output.printColorln(Ansi.Color.YELLOW, "+                   Quote v" + Main.VERSION + "  Help Document                   +");
+		Output.printColorln(Ansi.Color.YELLOW, "+      " + Main.COPYRIGHT + "      +");
 		Output.printColorln(Ansi.Color.YELLOW, "+----------------------------------------------------------------------+");
 		Output.printColorln(Ansi.Color.WHITE, "         Quote is a tool to display stock quotes and index data");
 		Output.printColorln(Ansi.Color.WHITE, "                    https://github.com/frossm/quote\n");
