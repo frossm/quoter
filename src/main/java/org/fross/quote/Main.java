@@ -1,6 +1,6 @@
 /**************************************************************************************************************
  * Quote.jar
- * Copyright 2019 Michael Fross, all rights reserved
+ * Copyright 2019-2020 Michael Fross, all rights reserved
  * 
  * Quote is a command line program that display stock quotes and index data.
  * 
@@ -30,7 +30,8 @@ import org.fross.library.Output;
 public class Main {
 	// Class Constants
 	public static String VERSION;
-	public static final String PROPERTIES_FILE = "quote.properties";
+	public static String INCEPTIONYEAR;
+	public static final String PROPERTIES_FILE = "app.properties";
 
 	public static void main(String[] args) {
 		int optionEntry;
@@ -45,6 +46,7 @@ public class Main {
 			Properties prop = new Properties();
 			prop.load(iStream);
 			VERSION = prop.getProperty("Application.version");
+			INCEPTIONYEAR = prop.getProperty("Application.inceptionYear");
 		} catch (IOException ex) {
 			Output.fatalError("Unable to read property file '" + PROPERTIES_FILE + "'", 3);
 		}
@@ -96,7 +98,8 @@ public class Main {
 		}
 
 		// Display the header
-		Output.printColorln(Ansi.Color.CYAN, "\nQuote v" + VERSION + " Copyright 2019 by Michael Fross");
+		Output.printColorln(Ansi.Color.CYAN,
+				"\nQuote v" + VERSION + " Copyright " + INCEPTIONYEAR + "-" + org.fross.library.Date.getCurrentYear() + " by Michael Fross");
 		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 		Output.printColorln(Ansi.Color.YELLOW, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow     YTD");
 		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");

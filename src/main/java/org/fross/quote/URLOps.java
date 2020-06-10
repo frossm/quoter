@@ -1,6 +1,6 @@
 /**************************************************************************************************************
  * Quote.jar
- * Copyright 2019 Michael Fross, all rights reserved
+ * Copyright 2019-2020 Michael Fross, all rights reserved
  * 
  * Quote is a command line program that display stock quotes and index data.
  * 
