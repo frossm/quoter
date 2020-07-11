@@ -1,5 +1,4 @@
-
-# quote - The Console Based Stock Quote Tool
+# quoter - The Console Based Stock Quote Tool
 
 I wanted a small command line program to check stock and index prices throughout the day.  In order to minimize HTML scraping, I decided to use the quotes from IEXCloud.IO.  You can signup for free and get 500k stock quotes per month for free.  Please check their usage agreements prior to signing up and ensure you are allowed to user their service.
 
@@ -11,7 +10,7 @@ Unfortunately, IEXCloud does not provide index data.  Therefor they are scraped 
 
 Before you can start to use the tool, you'll need to store your API Secret Key.  To do this execute the following:
 
-    java -jar quote.jar -c
+    java -jar quoter.jar -c
 
 This will prompt you for the key which will be stored in the java preferences system.  On Windows this is the registry.  In Linux it's a hidden directory inside your home directory. Currently it is not encrypted, but I'll need to look into this at some point.
 
@@ -38,7 +37,7 @@ Example:
 
 ## Feedback
 
-This is obviously not meant to be a large financial package.  It's just a small utility that I wanted to use to tell me if I'll ever be able to retire :-)  If you have suggestions or idea, please let me know.
+This is obviously not meant to be a large financial package.  It's just a small utility that I wanted to use to tell me if I'll ever be able to retire :-)  If you have suggestions or idea, please let me know.  quoter at fross dot org.
 
 ## License
 
