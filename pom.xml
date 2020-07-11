@@ -4,12 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.fross</groupId>
-	<artifactId>quote</artifactId>
-	<version>2020.01.01</version>
+	<artifactId>quoter</artifactId>
+	<version>2020.07.11</version>
 	<packaging>jar</packaging>
 
-	<name>quote</name>
-	<description>Simple console based program to display stock quotes and indexe data</description>
+	<name>quoter</name>
+	<description>Simple console based program to display stock quotes and index data</description>
 	<url>https://fross.org</url>
 
 	<developers>

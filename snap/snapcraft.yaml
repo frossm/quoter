@@ -1,18 +1,19 @@
-name: fquote
-version: '2019.08.28'
+name: quoter
+version: '2020.07.11'
 summary: Command line utility to pull stock and index quotes
 description: |
-  Quote pulls stock quotes from IEXCloud.IO.  You'll need a private key
-  to use it.  You can register and get one on iexcloud.io.
-  http://github.com/frossm/quote
+  Quote fetches stock quotes and index data from IEXCloud.IO.
+  You'll need a free private key from them to use it.  
+  You can register and get one on iexcloud.io.
+  http://github.com/frossm/quoter
 
-grade: stable # must be 'stable' to release into candidate/stable channels
-confinement: strict  # use 'strict' once you have the right plugs and slots
+grade: stable
+confinement: strict
 base: core18
 
 apps:
-  fquote:
-    command: bin/java -Djava.util.prefs.userRoot="$SNAP_USER_DATA" -jar $SNAP/jar/quote.jar
+  quoter:
+    command: bin/java -Djava.util.prefs.userRoot="$SNAP_USER_DATA" -jar $SNAP/jar/quoter.jar
 
 parts:
   library:
@@ -22,9 +23,9 @@ parts:
     source-type: git
     maven-options: [install]
 
-  fquote:
+  quoter:
     plugin: maven
-    source: https://github.com/frossm/quote.git
+    source: https://github.com/frossm/quoter.git
     source-tag: master
     source-type: git
     after: [library]
