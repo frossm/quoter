@@ -6,6 +6,8 @@ After getting an account, log into the dashboard and you can see your API tokens
 
 Unfortunately, IEXCloud does not provide index data.  Therefor they are scraped from a finance website.  I don't really like this, but it seems the only option at this point.  It does mean that there is a likelihood that I'll probably have to keep updating the program if the web page format changes.
 
+I live in the US and have no idea how this will perform for stock exchanges other than the DOW, S&P500, and the NASDAQ.  However, I would imagine it would work for the stock quotes as long as iexcloud can provide them.
+
 ## Program Setup
 
 Before you can start to use the tool, you'll need to store your API Secret Key.  To do this execute the following:
