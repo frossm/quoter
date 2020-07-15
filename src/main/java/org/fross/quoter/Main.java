@@ -65,6 +65,7 @@ public class Main {
 				Output.debugPrint("Setting Peference iexcloudtoken: " + iexCloudToken);
 				Prefs.Set("iexcloudtoken", iexCloudToken);
 				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Token Set To: '" + Prefs.QueryString("iexcloudtoken") + "'");
+				System.exit(0);
 				break;
 			case 'e':
 				Output.println("Export Results - COMPLETE LATER");
@@ -99,9 +100,6 @@ public class Main {
 
 		// Display the header
 		Output.printColorln(Ansi.Color.CYAN, "\nQuoter v" + VERSION + " " + COPYRIGHT);
-		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
-		Output.printColorln(Ansi.Color.YELLOW, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow     YTD");
-		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 		// Build an array list of symbols entered in on the command line
 		Output.debugPrint("Number of Symbols entered: " + (args.length - optG.getOptind()));
@@ -109,6 +107,13 @@ public class Main {
 		for (int i = optG.getOptind(); i < args.length; i++) {
 			Output.debugPrint("Symbol entered on commandline: " + args[i]);
 			symbolList.add(args[i]);
+		}
+
+		// If symbols were entered, display the header for them
+		if (symbolList.size() > 0) {
+			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
+			Output.printColorln(Ansi.Color.YELLOW, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow     YTD");
+			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 		}
 
 		// Display the data for the symbols entered. If no symbols were entered, just
@@ -226,7 +231,7 @@ public class Main {
 
 		// Display Index Output Header
 		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
-		Output.printColorln(Ansi.Color.YELLOW, "Symbol       Current      Chng      Chng%");
+		Output.printColorln(Ansi.Color.YELLOW, "Index        Current      Chng      Chng%");
 		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 		// Loop through the three indexes and display the results
@@ -274,7 +279,7 @@ public class Main {
 			latestTime = QuoteOps.GetQuote("IBM", Prefs.QueryString("iexcloudtoken"))[9];
 		}
 		Output.printColorln(Ansi.Color.CYAN, "\nLatest data as of " + latestTime);
-	}
 
-	// Program End
-}
+	} // END MAIN
+
+} // END CLASS

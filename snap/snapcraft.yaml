@@ -31,6 +31,7 @@ parts:
     after: [library]
 
 plugs:
+   # Quoter requires network access to download quotes
   quoter-network:
     interface: network
 
