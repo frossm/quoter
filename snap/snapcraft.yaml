@@ -29,3 +29,8 @@ parts:
     source-tag: master
     source-type: git
     after: [library]
+
+plugs:
+  quoter-network:
+    interface: network
+
