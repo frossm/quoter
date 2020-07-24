@@ -1,4 +1,4 @@
-<p align="center"> <img width="120" height = "120" src ="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg> </p> 
+<p align="center"> <img width="120" height = "120" src ="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg"> </p> 
 
 # quoter - The Console Based Stock Quote Tool
 
