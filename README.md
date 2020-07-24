@@ -1,3 +1,5 @@
+<p align="center"> <img width="120" height = "120" src ="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg> </p> 
+
 # quoter - The Console Based Stock Quote Tool
 
 Quoter is a small command line tool to fetch stock quotes.  In order to minimize HTML scraping, it retrieves quotes from [IEXCloud](https://iexcloud.io).  You can signup for free and get 500k stock quotes per month.  Please check their usage agreements prior to signing up and ensure you are allowed to user their service.
