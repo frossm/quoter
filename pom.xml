@@ -128,13 +128,13 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
-			<version>3.10</version>
+			<version>3.11</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.fross</groupId>
 			<artifactId>library</artifactId>
-			<version>2020.06.22</version>
+			<version>2020.07.22</version>
 		</dependency>
 	</dependencies>
 </project>
