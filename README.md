@@ -40,6 +40,9 @@ Example:
     java -jar quoter.jar amzn msft acn ibm
 
 ## SNAP
+
+[![quoter](https://snapcraft.io//quoter/badge.svg)](https://snapcraft.io/quoter)
+
 I would encourage anyone with a supported Linux platform to use snap.  See [Snapcraft Homepage](https://snapcraft.io) for more information. You can download, install, and keep the application up to date automatically by installing the snap via :
 
 `sudo snap install quoter`  (Assuming snap is installed)
