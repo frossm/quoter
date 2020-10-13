@@ -30,12 +30,14 @@ package org.fross.quoter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.fross.library.Debug;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
-import org.fross.library.Debug;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 public class QuoteOps {
 
@@ -48,6 +50,7 @@ public class QuoteOps {
 	 */
 	public static String[] GetQuote(String symb, String token) {
 		String QUOTEURLTEMPLATE = "https://cloud.iexapis.com/stable/stock/SYMBOLHERE/quote?token=TOKENHERE";
+		String[] JSONFields = { "symbol", "latestPrice", "change", "changePercent", "high", "low", "week52High", "week52Low", "ytdChange", "latestUpdate" };
 		String quoteURL = "";
 		String quoteDetail = "";
 		String[] retArray = new String[10];
@@ -74,75 +77,18 @@ public class QuoteOps {
 			Object obj = jp.parse(quoteDetail);
 			JSONObject jo = (JSONObject) obj;
 
-			// Symbol
-			try {
-				retArray[0] = jo.get("symbol").toString();
-			} catch (NullPointerException Ex) {
-				retArray[0] = "-";
+			// Loop through the returned JSON and map the fields to the return string array
+			for (int i = 0; i < JSONFields.length; i++) {
+				try {
+					retArray[i] = jo.get(JSONFields[i]).toString();
+				} catch (NullPointerException ex) {
+					retArray[i] = "-";
+				}
 			}
 
-			// LatestPrice
+			// Convert latest date to a readable string
 			try {
-				retArray[1] = jo.get("latestPrice").toString();
-			} catch (NullPointerException Ex) {
-				retArray[1] = "-";
-			}
-
-			// Change
-			try {
-				retArray[2] = jo.get("change").toString();
-			} catch (NullPointerException Ex) {
-				retArray[2] = "-";
-			}
-
-			// ChangePercent
-			try {
-				retArray[3] = jo.get("changePercent").toString();
-			} catch (NullPointerException Ex) {
-				retArray[3] = "-";
-			}
-
-			// High
-			try {
-				retArray[4] = jo.get("high").toString();
-			} catch (NullPointerException Ex) {
-				retArray[4] = "-";
-			}
-
-			// Low
-			try {
-				retArray[5] = jo.get("low").toString();
-			} catch (NullPointerException Ex) {
-				retArray[5] = "-";
-			}
-
-			// 52 Week High
-			try {
-				retArray[6] = jo.get("week52High").toString();
-			} catch (NullPointerException Ex) {
-				retArray[6] = "-";
-			}
-
-			// 52 Week Low
-			try {
-				retArray[7] = jo.get("week52Low").toString();
-			} catch (NullPointerException Ex) {
-				retArray[7] = "-";
-			}
-
-			// YTD Change
-			try {
-				retArray[8] = jo.get("ytdChange").toString();
-			} catch (NullPointerException Ex) {
-				retArray[8] = "-";
-			}
-
-			// Latest Date
-			try {
-				long epochTime = Long.parseLong(jo.get("latestUpdate").toString());
-				Date d = new Date(epochTime);
-				DateFormat dFormat = new SimpleDateFormat("EEEEE MMMMM dd, yyyy hh:mma");
-				retArray[9] = dFormat.format(d);
+				retArray[9] = EpochTime2String(Long.parseLong(retArray[9]));
 			} catch (NullPointerException Ex) {
 				retArray[9] = "-";
 			}
@@ -174,6 +120,7 @@ public class QuoteOps {
 		String idxPage;
 		String URLTEMPLATE = "https://www.cnbc.com/quotes/?symbol=SYMBOLHERE";
 		String URL = "ERROR";
+		String[] searchPatterns = new String[4];
 
 		// Ensure a valid value was passed
 		if (idx.toUpperCase() == "DOW") {
@@ -192,10 +139,19 @@ public class QuoteOps {
 			// Download the web page with
 			idxPage = URLOps.ReadURL(URL);
 
+			// Define the regex patterns to look for in the URL provided above
+			searchPatterns[1] = "\"last\":\"(.*?)\"";
+			searchPatterns[2] = "\"change\":\"(.*?)\"";
+			searchPatterns[3] = "\"change_pct\":\"(.*?)\"";
+
 			retArray[0] = idx;
-			retArray[1] = StringUtils.substringBetween(idxPage, "\"last\":\"", "\"");
-			retArray[2] = StringUtils.substringBetween(idxPage, "\"change\":\"", "\"");
-			retArray[3] = StringUtils.substringBetween(idxPage, "\"change_pct\":\"", "\"");
+			for (int i = 1; i < searchPatterns.length; i++) {
+				Pattern pat = Pattern.compile(searchPatterns[i]);
+				Matcher m = pat.matcher(idxPage);
+				if (m.find()) {
+					retArray[i] = m.group(1).trim();
+				}
+			}
 
 			// If we are in debug mode, display the values we are returning
 			if (Debug.query() == true) {
@@ -210,6 +166,27 @@ public class QuoteOps {
 		}
 
 		return retArray;
+	}
+
+	/**
+	 * EpochTime2String(): Take a Long number as a time epoch and return a human readable string
+	 * 
+	 * @param epochTime
+	 * @return
+	 */
+	public static String EpochTime2String(Long epochTime) {
+		String returnString;
+
+		// Convert Epoch to Simple Date String
+		try {
+			Date d = new Date(epochTime);
+			DateFormat dFormat = new SimpleDateFormat("EEEEE MMMMM dd, yyyy hh:mma");
+			returnString = dFormat.format(d);
+		} catch (NullPointerException Ex) {
+			throw new NullPointerException();
+		}
+
+		return (returnString);
 	}
 
 }

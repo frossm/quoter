@@ -33,10 +33,12 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Scanner;
-import org.fusesource.jansi.Ansi;
-import gnu.getopt.Getopt;
+
 import org.fross.library.Debug;
 import org.fross.library.Output;
+import org.fusesource.jansi.Ansi;
+
+import gnu.getopt.Getopt;
 
 /**
  * Main execution class
@@ -84,7 +86,7 @@ public class Main {
 				System.exit(0);
 				break;
 			case 'e':
-				Output.println("Export Results - COMPLETE LATER");
+				Output.println("Export Results - NOT YET IMPLEMENTED");
 				System.exit(0);
 				break;
 			case 'k':
@@ -239,7 +241,6 @@ public class Main {
 
 				// Start a new line for the next security
 				Output.println("");
-
 			}
 
 			Output.println("");
