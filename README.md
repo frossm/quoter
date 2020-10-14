@@ -4,7 +4,7 @@
 
 <img align="right" width="200" src="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg">Quoter is a small command line tool to fetch stock quotes.  In order to minimize HTML scraping, it retrieves quotes from [IEXCloud](https://iexcloud.io).  You can signup for free and get 500k stock quotes per month.  Please check their usage agreements prior to signing up and ensure you are allowed to user their service.
 
-After getting an account, log into the dashboard and you can see your API tokens.  You'll need the secret token to use this program.  The secret key starts with "sk_"
+After getting an account, log into the dashboard and you can see your API tokens.  You'll need the secret token to use this program.  The secret key starts with ``sk_``
 
 Unfortunately, IEXCloud does not provide index data.  Therefore they are scraped from a finance website to get the DOW, NASDAQ, and S&P500 data.  I don't really like this, but it seems the only option at this point.  It does mean that there is a likelihood that I'll probably have to keep updating the program if the web page format changes.
 
@@ -24,7 +24,7 @@ This will prompt you for the key which will be stored in the java preferences sy
 |------|-----------|
 |-D | Start in Debug Mode which will display additional debugging data. Normally not used|
 |-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key|
-|-e | Export the results into a CSV file [Not Yet Implemented]|
+|-x FILENAME| Export the results into the specified file in CSV format|
 |-v | Display the version and exit|
 |-k | Display the configured IEX secret API key and exit|
 |-h or -?| Display the help page|
@@ -47,13 +47,15 @@ I would encourage anyone with a supported Linux platform to use snap.  See [Snap
 
 `sudo snap install quoter`  (Assuming snap is installed)
 
-This will install the application into a sandbox where it is separate from other applications.  I do want to look at packaging it via Flatpak as well, but my understanding is that Maven is not well supported.  However, I need to do more investigation.
+This will install the application into a sandbox where it is separate from other applications.  Java is even included in the SNAP package so you don't evey have to have it elsewhere.  I do want to look at packaging it via Flatpak as well, but my understanding is that Maven is not well supported.  However, I need to do more investigation.
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/quoter)
 
 ## Feedback
 
-This is obviously not meant to be a large financial package.  It's just a small utility that I wanted to use to tell me if I'll ever be able to retire :-)   If you have suggestions or idea, please let me know.  quoter at fross dot org.
+This is obviously not meant to be a large financial package.  It's just a small utility that I wanted to use to tell me if I'll ever be able to retire :-)   If you have suggestions or idea, please let me know.  
+
+quoter at fross dot org.
 
 ## License
 

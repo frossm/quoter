@@ -27,6 +27,8 @@
 
 package org.fross.quoter;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -54,6 +56,9 @@ public class Main {
 		int optionEntry;
 		String iexCloudToken;
 		String latestTime = "None";
+		File exportFile = null;
+		FileWriter exportFileFW = null;
+		boolean exportFlag = false;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -70,12 +75,13 @@ public class Main {
 		}
 
 		// Process Command Line Options and set flags where needed
-		Getopt optG = new Getopt("quote", args, "Dcke:h?v");
+		Getopt optG = new Getopt("quote", args, "Dckx:h?v");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			case 'D': // Debug Mode
 				Debug.enable();
 				break;
+
 			case 'c': // Configure
 				Scanner scanner = new Scanner(System.in);
 				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
@@ -85,22 +91,40 @@ public class Main {
 				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Token Set To: '" + Prefs.QueryString("iexcloudtoken") + "'");
 				System.exit(0);
 				break;
-			case 'e':
-				Output.println("Export Results - NOT YET IMPLEMENTED");
-				System.exit(0);
+
+			case 'x':
+				try {
+					exportFile = new File(optG.getOptarg());
+					if (exportFile.createNewFile() == false) {
+						Output.fatalError("Could not create file: '" + exportFile + "'", 4);
+					}
+				} catch (IOException ex) {
+					Output.fatalError("Could not create file: '" + exportFile + "'", 4);
+				}
+				exportFlag = true;
+				try {
+					exportFileFW = new FileWriter(exportFile);
+				} catch (IOException ex) {
+					Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
+				}
 				break;
+
 			case 'k':
 				Output.println("The Configured IEXCloud Secret Key: " + Prefs.QueryString("iexcloudtoken"));
 				System.exit(0);
 				break;
+
 			case 'v':
 				Output.println("This version of Quoter is: " + VERSION);
 				System.exit(0);
-			case '?': // Help
+				break;
+
+			case '?':
 			case 'h':
 				Help.Display();
 				System.exit(0);
 				break;
+
 			default:
 				Output.printColor(Ansi.Color.RED, "Unknown Command Line Option: '" + (char) optionEntry + "'");
 				Help.Display();
@@ -109,7 +133,7 @@ public class Main {
 			}
 		}
 
-		// Read the prefs and make sure that an API key has been entered with the -c
+		// Read the preferences and make sure that an API key has been entered with the -c
 		// option
 		iexCloudToken = Prefs.QueryString("iexcloudtoken");
 		if (iexCloudToken == "Error") {
@@ -132,6 +156,15 @@ public class Main {
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow     YTD");
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
+		}
+
+		// Dump the header information to the export file
+		if (exportFlag == true && exportFile.canWrite()) {
+			try {
+				exportFileFW.append("Symbol,Current,Chng,Chng%,DayHigh,Daylow,52WHigh,52WLow,YTD,Date\n");
+			} catch (IOException ex) {
+				Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
+			}
 		}
 
 		// Display the data for the symbols entered. If no symbols were entered, just
@@ -241,6 +274,20 @@ public class Main {
 
 				// Start a new line for the next security
 				Output.println("");
+
+				// If export is chosen, dump this security's data to the export file
+				if (exportFlag == true && exportFile.canWrite()) {
+					try {
+						for (int k = 0; k < result.length; k++) {
+							if (k == 9)
+								result[k] = result[k].replace(", ", " ");  // Remove the comma in the date string
+							exportFileFW.append(result[k] + ",");
+						}
+						exportFileFW.append("\n");
+					} catch (IOException ex) {
+						Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
+					}
+				}
 			}
 
 			Output.println("");
@@ -284,6 +331,19 @@ public class Main {
 
 				// Start a new line for the next index
 				Output.println("");
+
+				// If export is chosen, dump this index's data to the export file
+				if (exportFlag == true && exportFile.canWrite()) {
+					try {
+						for (int k = 0; k < result.length; k++) {
+							exportFileFW.append(result[k] + ",");
+						}
+						exportFileFW.append("\n");
+
+					} catch (IOException ex) {
+						Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
+					}
+				}
 			}
 
 		} catch (Exception Ex) {
@@ -296,6 +356,16 @@ public class Main {
 			latestTime = QuoteOps.GetQuote("IBM", Prefs.QueryString("iexcloudtoken"))[9];
 		}
 		Output.printColorln(Ansi.Color.CYAN, "\nLatest data as of " + latestTime);
+
+		// Flush and close export file if needed
+		if (exportFlag == true) {
+			try {
+				exportFileFW.flush();
+				exportFileFW.close();
+			} catch (IOException ex) {
+				Output.printColorln(Ansi.Color.RED, "Error closing export file: " + ex.getMessage());
+			}
+		}
 
 	} // END MAIN
 
