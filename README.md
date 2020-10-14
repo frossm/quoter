@@ -38,6 +38,7 @@ However, you probably want some quotes.  Therefore, provide one or more.
 Example:
 
     java -jar quoter.jar amzn msft acn ibm
+    java -jar quoter.jar -x outputfile.csv t bp cmcsa ni vz 
 
 ## SNAP
 
