@@ -56,6 +56,7 @@
 				</configuration>
 			</plugin>
 
+			<!-- Build single executable "Fat Jar" with all dependencies added -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-assembly-plugin</artifactId>
@@ -79,6 +80,7 @@
 				</executions>
 			</plugin>
 
+
 			<!-- Copy the jar with dependencies output to one simply called the <ProjectName>.jar -->
 			<plugin>
 				<groupId>com.coderplus.maven.plugins</groupId>
@@ -98,6 +100,54 @@
 					</execution>
 				</executions>
 			</plugin>
+
+
+			<!-- Set a pom variable to the version numbers of the defined dependencies -->
+			<!-- https://gitlab.com/josh-cain/dependencyversion-maven-plugin -->
+			<!-- Example: The library dependency version reference is ${org.fross:library:jar.version} -->
+			<plugin>
+				<groupId>io.reformanda.semper</groupId>
+				<artifactId>dependencyversion-maven-plugin</artifactId>
+				<version>1.0.0</version>
+				<executions>
+					<execution>
+						<id>set-all</id>
+						<goals>
+							<goal>set-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+
+			<!-- Update snapcraft.yaml file to set the program and library version -->
+			<plugin>
+				<groupId>com.google.code.maven-replacer-plugin</groupId>
+				<artifactId>replacer</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<phase>initialize</phase>
+						<goals>
+							<goal>replace</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<file>snap/snapcraft.yaml</file>
+					<replacements>
+						<replacement>
+							<token>version:.*</token>
+							<value>version: '${project.version}'</value>
+						</replacement>
+						<replacement>
+							<token>source-tag:.*</token>
+							<value>source-tag: '${org.fross:library:jar.version}'</value>
+						</replacement>
+					</replacements>
+				</configuration>
+			</plugin>
+
 
 		</plugins>
 	</build>
@@ -127,7 +177,7 @@
 		<dependency>
 			<groupId>org.fusesource.jansi</groupId>
 			<artifactId>jansi</artifactId>
-			<version>1.18</version>
+			<version>2.0.1</version>
 		</dependency>
 
 		<!-- https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple -->
@@ -137,10 +187,11 @@
 			<version>1.1.1</version>
 		</dependency>
 
+		<!-- Fross library functions: https://github.com/frossm/library -->
 		<dependency>
 			<groupId>org.fross</groupId>
 			<artifactId>library</artifactId>
-			<version>2020.10.12</version>
+			<version>2020.11.03</version>
 		</dependency>
 	</dependencies>
 </project>

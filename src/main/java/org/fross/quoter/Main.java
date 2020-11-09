@@ -154,7 +154,7 @@ public class Main {
 		// If symbols were entered, display the header for them
 		if (symbolList.size() > 0) {
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow     YTD");
+			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng% DayHigh  Daylow  52WHigh   52WLow       YTD");
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 		}
 
