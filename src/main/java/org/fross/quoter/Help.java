@@ -41,12 +41,12 @@ public class Help {
 	 * Display(): Prints help in color using the JCDP library in the output module.
 	 */
 	public static void Display() {
-		Output.printColorln(Ansi.Color.YELLOW, "\n+----------------------------------------------------------------------+");
-		Output.printColorln(Ansi.Color.YELLOW, "+                       Quoter v" + Main.VERSION + "  Help                       +");
-		Output.printColorln(Ansi.Color.YELLOW, "+      " + Main.COPYRIGHT + "      +");
-		Output.printColorln(Ansi.Color.YELLOW, "+----------------------------------------------------------------------+");
-		Output.printColorln(Ansi.Color.WHITE, "         Quoter is a tool to display stock quotes and index data");
-		Output.printColorln(Ansi.Color.WHITE, "                    https://github.com/frossm/quoter\n");
+		Output.printColorln(Ansi.Color.CYAN, "\n+----------------------------------------------------------------------+");
+		Output.printColorln(Ansi.Color.CYAN, "+                       Quoter v" + Main.VERSION + "  Help                       +");
+		Output.printColorln(Ansi.Color.CYAN, "+      " + Main.COPYRIGHT + "      +");
+		Output.printColorln(Ansi.Color.CYAN, "+----------------------------------------------------------------------+");
+		Output.printColorln(Ansi.Color.CYAN, "         Quoter is a tool to display stock quotes and index data");
+		Output.printColorln(Ansi.Color.CYAN, "                    https://github.com/frossm/quoter\n");
 
 		Output.printColorln(Ansi.Color.YELLOW, "Command Line Options:");
 		Output.printColorln(Ansi.Color.WHITE, " -c        Configure the IEXCloud secret key. See link above for details.");
@@ -56,7 +56,8 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, " -v        Display program version and exit");
 		Output.printColorln(Ansi.Color.WHITE, " -? | -h   Display this help information");
 
-		Output.printColorln(Ansi.Color.WHITE, "\nNote: Quoter data is sourced from IEXCloud.  You'll need at least the free account");
-		Output.printColorln(Ansi.Color.WHITE, "        The Index data is pulled from a financial website\n");
+		Output.printColorln(Ansi.Color.YELLOW, "\nNote:");
+		Output.printColorln(Ansi.Color.WHITE, " - Quoter data is sourced from IEXCloud.io.  You'll need at least the free account");
+		Output.printColorln(Ansi.Color.WHITE, " - The Index data is pulled from a financial website\n");
 	}
 }

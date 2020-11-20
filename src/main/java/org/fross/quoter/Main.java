@@ -110,7 +110,7 @@ public class Main {
 				break;
 
 			case 'k':
-				Output.println("The Configured IEXCloud Secret Key: " + Prefs.QueryString("iexcloudtoken"));
+				Output.println(Prefs.QueryString("iexcloudtoken"));
 				System.exit(0);
 				break;
 
@@ -295,7 +295,7 @@ public class Main {
 
 		// Display Index Output Header
 		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
-		Output.printColorln(Ansi.Color.WHITE, "Index        Current      Chng      Chng%");
+		Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%");
 		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 		// Loop through the three indexes and display the results
