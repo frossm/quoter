@@ -33,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -189,7 +188,7 @@ public class Main {
 
 			while (j.hasNext()) {
 				currentSymbol = j.next();
-				String[] result = QuoteOps.GetQuote(currentSymbol, Prefs.QueryString("iexcloudtoken"));
+				String[] result = QuoteOps.getQuote(currentSymbol, Prefs.QueryString("iexcloudtoken"));
 				String[] outString = new String[9];
 
 				// Validate the provided quote is valid
@@ -318,7 +317,7 @@ public class Main {
 
 				// Download the web page and return the results array
 				Output.debugPrint("Getting Index data for: " + indexList[i]);
-				String[] result = QuoteOps.GetIndex(indexList[i]);
+				String[] result = QuoteOps.getIndex(indexList[i]);
 
 				// Determine the color based on the change amount
 				Ansi.Color outputColor = Ansi.Color.WHITE;
@@ -366,7 +365,7 @@ public class Main {
 		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
 		// just index data is displayed, grab a security in order to get the date
 		if (symbolList.isEmpty()) {
-			latestTime = QuoteOps.GetQuote("IBM", Prefs.QueryString("iexcloudtoken"))[9];
+			latestTime = QuoteOps.getQuote("IBM", Prefs.QueryString("iexcloudtoken"))[9];
 		}
 		Output.printColorln(Ansi.Color.CYAN, "\nLatest data as of " + latestTime);
 
@@ -383,95 +382,10 @@ public class Main {
 		// Display trending data if -t was provided and there is at least one symbol
 		if (trendFlag == true && !symbolList.isEmpty()) {
 			for (String i : symbolList) {
-				 DisplayTrending(i, Prefs.QueryString("iexcloudtoken"));
+				 HistoricalQuotes.displayTrendingMap(i, Prefs.QueryString("iexcloudtoken"));
 			}
-
 		}
 
 	} // END MAIN
-
-	/**
-	 * DisplayTrending(): Display three month trending data for provided stock
-	 * 
-	 * @param symb, token
-	 */
-	public static void DisplayTrending(String symb, String token) {
-		int GRAPHWIDTH = 80;
-		Float dollarsPerSlot;
-
-		Map<String, Float> resultTreeMap = QuoteOps.GetHistorical3M(symb, token);
-
-		// Display all values for debugging
-//		for (Map.Entry<String, Float> i : resultTreeMap.entrySet()) {
-//			String key = i.getKey();
-//			Output.debugPrint(key + " : " + resultTreeMap.get(key));
-//		}
-
-		// Calculate the largest and smallest security value in the historical data
-		Float lv = LargestValue(resultTreeMap);
-		Float sv = SmallestValue(resultTreeMap);
-		Output.debugPrint("Largest Value in Historical Data:  " + lv);
-		Output.debugPrint("Smallest Value in Historical Data: " + sv);
-
-		// Determine how many spaces per dollar
-		dollarsPerSlot = GRAPHWIDTH / (lv - sv);
-		Output.debugPrint("Map Slots:" + GRAPHWIDTH);
-		Output.debugPrint("Dollars per Map Slot:" + dollarsPerSlot);
-
-		// Display the header
-		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity: " + symb.toUpperCase());
-		Output.printColorln(Ansi.Color.CYAN, "            " + sv + " ".repeat(GRAPHWIDTH - sv.toString().length() - lv.toString().length()) + lv);
-		Output.printColorln(Ansi.Color.CYAN, "           +" + "-".repeat(GRAPHWIDTH + 1) + "+");
-
-		// Loop through the sorted data and display the graph
-		for (Map.Entry<String, Float> i : resultTreeMap.entrySet()) {
-			String date = i.getKey();
-			Float value = resultTreeMap.get(date);
-			int numSpaces = (int) ((value - sv) * dollarsPerSlot);
-
-			// Display the row of data
-			Output.printColor(Ansi.Color.CYAN, date + " |");
-			Output.printColor(Ansi.Color.YELLOW, " ".repeat(numSpaces) + "o");
-			Output.printColorln(Ansi.Color.CYAN, " ".repeat(GRAPHWIDTH - numSpaces) + "| " + String.format("%.2f", value));
-		}
-		
-		// Footer
-		Output.printColorln(Ansi.Color.CYAN, "           +" + "-".repeat(GRAPHWIDTH + 1) + "+");
-
-	} // END DISPLAYTRENDING
-
-	/**
-	 * LargestValue(): Return largest float value of the map
-	 * 
-	 * @param map
-	 */
-	public static Float LargestValue(Map<String, Float> map) {
-		Float lv = 0f;
-
-		for (Map.Entry<String, Float> i : map.entrySet()) {
-			String key = i.getKey();
-			if (map.get(key) > lv)
-				lv = map.get(key);
-		}
-		return lv;
-
-	}
-
-	/**
-	 * SmallestValue(): Return smallest float value of the map
-	 * 
-	 * @param map
-	 */
-	public static Float SmallestValue(Map<String, Float> map) {
-		Float sv = Float.MAX_VALUE;
-
-		for (Map.Entry<String, Float> i : map.entrySet()) {
-			String key = i.getKey();
-			if (map.get(key) < sv)
-				sv = map.get(key);
-		}
-		return sv;
-
-	}
 
 } // END CLASS
