@@ -30,14 +30,17 @@ package org.fross.quoter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.fross.library.Debug;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class QuoteOps {
 
@@ -55,32 +58,34 @@ public class QuoteOps {
 		String quoteDetail = "";
 		String[] retArray = new String[10];
 
-		// Get the quote data in JSON format
+		// Rewrite the template URL with the provided values
 		Output.debugPrint("Processing Symbol: '" + symb + "'");
 		quoteURL = QUOTEURLTEMPLATE.replaceAll("SYMBOLHERE", symb);
 		quoteURL = quoteURL.replaceAll("TOKENHERE", token);
 		Output.debugPrint("Rewritten URL: " + quoteURL);
 
+		// Query IEXCloud's REST API and get the security information in JSON format
 		try {
 			quoteDetail = URLOps.ReadURL(quoteURL);
 		} catch (Exception ex) {
 			String[] errorReturn = { symb, "Error", "Retrieving", "Quote", "", "", "", "", "" };
 			return errorReturn;
 		}
-
-		// Display the returned JSON data
 		Output.debugPrint("\nRaw Data from REST API call:\n" + quoteDetail + "\n");
 
 		// Decode the JSON and extract the desired data
 		try {
-			JSONParser jp = new JSONParser();
-			Object obj = jp.parse(quoteDetail);
-			JSONObject jo = (JSONObject) obj;
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+
+			// In Gson, convert the JSON into a map
+			@SuppressWarnings("unchecked")
+			Map<String, Object> gsonMap = gson.fromJson(quoteDetail, Map.class);
 
 			// Loop through the returned JSON and map the fields to the return string array
 			for (int i = 0; i < JSONFields.length; i++) {
 				try {
-					retArray[i] = jo.get(JSONFields[i]).toString();
+					retArray[i] = gsonMap.get(JSONFields[i].toString()).toString();
 				} catch (NullPointerException ex) {
 					retArray[i] = "-";
 				}
@@ -88,7 +93,9 @@ public class QuoteOps {
 
 			// Convert latest date to a readable string
 			try {
-				retArray[9] = EpochTime2String(Long.parseLong(retArray[9]));
+				String dateString = String.format("%.0f", Double.parseDouble(gsonMap.get("latestUpdate").toString()));
+				retArray[9] = EpochTime2String(Long.parseLong(dateString));
+
 			} catch (NullPointerException Ex) {
 				retArray[9] = "-";
 			}
@@ -189,4 +196,63 @@ public class QuoteOps {
 		return (returnString);
 	}
 
-}
+	/**
+	 * GetHistorical3M(): Return map of date/closePrice for 3 months
+	 * 
+	 * @return
+	 */
+	public static Map<String, Float> GetHistorical3M(String symb, String token) {
+		String QUOTEURLTEMPLATE = "https://cloud.iexapis.com/stable/stock/SYMBOLHERE/chart/3m?token=TOKENHERE";
+		// String QUOTEURLTEMPLATE =
+		// "https://sandbox.iexapis.com/stable/stock/SYMBOLHERE/chart/3m?token=TOKENHERE";
+		String quoteURL = "";
+		String rawChartData = "";
+		Map<String, Float> resultMap = new TreeMap<String, Float>();	// TreeMaps are sorted
+
+		// Rewrite the template URL with the provided values
+		Output.debugPrint("Processing Trending for Symbol: '" + symb + "'");
+		quoteURL = QUOTEURLTEMPLATE.replaceAll("SYMBOLHERE", symb);
+		quoteURL = quoteURL.replaceAll("TOKENHERE", token);
+		Output.debugPrint("Rewritten Trending URL: " + quoteURL);
+
+		// Query IEXCloud's REST API and get the historical security information in JSON format
+		try {
+			rawChartData = URLOps.ReadURL(quoteURL);
+		} catch (Exception ex) {
+			Output.fatalError("Could not query historical data from IEXCloud", 3);
+		}
+
+		// Remove any square brackets and the trailing comma
+		rawChartData = rawChartData.replace("[", "");
+		rawChartData = rawChartData.replace("]", "");
+
+		// Break JSON into an array of days
+		String[] rawChartArray = rawChartData.split("\\{");
+
+		// Add the '{' back into each array and remove the trailing comma to keep JSON legal
+		for (int i = 0; i < rawChartArray.length; i++) {
+			rawChartArray[i] = "{" + rawChartArray[i];
+			rawChartArray[i] = rawChartArray[i].replace("},", "}");
+		}
+
+		// Convert the raw JSON data into the map to return
+		try {
+			GsonBuilder builder = new GsonBuilder();
+			Gson gson = builder.create();
+
+			// Iterate through the list and populate the return map
+			for (int i = 1; i < rawChartArray.length; i++) {
+				// In Gson, convert the JSON into a map
+				@SuppressWarnings("unchecked")
+				Map<String, Object> gsonMap = gson.fromJson(rawChartArray[i], Map.class);
+				resultMap.put(gsonMap.get("date").toString(), Float.parseFloat(gsonMap.get("close").toString()));
+			}
+
+		} catch (Exception ex) {
+			Output.printColorln(Ansi.Color.RED, "Error parsing JSON from IEX Cloud:\n" + ex.getMessage());
+		}
+
+		return resultMap;
+	}
+
+} // END CLASS

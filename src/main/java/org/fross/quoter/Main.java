@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -59,6 +60,7 @@ public class Main {
 		File exportFile = null;
 		FileWriter exportFileFW = null;
 		boolean exportFlag = false;
+		boolean trendFlag = false;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -75,14 +77,21 @@ public class Main {
 		}
 
 		// Process Command Line Options and set flags where needed
-		Getopt optG = new Getopt("quote", args, "Dckx:h?v");
+		Getopt optG = new Getopt("quote", args, "Dtckx:h?v");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
-			case 'D': // Debug Mode
+			// Turn on Debug Mode
+			case 'D':
 				Debug.enable();
 				break;
 
-			case 'c': // Configure
+			// Show Stock Trending
+			case 't':
+				trendFlag = true;
+				break;
+
+			// Configure IEXCloud Secret Key
+			case 'c':
 				Scanner scanner = new Scanner(System.in);
 				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
 				iexCloudToken = scanner.next();
@@ -92,6 +101,7 @@ public class Main {
 				System.exit(0);
 				break;
 
+			// Export Data
 			case 'x':
 				try {
 					exportFile = new File(optG.getOptarg());
@@ -109,16 +119,19 @@ public class Main {
 				}
 				break;
 
+			// Display configured IEXCloud Secret Key
 			case 'k':
 				Output.println(Prefs.QueryString("iexcloudtoken"));
 				System.exit(0);
 				break;
 
+			// Display version of Quoter and exit
 			case 'v':
 				Output.println("This version of Quoter is: " + VERSION);
 				System.exit(0);
 				break;
 
+			// Access in program help
 			case '?':
 			case 'h':
 				Help.Display();
@@ -154,7 +167,7 @@ public class Main {
 		// If symbols were entered, display the header for them
 		if (symbolList.size() > 0) {
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng% DayHigh  Daylow  52WHigh   52WLow       YTD");
+			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow       YTD");
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 		}
 
@@ -367,6 +380,99 @@ public class Main {
 			}
 		}
 
+		// Display trending data if -t was provided and there is at least one symbol
+		if (trendFlag == true && !symbolList.isEmpty()) {
+			for (String i : symbolList) {
+				//DisplayTrending(i, "***REMOVED***");
+				 DisplayTrending(i, Prefs.QueryString("iexcloudtoken"));
+			}
+
+		}
+
 	} // END MAIN
+
+	/**
+	 * DisplayTrending(): Display three month trending data for provided stock
+	 * 
+	 * @param symb, token
+	 */
+	public static void DisplayTrending(String symb, String token) {
+		int GRAPHWIDTH = 80;
+		Float dollarsPerSlot;
+
+		Map<String, Float> resultTreeMap = QuoteOps.GetHistorical3M(symb, token);
+
+		// Display all values for debugging
+//		for (Map.Entry<String, Float> i : resultTreeMap.entrySet()) {
+//			String key = i.getKey();
+//			Output.debugPrint(key + " : " + resultTreeMap.get(key));
+//		}
+
+		// Calculate the largest and smallest security value in the historical data
+		Float lv = LargestValue(resultTreeMap);
+		Float sv = SmallestValue(resultTreeMap);
+		Output.debugPrint("Largest Value in Historical Data:  " + lv);
+		Output.debugPrint("Smallest Value in Historical Data: " + sv);
+
+		// Determine how many spaces per dollar
+		dollarsPerSlot = GRAPHWIDTH / (lv - sv);
+		Output.debugPrint("Map Slots:" + GRAPHWIDTH);
+		Output.debugPrint("Dollars per Map Slot:" + dollarsPerSlot);
+
+		// Display the header
+		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity: " + symb.toUpperCase());
+		Output.printColorln(Ansi.Color.CYAN, "            " + sv + " ".repeat(GRAPHWIDTH - sv.toString().length() - lv.toString().length()) + lv);
+		Output.printColorln(Ansi.Color.CYAN, "           +" + "-".repeat(GRAPHWIDTH + 1) + "+");
+
+		// Loop through the sorted data and display the graph
+		for (Map.Entry<String, Float> i : resultTreeMap.entrySet()) {
+			String date = i.getKey();
+			Float value = resultTreeMap.get(date);
+			int numSpaces = (int) ((value - sv) * dollarsPerSlot);
+
+			// Display the row of data
+			Output.printColor(Ansi.Color.CYAN, date + " |");
+			Output.printColor(Ansi.Color.YELLOW, " ".repeat(numSpaces) + "o");
+			Output.printColorln(Ansi.Color.CYAN, " ".repeat(GRAPHWIDTH - numSpaces) + "| " + String.format("%.2f", value));
+		}
+		
+		// Footer
+		Output.printColorln(Ansi.Color.CYAN, "           +" + "-".repeat(GRAPHWIDTH + 1) + "+");
+
+	} // END DISPLAYTRENDING
+
+	/**
+	 * LargestValue(): Return largest float value of the map
+	 * 
+	 * @param map
+	 */
+	public static Float LargestValue(Map<String, Float> map) {
+		Float lv = 0f;
+
+		for (Map.Entry<String, Float> i : map.entrySet()) {
+			String key = i.getKey();
+			if (map.get(key) > lv)
+				lv = map.get(key);
+		}
+		return lv;
+
+	}
+
+	/**
+	 * SmallestValue(): Return smallest float value of the map
+	 * 
+	 * @param map
+	 */
+	public static Float SmallestValue(Map<String, Float> map) {
+		Float sv = Float.MAX_VALUE;
+
+		for (Map.Entry<String, Float> i : map.entrySet()) {
+			String key = i.getKey();
+			if (map.get(key) < sv)
+				sv = map.get(key);
+		}
+		return sv;
+
+	}
 
 } // END CLASS

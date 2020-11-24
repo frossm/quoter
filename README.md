@@ -16,7 +16,9 @@ Before you can start to use the tool, you'll need to store your API Secret Key. 
 
     java -jar quoter.jar -c
 
-This will prompt you for the key which will be stored in the java preferences system.  On Windows this is the registry.  In Linux it's a hidden directory inside your home directory. Currently it is not encrypted, but I'll need to look into this at some point.
+This will prompt you for the key which will be stored in the java preferences system.  On Windows this is the registry.  In Linux it's a hidden directory inside your home directory. Currently it is not encrypted, but I'll need to look into this at some point.  
+
+Note that if Quoter has been installed via a snap, `quoter -c` is all that is needed.
 
 ## Program Options
 
@@ -24,6 +26,7 @@ This will prompt you for the key which will be stored in the java preferences sy
 |------|-----------|
 |-D | Start in Debug Mode which will display additional debugging data. Normally not used|
 |-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key|
+|-t | After the initial quote information, display a three month historical view of close prices.  Please note that this call is heavily weighted by IEXCLOUD and will use quite a few messages|
 |-x FILENAME| Export the results into the specified file in CSV format|
 |-v | Display the version and exit|
 |-k | Display the configured IEX secret API key and exit|
