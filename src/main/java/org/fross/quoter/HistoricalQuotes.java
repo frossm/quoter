@@ -135,15 +135,10 @@ public class HistoricalQuotes {
 	 */
 	public static void displayTrendingMap(String symb, String token) {
 		int GRAPHWIDTH = 80;
-		Float dollarsPerSlot;
+		Float slotsPerCostUnit;
 
+		// Get the historical quotes
 		Map<String, Float> resultTreeMap = getHistoricalQuotes(symb, token);
-
-		// Display all values for debugging
-//		for (Map.Entry<String, Float> i : resultTreeMap.entrySet()) {
-//			String key = i.getKey();
-//			Output.debugPrint(key + " : " + resultTreeMap.get(key));
-//		}
 
 		// Calculate the largest and smallest security value in the historical data
 		Float lv = largestValue(resultTreeMap);
@@ -152,9 +147,9 @@ public class HistoricalQuotes {
 		Output.debugPrint("Smallest Value in Historical Data: " + sv);
 
 		// Determine how many spaces per dollar
-		dollarsPerSlot = GRAPHWIDTH / (lv - sv);
-		Output.debugPrint("Map Slots:" + GRAPHWIDTH);
-		Output.debugPrint("Dollars per Map Slot:" + dollarsPerSlot);
+		slotsPerCostUnit = GRAPHWIDTH / (lv - sv);
+		Output.debugPrint("Map Slots: " + GRAPHWIDTH);
+		Output.debugPrint("Slots per Cost Unit: " + slotsPerCostUnit);
 
 		// Display the header
 		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity: " + symb.toUpperCase());
@@ -165,7 +160,7 @@ public class HistoricalQuotes {
 		for (Map.Entry<String, Float> i : resultTreeMap.entrySet()) {
 			String date = i.getKey();
 			Float value = resultTreeMap.get(date);
-			int numSpaces = (int) ((value - sv) * dollarsPerSlot);
+			int numSpaces = (int) ((value - sv) * slotsPerCostUnit);
 
 			// Display the row of data
 			Output.printColor(Ansi.Color.CYAN, date + " |");
@@ -174,8 +169,8 @@ public class HistoricalQuotes {
 		}
 
 		// Footer
-		Output.printColorln(Ansi.Color.CYAN, "           +" + "-".repeat(GRAPHWIDTH + 1) + "+");
-
+		Output.printColorln(Ansi.Color.CYAN, "           +" + "-".repeat(GRAPHWIDTH + 1) + "+\n\n");
+		
 	} // END DISPLAYTRENDING
 
 } // END CLASS

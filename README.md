@@ -1,4 +1,4 @@
-<p align="center"> <img width="70%" src ="https://github.com/frossm/quoter/blob/master/graphics/QuoterScreenShot915x550.jpg"> </p> 
+<p align="center"> <img width="70%" src ="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot.jpg"> </p> 
 
 # quoter - The Console Based Stock Quote Tool
 
@@ -43,7 +43,15 @@ Example:
     java -jar quoter.jar amzn msft acn ibm
     java -jar quoter.jar -x outputfile.csv t bp cmcsa ni vz 
 
-## SNAP
+## Trending
+<img align="right" width="300" src="https://github.com/frossm/quoter/blob/master/graphics/SnapShot-Trending.jpg">This feature will allow for approximately three months of trending.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.  It's probably 90 degrees to what I'd like, but it's not a GUI application and there are limited capabilities of doing this in the console.  
+
+It's executed by giving Quoter the **`-t`** command line switch.  If there are 5 symbols on the command line, it will trend them all.
+
+Please note that this call to IEXCloud is weighted heavily and will use quite a few of your allowed monthly calls.  However, given you get 500,000 calls per month, there is probably plenty if it's not massively over used.
+
+
+### SNAP Installation
 
 [![quoter](https://snapcraft.io//quoter/badge.svg)](https://snapcraft.io/quoter)
 
