@@ -50,6 +50,7 @@ public class Help {
 
 		Output.printColorln(Ansi.Color.YELLOW, "Command Line Options:");
 		Output.printColorln(Ansi.Color.WHITE, " -c        Configure the IEXCloud secret key. See link above for details.");
+		Output.printColorln(Ansi.Color.WHITE, " -t        Include a 3 month historical trend"); 		
 		Output.printColorln(Ansi.Color.WHITE, " -x <file> Export results into the specified file in CSV format");
 		Output.printColorln(Ansi.Color.WHITE, " -k        Display the IEXCloud secret key being used");
 		Output.printColorln(Ansi.Color.WHITE, " -D        Start in debug mode.  Same as using the 'debug' command");
