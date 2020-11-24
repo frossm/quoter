@@ -383,7 +383,6 @@ public class Main {
 		// Display trending data if -t was provided and there is at least one symbol
 		if (trendFlag == true && !symbolList.isEmpty()) {
 			for (String i : symbolList) {
-				//DisplayTrending(i, "***REMOVED***");
 				 DisplayTrending(i, Prefs.QueryString("iexcloudtoken"));
 			}
 

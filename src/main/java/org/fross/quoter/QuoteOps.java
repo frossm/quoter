@@ -203,8 +203,6 @@ public class QuoteOps {
 	 */
 	public static Map<String, Float> GetHistorical3M(String symb, String token) {
 		String QUOTEURLTEMPLATE = "https://cloud.iexapis.com/stable/stock/SYMBOLHERE/chart/3m?token=TOKENHERE";
-		// String QUOTEURLTEMPLATE =
-		// "https://sandbox.iexapis.com/stable/stock/SYMBOLHERE/chart/3m?token=TOKENHERE";
 		String quoteURL = "";
 		String rawChartData = "";
 		Map<String, Float> resultMap = new TreeMap<String, Float>();	// TreeMaps are sorted
