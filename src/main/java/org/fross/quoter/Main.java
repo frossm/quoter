@@ -94,7 +94,7 @@ public class Main {
 				Scanner scanner = new Scanner(System.in);
 				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
 				iexCloudToken = scanner.next();
-				Output.debugPrint("Setting Peference iexcloudtoken: " + iexCloudToken);
+				Output.debugPrint("Setting Preference iexcloudtoken: " + iexCloudToken);
 				Prefs.Set("iexcloudtoken", iexCloudToken);
 				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Token Set To: '" + Prefs.QueryString("iexcloudtoken") + "'");
 				System.exit(0);
@@ -126,7 +126,7 @@ public class Main {
 
 			// Display version of Quoter and exit
 			case 'v':
-				Output.println("This version of Quoter is: " + VERSION);
+				Output.println(VERSION);
 				System.exit(0);
 				break;
 
