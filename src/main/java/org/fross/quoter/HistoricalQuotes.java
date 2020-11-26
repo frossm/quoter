@@ -95,36 +95,36 @@ public class HistoricalQuotes {
 	}
 
 	/**
-	 * LargestValue(): Return largest float value of the map
+	 * LargestMapValue(): Return largest float value of the provided map
 	 * 
 	 * @param map
 	 */
-	public static Float largestValue(Map<String, Float> map) {
-		Float lv = 0f;
+	public static Float largestMapValue(Map<String, Float> map) {
+		Float largestValue = Float.MIN_VALUE;
 
 		for (Map.Entry<String, Float> i : map.entrySet()) {
 			String key = i.getKey();
-			if (map.get(key) > lv)
-				lv = map.get(key);
+			if (map.get(key) > largestValue)
+				largestValue = map.get(key);
 		}
-		return lv;
+		return largestValue;
 
 	}
 
 	/**
-	 * SmallestValue(): Return smallest float value of the map
+	 * SmallestMapValue(): Return smallest float value of the provided map
 	 * 
 	 * @param map
 	 */
-	public static Float smallestValue(Map<String, Float> map) {
-		Float sv = Float.MAX_VALUE;
+	public static Float smallestMapValue(Map<String, Float> map) {
+		Float smallestValue = Float.MAX_VALUE;
 
 		for (Map.Entry<String, Float> i : map.entrySet()) {
 			String key = i.getKey();
-			if (map.get(key) < sv)
-				sv = map.get(key);
+			if (map.get(key) < smallestValue)
+				smallestValue = map.get(key);
 		}
-		return sv;
+		return smallestValue;
 
 	}
 
@@ -141,8 +141,8 @@ public class HistoricalQuotes {
 		Map<String, Float> resultTreeMap = getHistoricalQuotes(symb, token);
 
 		// Calculate the largest and smallest security value in the historical data
-		Float lv = largestValue(resultTreeMap);
-		Float sv = smallestValue(resultTreeMap);
+		Float lv = largestMapValue(resultTreeMap);
+		Float sv = smallestMapValue(resultTreeMap);
 		Output.debugPrint("Largest Value in Historical Data:  " + lv);
 		Output.debugPrint("Smallest Value in Historical Data: " + sv);
 
@@ -169,8 +169,8 @@ public class HistoricalQuotes {
 		}
 
 		// Footer
-		Output.printColorln(Ansi.Color.CYAN, "           +" + "-".repeat(GRAPHWIDTH + 1) + "+\n\n");
-		
+		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH + 1) + "+\n\n");
+
 	} // END DISPLAYTRENDING
 
 } // END CLASS
