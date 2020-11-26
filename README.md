@@ -44,7 +44,7 @@ Example:
     java -jar quoter.jar -x outputfile.csv t bp cmcsa ni vz 
 
 ## Trending
-<img align="right" width="300" src="https://github.com/frossm/quoter/blob/master/graphics/SnapShot-Trending.jpg">This feature will allow for approximately three months of trending.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.  It's probably 90 degrees to what I'd like, but it's not a GUI application and there are limited capabilities of doing this in the console.  
+<img align="right" width="300" src="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot-Trending.jpg">This feature will allow for approximately three months of trending.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.  It's probably 90 degrees to what I'd like, but it's not a GUI application and there are limited capabilities of doing this in the console.  
 
 It's executed by giving Quoter the **`-t`** command line switch.  If there are 5 symbols on the command line, it will trend them all.
 
