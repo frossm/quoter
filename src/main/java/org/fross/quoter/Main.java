@@ -367,7 +367,7 @@ public class Main {
 		if (symbolList.isEmpty()) {
 			latestTime = QuoteOps.getQuote("IBM", Prefs.QueryString("iexcloudtoken"))[9];
 		}
-		Output.printColorln(Ansi.Color.CYAN, "\nLatest data as of " + latestTime);
+		Output.printColorln(Ansi.Color.CYAN, "\nData as of " + latestTime);
 
 		// Flush and close export file if needed
 		if (exportFlag == true) {

@@ -186,7 +186,7 @@ public class QuoteOps {
 		// Convert Epoch to Simple Date String
 		try {
 			Date d = new Date(epochTime);
-			DateFormat dFormat = new SimpleDateFormat("EEEEE MMMMM dd, yyyy hh:mma");
+			DateFormat dFormat = new SimpleDateFormat("EEEEE MMMMM dd, yyyy hh:mma z");
 			returnString = dFormat.format(d);
 		} catch (NullPointerException Ex) {
 			throw new NullPointerException();
