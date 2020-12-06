@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -75,7 +76,7 @@ public class Main {
 			Output.fatalError("Unable to read property file '" + PROPERTIES_FILE + "'", 3);
 		}
 
-		// Process Command Line Options and set flags where needed
+		// Process Command Line Options
 		Getopt optG = new Getopt("quote", args, "Dtckx:h?v");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
@@ -147,8 +148,7 @@ public class Main {
 
 		// Read the preferences and make sure that an API key has been entered with the -c
 		// option
-		iexCloudToken = Prefs.QueryString("iexcloudtoken");
-		if (iexCloudToken == "Error") {
+		if (Prefs.QueryString("iexcloudtoken") == "Error") {
 			Output.fatalError("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
 		}
 
@@ -170,92 +170,85 @@ public class Main {
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 		}
 
-		// Dump the header information to the export file
-		if (exportFlag == true && exportFile.canWrite()) {
-			try {
-				exportFileFW.append("Symbol,Current,Chng,Chng%,DayHigh,Daylow,52WHigh,52WLow,YTD,Date\n");
-			} catch (IOException ex) {
-				Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
-			}
-		}
-
 		// Display the data for the symbols entered. If no symbols were entered, just
 		// display the index data
 		if (!symbolList.isEmpty()) {
 			// Loop through each entered symbol and display it's data
 			Iterator<String> j = symbolList.iterator();
 			String currentSymbol = "";
+			boolean exportHeaderWritten = false;
 
 			while (j.hasNext()) {
 				currentSymbol = j.next();
-				String[] result = QuoteOps.getQuote(currentSymbol, Prefs.QueryString("iexcloudtoken"));
 				String[] outString = new String[9];
 
+				// Create the symbol object
+				Symbol symbolData = new Symbol(currentSymbol, Prefs.QueryString("iexcloudtoken"));
+
 				// Validate the provided quote is valid
-				if (result[1] == "Error") {
+				if (symbolData.query("status").compareTo("Error") == 0) {
 					// Display error and skip to the next iteration
-					Output.printColorln(Ansi.Color.BLUE, "'" + result[0] + "' is invalid");
+					Output.printColorln(Ansi.Color.BLUE, "'" + symbolData.query("symbol") + "' is invalid");
 					continue;
 				}
 
 				// Format the Output into an array
-				// Symbol
 				try {
 					// Symbol
-					outString[0] = String.format("%-8s", result[0]);
+					outString[0] = String.format("%-8s", symbolData.query("symbol"));
 
 					// Current
 					try {
-						outString[1] = String.format("%,8.2f", Float.valueOf(result[1]));
+						outString[1] = String.format("%,8.2f", Float.valueOf(symbolData.query("latestPrice")));
 					} catch (NumberFormatException Ex) {
 						outString[1] = String.format("%8s", "-");
 					}
 
 					// Change Amount
 					try {
-						outString[2] = String.format("%+,8.2f", Float.valueOf(result[2]));
+						outString[2] = String.format("%+,8.2f", Float.valueOf(symbolData.query("change")));
 					} catch (NumberFormatException Ex) {
 						outString[2] = String.format("%8s", "-");
 					}
 
 					// Change Percentage
 					try {
-						outString[3] = String.format("%+,7.2f%%", (Float.valueOf(result[3]) * 100));
+						outString[3] = String.format("%+,7.2f%%", (Float.valueOf(symbolData.query("changePercent")) * 100));
 					} catch (NumberFormatException Ex) {
 						outString[3] = String.format("%8s", "-");
 					}
 
 					// Day High
 					try {
-						outString[4] = String.format("%,9.2f", Float.valueOf(result[4]));
+						outString[4] = String.format("%,9.2f", Float.valueOf(symbolData.query("high")));
 					} catch (NumberFormatException Ex) {
 						outString[4] = String.format("%8s", "-");
 					}
 
 					// Day Low
 					try {
-						outString[5] = String.format("%,9.2f", Float.valueOf(result[5]));
+						outString[5] = String.format("%,9.2f", Float.valueOf(symbolData.query("low")));
 					} catch (NumberFormatException Ex) {
 						outString[5] = String.format("%8s", "-");
 					}
 
 					// 52 Week High
 					try {
-						outString[6] = String.format("%,9.2f", Float.valueOf(result[6]));
+						outString[6] = String.format("%,9.2f", Float.valueOf(symbolData.query("week52High")));
 					} catch (NumberFormatException Ex) {
 						outString[6] = String.format("%8s", "-");
 					}
 
 					// 52 Week Low
 					try {
-						outString[7] = String.format("%,9.2f", Float.valueOf(result[7]));
+						outString[7] = String.format("%,9.2f", Float.valueOf(symbolData.query("week52Low")));
 					} catch (NumberFormatException Ex) {
 						outString[7] = String.format("%8s", "-");
 					}
 
 					// Year to date
 					try {
-						outString[8] = String.format("%+,9.2f%%", (Float.valueOf(result[8]) * 100));
+						outString[8] = String.format("%+,9.2f%%", (Float.valueOf(symbolData.query("ytdChange")) * 100));
 					} catch (NumberFormatException Ex) {
 						outString[8] = String.format("%8s", "-");
 					}
@@ -267,7 +260,7 @@ public class Main {
 				// Determine the color based on the change amount
 				Ansi.Color outputColor = Ansi.Color.WHITE;
 				try {
-					if (Float.valueOf(result[2]) < 0) {
+					if (Float.valueOf(symbolData.query("change")) < 0) {
 						outputColor = Ansi.Color.RED;
 					}
 
@@ -282,7 +275,7 @@ public class Main {
 
 				// Set the latest time for output later. Since they should all be the same, just keep that last
 				// symbol's data
-				latestTime = result[9];
+				latestTime = symbolData.query("latestUpdate");
 
 				// Start a new line for the next security
 				Output.println("");
@@ -290,13 +283,24 @@ public class Main {
 				// If export is chosen, dump this security's data to the export file
 				if (exportFlag == true && exportFile.canWrite()) {
 					try {
-						for (int k = 0; k < result.length; k++) {
-							if (k == 9)
-								result[k] = result[k].replace(", ", " ");  // Remove the comma in the date string
-							exportFileFW.append(result[k] + ",");
+						// Export the header row
+						List<String> fields = symbolData.queryAllFieldNames();
+						if (exportHeaderWritten == false) {
+							for (String i : fields) {
+								exportFileFW.append(i + ",");
+							}
+							exportFileFW.append("\n");
+							exportHeaderWritten = true;
+						}
+
+						// Export the symbol data
+						for (String i : fields) {
+							exportFileFW.append(symbolData.query(i) + ",");
 						}
 						exportFileFW.append("\n");
+
 					} catch (IOException ex) {
+
 						Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
 					}
 				}
@@ -313,11 +317,11 @@ public class Main {
 		// Loop through the three indexes and display the results
 		String[] indexList = { "DOW", "NASDAQ", "S&P" };
 		try {
+			boolean exportHeaderWritten = false;
 			for (int i = 0; i < indexList.length; i++) {
-
 				// Download the web page and return the results array
 				Output.debugPrint("Getting Index data for: " + indexList[i]);
-				String[] result = QuoteOps.getIndex(indexList[i]);
+				String[] result = Index.getIndex(indexList[i]);
 
 				// Determine the color based on the change amount
 				Ansi.Color outputColor = Ansi.Color.WHITE;
@@ -347,6 +351,14 @@ public class Main {
 				// If export is chosen, dump this index's data to the export file
 				if (exportFlag == true && exportFile.canWrite()) {
 					try {
+
+						// Dump the header information to the export file
+						if (exportHeaderWritten == false) {
+							exportFileFW.append("\nSymbol,Current,Chng,Chng%\n");
+							exportHeaderWritten = true;
+						}
+						
+						// Dump the index data
 						for (int k = 0; k < result.length; k++) {
 							exportFileFW.append(result[k] + ",");
 						}
@@ -365,7 +377,8 @@ public class Main {
 		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
 		// just index data is displayed, grab a security in order to get the date
 		if (symbolList.isEmpty()) {
-			latestTime = QuoteOps.getQuote("IBM", Prefs.QueryString("iexcloudtoken"))[9];
+			Symbol getTime = new Symbol("IBM", Prefs.QueryString("iexcloudtoken"));
+			latestTime = getTime.query("latestUpdate");
 		}
 		Output.printColorln(Ansi.Color.CYAN, "\nData as of " + latestTime);
 
@@ -382,7 +395,7 @@ public class Main {
 		// Display trending data if -t was provided and there is at least one symbol
 		if (trendFlag == true && !symbolList.isEmpty()) {
 			for (String i : symbolList) {
-				 HistoricalQuotes.displayTrendingMap(i, Prefs.QueryString("iexcloudtoken"));
+				HistoricalQuotes.displayTrendingMap(i, Prefs.QueryString("iexcloudtoken"));
 			}
 		}
 
