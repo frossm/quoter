@@ -42,7 +42,7 @@ public class Index {
 	 * @param idx
 	 * @return
 	 */
-	public static String[] getIndex(String idx) {
+	protected static String[] getIndex(String idx) {
 		String[] retArray = new String[4];
 		String idxPage;
 		String URLTEMPLATE = "https://www.cnbc.com/quotes/?symbol=SYMBOLHERE";
@@ -61,7 +61,7 @@ public class Index {
 			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", ".inx");
 			break;
 		default:
-			Output.fatalError("Call to GetIndex must be 'DOW', 'NASDAQ', or 'S&P'", 4);
+			Output.fatalError("Call to getIndex() must be 'DOW', 'NASDAQ', or 'S&P'", 4);
 			break;
 		}
 		Output.debugPrint("Index URL rewritten to: " + URL);
@@ -99,4 +99,4 @@ public class Index {
 		return retArray;
 	}
 
-} // END CLASS
+}

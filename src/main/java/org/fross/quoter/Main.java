@@ -254,7 +254,7 @@ public class Main {
 					}
 
 				} catch (Exception Ex) {
-					Output.printColorln(Ansi.Color.RED, "Unknown Error Occured");
+					Output.printColorln(Ansi.Color.RED, "Unknown Error Occured formatting secuity output");
 				}
 
 				// Determine the color based on the change amount
@@ -300,7 +300,6 @@ public class Main {
 						exportFileFW.append("\n");
 
 					} catch (IOException ex) {
-
 						Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
 					}
 				}
@@ -332,6 +331,8 @@ public class Main {
 				// Format the Output
 				// Index Name
 				String[] outString = new String[4];
+				
+				// Symbol
 				outString[0] = String.format("%-10s", result[0]);
 				// Current
 				outString[1] = String.format("%,10.2f", Float.valueOf(result[1]));
@@ -340,7 +341,7 @@ public class Main {
 				// Change Percentage
 				outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3]));
 
-				// Display Index results to the string
+				// Display Index results to the screen
 				for (int k = 0; k < outString.length; k++) {
 					Output.printColor(outputColor, outString[k]);
 				}
@@ -357,7 +358,7 @@ public class Main {
 							exportFileFW.append("\nSymbol,Current,Chng,Chng%\n");
 							exportHeaderWritten = true;
 						}
-						
+
 						// Dump the index data
 						for (int k = 0; k < result.length; k++) {
 							exportFileFW.append(result[k] + ",");
@@ -399,6 +400,6 @@ public class Main {
 			}
 		}
 
-	} // END MAIN
+	}
 
-} // END CLASS
+}

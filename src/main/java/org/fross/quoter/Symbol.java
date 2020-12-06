@@ -130,6 +130,7 @@ public class Symbol {
 		// Query IEXCloud's REST API and get the security information in JSON format
 		try {
 			quoteDetail = URLOps.ReadURL(quoteURL);
+
 		} catch (Exception ex) {
 			returnData.put("symbol", symb);
 			returnData.put("status", "Error");
@@ -151,6 +152,7 @@ public class Symbol {
 				String key = i.getKey();
 				try {
 					returnData.put(key, gsonMap.get(key).toString());
+
 				} catch (NullPointerException ex) {
 					returnData.put(key, "-");
 				}
@@ -163,7 +165,7 @@ public class Symbol {
 				returnData.put("latestUpdate", dateString);
 
 			} catch (NullPointerException Ex) {
-				returnData.put("latestUpdate", "-");
+				returnData.put("latestUpdate", "[Error Retrieving Date]");
 			}
 
 			// If we are in debug mode, display the values we are returning
