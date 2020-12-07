@@ -29,6 +29,7 @@ package org.fross.quoter;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.fross.library.Format;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
 
@@ -151,8 +152,18 @@ public class HistoricalQuotes {
 		Output.debugPrint("Map Slots: " + GRAPHWIDTH);
 		Output.debugPrint("Slots per Cost Unit: " + slotsPerCostUnit);
 
-		// Display the header
-		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity: " + symb.toUpperCase());
+		// Create a symbol object with IEXCloud Data
+		Symbol symbolData = new Symbol(symb, token);
+
+		// Display the symbol informational header
+		Output.printColorln(Ansi.Color.WHITE, "\n\n+" + "-".repeat(GRAPHWIDTH + 12) + "+");
+		Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + symbolData.query("companyName"));
+		Output.printColorln(Ansi.Color.YELLOW, "Exchange:    " + symbolData.query("primaryExchange"));
+		Output.printColorln(Ansi.Color.YELLOW, "PE Ratio:    " + symbolData.query("peRatio"));
+		Output.printColorln(Ansi.Color.YELLOW, "Market Cap:  " + Format.Comma(Double.valueOf(symbolData.query("marketCap")).longValue()));
+		Output.printColorln(Ansi.Color.WHITE, "+" + "-".repeat(GRAPHWIDTH + 12) + "+\n");
+
+		// Display trending title bar
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(GRAPHWIDTH - sv.toString().length() - lv.toString().length() + 1) + lv);
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH + 1) + "+");
 
@@ -171,6 +182,6 @@ public class HistoricalQuotes {
 		// Footer
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH + 1) + "+\n\n");
 
-	} // END DISPLAYTRENDING
+	}
 
-} // END CLASS
+}
