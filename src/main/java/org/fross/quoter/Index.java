@@ -43,11 +43,11 @@ public class Index {
 	 * @return
 	 */
 	protected static String[] getIndex(String idx) {
-		String[] retArray = new String[4];
+		String[] retArray = new String[6];
 		String idxPage;
 		String URLTEMPLATE = "https://www.cnbc.com/quotes/?symbol=SYMBOLHERE";
 		String URL = "ERROR";
-		String[] searchPatterns = new String[4];
+		String[] searchPatterns = new String[6];
 
 		// Ensure a valid value was passed
 		switch (idx.toUpperCase()) {
@@ -74,6 +74,8 @@ public class Index {
 			searchPatterns[1] = "\"last\":\"(.*?)\"";
 			searchPatterns[2] = "\"change\":\"(.*?)\"";
 			searchPatterns[3] = "\"change_pct\":\"(.*?)\"";
+			searchPatterns[4] = "'year low'.*?\\>(.*?)\\<";
+			searchPatterns[5] = "'year high'.*?\\>(.*?)\\<";
 
 			retArray[0] = idx;
 			for (int i = 1; i < searchPatterns.length; i++) {

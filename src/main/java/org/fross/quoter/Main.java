@@ -222,35 +222,35 @@ public class Main {
 					try {
 						outString[4] = String.format("%,9.2f", Float.valueOf(symbolData.query("high")));
 					} catch (NumberFormatException Ex) {
-						outString[4] = String.format("%8s", "-");
+						outString[4] = String.format("%9s", "-");
 					}
 
 					// Day Low
 					try {
 						outString[5] = String.format("%,9.2f", Float.valueOf(symbolData.query("low")));
 					} catch (NumberFormatException Ex) {
-						outString[5] = String.format("%8s", "-");
+						outString[5] = String.format("%9s", "-");
 					}
 
 					// 52 Week High
 					try {
 						outString[6] = String.format("%,9.2f", Float.valueOf(symbolData.query("week52High")));
 					} catch (NumberFormatException Ex) {
-						outString[6] = String.format("%8s", "-");
+						outString[6] = String.format("%9s", "-");
 					}
 
 					// 52 Week Low
 					try {
 						outString[7] = String.format("%,9.2f", Float.valueOf(symbolData.query("week52Low")));
 					} catch (NumberFormatException Ex) {
-						outString[7] = String.format("%8s", "-");
+						outString[7] = String.format("%9s", "-");
 					}
 
 					// Year to date
 					try {
 						outString[8] = String.format("%+,9.2f%%", (Float.valueOf(symbolData.query("ytdChange")) * 100));
 					} catch (NumberFormatException Ex) {
-						outString[8] = String.format("%8s", "-");
+						outString[8] = String.format("%9s", "-");
 					}
 
 				} catch (Exception Ex) {
@@ -310,7 +310,7 @@ public class Main {
 
 		// Display Index Output Header
 		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
-		Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%");
+		Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh        52WLow");
 		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 		// Loop through the three indexes and display the results
@@ -330,8 +330,8 @@ public class Main {
 
 				// Format the Output
 				// Index Name
-				String[] outString = new String[4];
-				
+				String[] outString = new String[6];
+
 				// Symbol
 				outString[0] = String.format("%-10s", result[0]);
 				// Current
@@ -340,6 +340,10 @@ public class Main {
 				outString[2] = String.format("%+,10.2f", Float.valueOf(result[2]));
 				// Change Percentage
 				outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3]));
+				// 52Week High
+				outString[4] = String.format("%,14.2f", Float.valueOf(result[4]));
+				// 52Week Low
+				outString[5] = String.format("%,14.2f", Float.valueOf(result[5]));
 
 				// Display Index results to the screen
 				for (int k = 0; k < outString.length; k++) {
