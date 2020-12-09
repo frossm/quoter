@@ -27,13 +27,10 @@
 
 package org.fross.quoter;
 
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 
@@ -57,10 +54,9 @@ public class Main {
 		int optionEntry;
 		String iexCloudToken;
 		String latestTime = "None";
-		File exportFile = null;
-		FileWriter exportFileFW = null;
 		boolean exportFlag = false;
 		boolean trendFlag = false;
+		FileExporter exporter = null;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -103,20 +99,8 @@ public class Main {
 
 			// Export Data
 			case 'x':
-				try {
-					exportFile = new File(optG.getOptarg());
-					if (exportFile.createNewFile() == false) {
-						Output.fatalError("Could not create file: '" + exportFile + "'", 4);
-					}
-				} catch (IOException ex) {
-					Output.fatalError("Could not create file: '" + exportFile + "'", 4);
-				}
 				exportFlag = true;
-				try {
-					exportFileFW = new FileWriter(exportFile);
-				} catch (IOException ex) {
-					Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
-				}
+				exporter = new FileExporter(optG.getOptarg());
 				break;
 
 			// Display configured IEXCloud Secret Key
@@ -176,7 +160,6 @@ public class Main {
 			// Loop through each entered symbol and display it's data
 			Iterator<String> j = symbolList.iterator();
 			String currentSymbol = "";
-			boolean exportHeaderWritten = false;
 
 			while (j.hasNext()) {
 				currentSymbol = j.next();
@@ -281,27 +264,8 @@ public class Main {
 				Output.println("");
 
 				// If export is chosen, dump this security's data to the export file
-				if (exportFlag == true && exportFile.canWrite()) {
-					try {
-						// Export the header row
-						List<String> fields = symbolData.queryAllFieldNames();
-						if (exportHeaderWritten == false) {
-							for (String i : fields) {
-								exportFileFW.append(i + ",");
-							}
-							exportFileFW.append("\n");
-							exportHeaderWritten = true;
-						}
-
-						// Export the symbol data
-						for (String i : fields) {
-							exportFileFW.append(symbolData.query(i) + ",");
-						}
-						exportFileFW.append("\n");
-
-					} catch (IOException ex) {
-						Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
-					}
+				if (exportFlag == true && exporter.canWrite()) {
+					exporter.exportSecurities(symbolData);
 				}
 			}
 
@@ -316,7 +280,6 @@ public class Main {
 		// Loop through the three indexes and display the results
 		String[] indexList = { "DOW", "NASDAQ", "S&P" };
 		try {
-			boolean exportHeaderWritten = false;
 			for (int i = 0; i < indexList.length; i++) {
 				// Download the web page and return the results array
 				Output.debugPrint("Getting Index data for: " + indexList[i]);
@@ -354,24 +317,8 @@ public class Main {
 				Output.println("");
 
 				// If export is chosen, dump this index's data to the export file
-				if (exportFlag == true && exportFile.canWrite()) {
-					try {
-
-						// Dump the header information to the export file
-						if (exportHeaderWritten == false) {
-							exportFileFW.append("\nSymbol,Current,Chng,Chng%\n");
-							exportHeaderWritten = true;
-						}
-
-						// Dump the index data
-						for (int k = 0; k < result.length; k++) {
-							exportFileFW.append(result[k] + ",");
-						}
-						exportFileFW.append("\n");
-
-					} catch (IOException ex) {
-						Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
-					}
+				if (exportFlag == true && exporter.canWrite()) {
+					exporter.exportIndexes(result);
 				}
 			}
 
@@ -389,12 +336,8 @@ public class Main {
 
 		// Flush and close export file if needed
 		if (exportFlag == true) {
-			try {
-				exportFileFW.flush();
-				exportFileFW.close();
-			} catch (IOException ex) {
-				Output.printColorln(Ansi.Color.RED, "Error closing export file: " + ex.getMessage());
-			}
+			exporter.close();
+			Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
 		}
 
 		// Display trending data if -t was provided and there is at least one symbol
