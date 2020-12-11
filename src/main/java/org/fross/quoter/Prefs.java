@@ -49,7 +49,7 @@ public class Prefs {
 	 * @param key
 	 * @return
 	 */
-	public static boolean QueryBoolean(String key) {
+	public static boolean queryBoolean(String key) {
 		return prefs.getBoolean(key, false);
 	}
 
@@ -59,7 +59,7 @@ public class Prefs {
 	 * @param key
 	 * @return
 	 */
-	public static Double QueryDouble(String key) {
+	public static Double queryDouble(String key) {
 		return prefs.getDouble(key, 0);
 	}
 
@@ -69,7 +69,7 @@ public class Prefs {
 	 * @param key
 	 * @return
 	 */
-	public static String QueryString(String key) {
+	public static String queryString(String key) {
 		return prefs.get(key, "Error");
 	}
 
@@ -79,7 +79,7 @@ public class Prefs {
 	 * @param key
 	 * @param value
 	 */
-	public static void Set(String key, boolean value) {
+	public static void set(String key, boolean value) {
 		prefs.putBoolean(key, value);
 	}
 
@@ -89,7 +89,7 @@ public class Prefs {
 	 * @param key
 	 * @param value
 	 */
-	public static void Set(String key, int value) {
+	public static void set(String key, int value) {
 		prefs.putInt(key, value);
 	}
 
@@ -99,7 +99,7 @@ public class Prefs {
 	 * @param key
 	 * @param value
 	 */
-	public static void Set(String key, double value) {
+	public static void set(String key, double value) {
 		prefs.putDouble(key, value);
 	}
 
@@ -109,7 +109,15 @@ public class Prefs {
 	 * @param key
 	 * @param value
 	 */
-	public static void Set(String key, String value) {
+	public static void set(String key, String value) {
 		prefs.put(key, value);
+	}
+	
+	/**
+	 * remove(): Remove the provided preference
+	 * @param key
+	 */
+	public static void remove(String key) {
+		prefs.remove(key);
 	}
 }

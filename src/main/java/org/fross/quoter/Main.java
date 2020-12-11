@@ -49,15 +49,21 @@ public class Main {
 	public static String VERSION;
 	public static String COPYRIGHT;
 	public static final String PROPERTIES_FILE = "app.properties";
+	public static final String PREFS_IEXCLOUDTOKEN = "iexcloudtoken";
+	public static final String PREFS_SAVED_SYMBOLS = "savedsymbols";
 
 	public static void main(String[] args) {
 		int optionEntry;
-		String iexCloudToken;
 		String latestTime = "None";
+		FileExporter exporter = null;
+		ArrayList<String> symbolList = new ArrayList<String>();
+
+		// Command line flags
 		boolean exportFlag = false;
 		boolean trendFlag = false;
 		boolean detailedFlag = false;
-		FileExporter exporter = null;
+		boolean saveSymbolsflag = false;
+		boolean ignoreSavedFlag = false;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -74,7 +80,7 @@ public class Main {
 		}
 
 		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "Dtdckx:h?v");
+		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvh?");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			// Turn on Debug Mode
@@ -82,7 +88,7 @@ public class Main {
 				Debug.enable();
 				break;
 
-			// Show detailed stock information
+			// Show Detailed Stock Information
 			case 'd':
 				detailedFlag = true;
 				break;
@@ -92,14 +98,34 @@ public class Main {
 				trendFlag = true;
 				break;
 
+			// Save command line securities
+			case 's':
+				saveSymbolsflag = true;
+				break;
+
+			// Remove saved securities
+			case 'r':
+				Prefs.remove(PREFS_SAVED_SYMBOLS);
+				break;
+
+			// Ignore saved securities
+			case 'i':
+				ignoreSavedFlag = true;
+				break;
+
 			// Configure IEXCloud Secret Key
 			case 'c':
 				Scanner scanner = new Scanner(System.in);
 				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
-				iexCloudToken = scanner.next();
-				Output.debugPrint("Setting Preference iexcloudtoken: " + iexCloudToken);
-				Prefs.Set("iexcloudtoken", iexCloudToken);
-				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Token Set To: '" + Prefs.QueryString("iexcloudtoken") + "'");
+				Prefs.set(PREFS_IEXCLOUDTOKEN, scanner.next());
+				Output.debugPrint("Setting Preference for iexcloudtoken: " + Prefs.queryString(PREFS_IEXCLOUDTOKEN));
+				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDTOKEN) + "'");
+				System.exit(0);
+				break;
+
+			// Display Configured IEXCloud Secret Key
+			case 'k':
+				Output.println(Prefs.queryString(PREFS_IEXCLOUDTOKEN));
 				System.exit(0);
 				break;
 
@@ -109,15 +135,10 @@ public class Main {
 				exporter = new FileExporter(optG.getOptarg());
 				break;
 
-			// Display configured IEXCloud Secret Key
-			case 'k':
-				Output.println(Prefs.QueryString("iexcloudtoken"));
-				System.exit(0);
-				break;
-
 			// Display version of Quoter and exit
 			case 'v':
-				Output.println(VERSION);
+				Output.println("Quoter Version: v" + VERSION);
+				Output.println(COPYRIGHT);
 				System.exit(0);
 				break;
 
@@ -138,19 +159,42 @@ public class Main {
 
 		// Read the preferences and make sure that an API key has been entered with the -c
 		// option
-		if (Prefs.QueryString("iexcloudtoken") == "Error") {
+		if (Prefs.queryString(PREFS_IEXCLOUDTOKEN) == "Error") {
 			Output.fatalError("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
 		}
 
 		// Display the header
 		Output.printColorln(Ansi.Color.CYAN, "\nQuoter v" + VERSION + " " + COPYRIGHT);
 
-		// Build an array list of symbols entered in on the command line
-		Output.debugPrint("Number of Symbols entered: " + (args.length - optG.getOptind()));
-		ArrayList<String> symbolList = new ArrayList<String>();
+		// Build an array list of symbols entered on the command line
+		Output.debugPrint("Number of Symbols entered on command line: " + (args.length - optG.getOptind()));
 		for (int i = optG.getOptind(); i < args.length; i++) {
 			Output.debugPrint("Symbol entered on commandline: " + args[i]);
 			symbolList.add(args[i]);
+		}
+
+		// Save the symbols on the command line to preferences as a space delimited list
+		if (saveSymbolsflag == true && symbolList.isEmpty() == false) {
+			String flatSymbolList = "";
+			for (String i : symbolList) {
+				flatSymbolList += i + " ";
+			}
+			Output.debugPrint("Saving the following symbols to preferences: '" + flatSymbolList.trim() + "'");
+			Prefs.set(PREFS_SAVED_SYMBOLS, flatSymbolList.trim());
+
+			// Empty the symbol list after saving as they will be added back below. Don't want it twice
+			symbolList.clear();
+		}
+
+		// Add any saved symbols to the list of symbols to process
+		if (ignoreSavedFlag == false) {
+			Output.debugPrint("Adding saved symbols: '" + Prefs.queryString(PREFS_SAVED_SYMBOLS) + "'");
+			String[] savedSymbols = Prefs.queryString(PREFS_SAVED_SYMBOLS).split(" ");
+			for (String i : savedSymbols) {
+				if (i != "Error") {
+					symbolList.add(i);
+				}
+			}
 		}
 
 		// If symbols were entered, display the header for them
@@ -172,7 +216,7 @@ public class Main {
 				String[] outString = new String[9];
 
 				// Create the symbol object
-				Symbol symbolData = new Symbol(currentSymbol, Prefs.QueryString("iexcloudtoken"));
+				Symbol symbolData = new Symbol(currentSymbol, Prefs.queryString(PREFS_IEXCLOUDTOKEN));
 
 				// Validate the provided quote is valid
 				if (symbolData.get("status").compareTo("Error") == 0) {
@@ -335,7 +379,7 @@ public class Main {
 		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
 		// just index data is displayed, grab a security in order to get the date
 		if (symbolList.isEmpty()) {
-			Symbol getTime = new Symbol("IBM", Prefs.QueryString("iexcloudtoken"));
+			Symbol getTime = new Symbol("IBM", Prefs.queryString(PREFS_IEXCLOUDTOKEN));
 			latestTime = getTime.get("latestUpdate");
 		}
 		Output.printColorln(Ansi.Color.CYAN, "\nData as of " + latestTime);
@@ -352,7 +396,7 @@ public class Main {
 			// Loop through each symbol and show the detailed display
 			for (String symb : symbolList) {
 				// Create the symbol data object
-				Symbol symbolData = new Symbol(symb, Prefs.QueryString("iexcloudtoken"));
+				Symbol symbolData = new Symbol(symb, Prefs.queryString(PREFS_IEXCLOUDTOKEN));
 
 				// Display Header
 				Output.printColorln(Ansi.Color.CYAN, "-".repeat(HEADERWIDTH));
@@ -371,7 +415,7 @@ public class Main {
 		// Display trending data if -t was provided and there is at least one symbol
 		if (trendFlag == true && !symbolList.isEmpty()) {
 			for (String i : symbolList) {
-				HistoricalQuotes.displayTrendingMap(i, Prefs.QueryString("iexcloudtoken"));
+				HistoricalQuotes.displayTrendingMap(i, Prefs.queryString(PREFS_IEXCLOUDTOKEN));
 			}
 		}
 

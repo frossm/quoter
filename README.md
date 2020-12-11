@@ -22,14 +22,27 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 
 ## Program Options
 
+#### Configuration
+|Option|Description|
+|------|-----------|
+|-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key|
+|-k | Display the configured IEX secret API key and exit|
+|-s | Save the securities provided into the preferences system to be executed each time Quoter is run.  If a `-d` Detailed or `-t` Trend is requested, the saved securities will be included.  If a symbol is added on the command line it will be shown along with those that are saved.  If `-s` is provided and there are already saved securities, the current list will overwrite the old list |
+|-r | Remove saved securities.  If you'd like them back you'll need to re-save them |
+|-i | Ignore saved queries for this execution.  They will remain saved |
+
+#### Security Information
+|Option|Description|
+|------|-----------|
+|-d | Display detailed stock information for the symbols provided.  This is simply additional information retreived from IEXCloud|
+|-t | After the initial quote information, display a three month historical view of close prices.  Please note that this call is heavily weighted by IEXCLOUD and will use quite a few messages|
+|-x FileName| Export the results into the specified file in CSV format.  Note it needs to be a location can can be written to by the user|
+
+#### Misc
 |Option|Description|
 |------|-----------|
 |-D | Start in Debug Mode which will display additional debugging data. Normally not used|
-|-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key|
-|-t | After the initial quote information, display a three month historical view of close prices.  Please note that this call is heavily weighted by IEXCLOUD and will use quite a few messages|
-|-x FILENAME| Export the results into the specified file in CSV format|
 |-v | Display the version and exit|
-|-k | Display the configured IEX secret API key and exit|
 |-h or -?| Display the help page|
 
 ## Parameters

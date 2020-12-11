@@ -29,7 +29,6 @@ package org.fross.quoter;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.fross.library.Format;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
 
