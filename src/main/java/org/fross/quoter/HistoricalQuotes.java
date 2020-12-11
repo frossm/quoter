@@ -156,11 +156,11 @@ public class HistoricalQuotes {
 		Symbol symbolData = new Symbol(symb, token);
 
 		// Display the symbol informational header
-		Output.printColorln(Ansi.Color.WHITE, "\n\n+" + "-".repeat(GRAPHWIDTH + 12) + "+");
-		Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + symbolData.query("companyName"));
-		Output.printColorln(Ansi.Color.YELLOW, "Exchange:    " + symbolData.query("primaryExchange"));
-		Output.printColorln(Ansi.Color.YELLOW, "PE Ratio:    " + symbolData.query("peRatio"));
-		Output.printColorln(Ansi.Color.YELLOW, "Market Cap:  " + Format.Comma(Double.valueOf(symbolData.query("marketCap")).longValue()));
+		Output.printColorln(Ansi.Color.WHITE, "\n\n+--Three Month Trend" + "-".repeat(GRAPHWIDTH - 7) + "+");
+		Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + symbolData.get("companyName"));
+		Output.printColorln(Ansi.Color.YELLOW, "Exchange:    " + symbolData.get("primaryExchange"));
+		Output.printColorln(Ansi.Color.YELLOW, "PE Ratio:    " + symbolData.get("peRatio"));
+		Output.printColorln(Ansi.Color.YELLOW, "Market Cap:  " + symbolData.get("marketCap"));
 		Output.printColorln(Ansi.Color.WHITE, "+" + "-".repeat(GRAPHWIDTH + 12) + "+\n");
 
 		// Display trending title bar

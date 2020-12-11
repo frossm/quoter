@@ -27,6 +27,7 @@
 
 package org.fross.quoter;
 
+import org.fross.library.Format;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
 
@@ -37,28 +38,36 @@ import org.fusesource.jansi.Ansi;
  *
  */
 public class Help {
+	static final int HEADERWIDTH = 72;
+
 	/**
 	 * Display(): Prints help in color using the JCDP library in the output module.
 	 */
 	public static void Display() {
-		Output.printColorln(Ansi.Color.CYAN, "\n+----------------------------------------------------------------------+");
-		Output.printColorln(Ansi.Color.CYAN, "+                       Quoter v" + Main.VERSION + "  Help                       +");
-		Output.printColorln(Ansi.Color.CYAN, "+      " + Main.COPYRIGHT + "      +");
-		Output.printColorln(Ansi.Color.CYAN, "+----------------------------------------------------------------------+");
-		Output.printColorln(Ansi.Color.CYAN, "         Quoter is a tool to display stock quotes and index data");
-		Output.printColorln(Ansi.Color.CYAN, "                    https://github.com/frossm/quoter\n");
+		Output.printColorln(Ansi.Color.CYAN, "\n+" + "-".repeat(HEADERWIDTH - 2) + "+");
+		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, "Quoter  v" + Main.VERSION) + "+");
+		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, Main.COPYRIGHT) + "+");
+		Output.printColorln(Ansi.Color.CYAN, "+" + "-".repeat(HEADERWIDTH - 2) + "+");
+		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Quoter is a tool to display stock quotes and index data"));
+		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "https://github.com/frossm/quoter") + "\n");
 
-		Output.printColorln(Ansi.Color.YELLOW, "Command Line Options:");
-		Output.printColorln(Ansi.Color.WHITE, " -c        Configure the IEXCloud secret key. See link above for details.");
-		Output.printColorln(Ansi.Color.WHITE, " -t        Include a 3 month historical trend");
-		Output.printColorln(Ansi.Color.WHITE, " -x <file> Export results into the specified file in CSV format");
-		Output.printColorln(Ansi.Color.WHITE, " -k        Display the IEXCloud secret key being used");
-		Output.printColorln(Ansi.Color.WHITE, " -D        Start in debug mode and display developer information");
-		Output.printColorln(Ansi.Color.WHITE, " -v        Display program version and exit");
-		Output.printColorln(Ansi.Color.WHITE, " -? | -h   Display this help information");
+		Output.printColorln(Ansi.Color.WHITE, "Command Line Options");
 
-		Output.printColorln(Ansi.Color.YELLOW, "\nNote:");
-		Output.printColorln(Ansi.Color.WHITE, " - Quoter data is sourced from IEXCloud.io.  You'll need at least the free account");
+		Output.printColorln(Ansi.Color.YELLOW, "\nConfiguration:");
+		Output.printColorln(Ansi.Color.WHITE, "  -c        Configure the IEXCloud secret key. See link above for details.");
+		Output.printColorln(Ansi.Color.WHITE, "  -k        Display the IEXCloud secret key being used");
+
+		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
+		Output.printColorln(Ansi.Color.WHITE, "  -d        Display more detailed security information");
+		Output.printColorln(Ansi.Color.WHITE, "  -t        Include a 3 month historical trend");
+
+		Output.printColorln(Ansi.Color.YELLOW, "\nMisc:");
+		Output.printColorln(Ansi.Color.WHITE, "  -D        Start in debug mode and display developer information");
+		Output.printColorln(Ansi.Color.WHITE, "  -v        Display program version and exit");
+		Output.printColorln(Ansi.Color.WHITE, "  -? | -h   Display this help information");
+
+		Output.printColorln(Ansi.Color.YELLOW, "\nNotes:");
+		Output.printColorln(Ansi.Color.WHITE, " - Quoter data is sourced from IEXCloud.io. You'll need minimally a free account");
 		Output.printColorln(Ansi.Color.WHITE, " - The Index data is pulled from a financial website\n");
 	}
 }

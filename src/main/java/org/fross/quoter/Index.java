@@ -74,8 +74,8 @@ public class Index {
 			searchPatterns[1] = "\"last\":\"(.*?)\"";
 			searchPatterns[2] = "\"change\":\"(.*?)\"";
 			searchPatterns[3] = "\"change_pct\":\"(.*?)\"";
-			searchPatterns[4] = "'year low'.*?\\>(.*?)\\<";
-			searchPatterns[5] = "'year high'.*?\\>(.*?)\\<";
+			searchPatterns[4] = "'year high'.*?\\>(.*?)\\<";
+			searchPatterns[5] = "'year low'.*?\\>(.*?)\\<";
 
 			retArray[0] = idx;
 			for (int i = 1; i < searchPatterns.length; i++) {

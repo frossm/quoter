@@ -86,7 +86,7 @@ public class FileExporter {
 	public boolean exportSecurities(Symbol symbolData) {
 		try {
 			// Export the header row
-			List<String> fields = symbolData.queryAllFieldNames();
+			List<String> fields = symbolData.getAllFieldNames();
 			if (this.exportSymbolHeaderWritten == false) {
 				for (String i : fields) {
 					exportFileFW.append(i + ",");
@@ -98,7 +98,7 @@ public class FileExporter {
 			// Export the symbol data
 			for (String i : fields) {
 				// If the data has a ',' in it remove it
-				String item = symbolData.query(i).replaceAll(",", "");
+				String item = symbolData.get(i).replaceAll(",", "");
 				exportFileFW.append(item + ",");
 			}
 			exportFileFW.append("\n");

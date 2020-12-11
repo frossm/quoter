@@ -56,6 +56,7 @@ public class Main {
 		String latestTime = "None";
 		boolean exportFlag = false;
 		boolean trendFlag = false;
+		boolean detailedFlag = false;
 		FileExporter exporter = null;
 
 		// Process application level properties file
@@ -73,12 +74,17 @@ public class Main {
 		}
 
 		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "Dtckx:h?v");
+		Getopt optG = new Getopt("quote", args, "Dtdckx:h?v");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			// Turn on Debug Mode
 			case 'D':
 				Debug.enable();
+				break;
+
+			// Show detailed stock information
+			case 'd':
+				detailedFlag = true;
 				break;
 
 			// Show Stock Trending
@@ -169,69 +175,69 @@ public class Main {
 				Symbol symbolData = new Symbol(currentSymbol, Prefs.QueryString("iexcloudtoken"));
 
 				// Validate the provided quote is valid
-				if (symbolData.query("status").compareTo("Error") == 0) {
+				if (symbolData.get("status").compareTo("Error") == 0) {
 					// Display error and skip to the next iteration
-					Output.printColorln(Ansi.Color.BLUE, "'" + symbolData.query("symbol") + "' is invalid");
+					Output.printColorln(Ansi.Color.BLUE, "'" + symbolData.get("symbol") + "' is invalid");
 					continue;
 				}
 
 				// Format the Output into an array
 				try {
 					// Symbol
-					outString[0] = String.format("%-8s", symbolData.query("symbol"));
+					outString[0] = String.format("%-8s", symbolData.get("symbol"));
 
 					// Current
 					try {
-						outString[1] = String.format("%,8.2f", Float.valueOf(symbolData.query("latestPrice")));
+						outString[1] = String.format("%,8.2f", Float.valueOf(symbolData.get("latestPrice")));
 					} catch (NumberFormatException Ex) {
 						outString[1] = String.format("%8s", "-");
 					}
 
 					// Change Amount
 					try {
-						outString[2] = String.format("%+,8.2f", Float.valueOf(symbolData.query("change")));
+						outString[2] = String.format("%+,8.2f", Float.valueOf(symbolData.get("change")));
 					} catch (NumberFormatException Ex) {
 						outString[2] = String.format("%8s", "-");
 					}
 
 					// Change Percentage
 					try {
-						outString[3] = String.format("%+,7.2f%%", (Float.valueOf(symbolData.query("changePercent")) * 100));
+						outString[3] = String.format("%+,7.2f%%", (Float.valueOf(symbolData.get("changePercent")) * 100));
 					} catch (NumberFormatException Ex) {
 						outString[3] = String.format("%8s", "-");
 					}
 
 					// Day High
 					try {
-						outString[4] = String.format("%,9.2f", Float.valueOf(symbolData.query("high")));
+						outString[4] = String.format("%,9.2f", Float.valueOf(symbolData.get("high")));
 					} catch (NumberFormatException Ex) {
 						outString[4] = String.format("%9s", "-");
 					}
 
 					// Day Low
 					try {
-						outString[5] = String.format("%,9.2f", Float.valueOf(symbolData.query("low")));
+						outString[5] = String.format("%,9.2f", Float.valueOf(symbolData.get("low")));
 					} catch (NumberFormatException Ex) {
 						outString[5] = String.format("%9s", "-");
 					}
 
 					// 52 Week High
 					try {
-						outString[6] = String.format("%,9.2f", Float.valueOf(symbolData.query("week52High")));
+						outString[6] = String.format("%,9.2f", Float.valueOf(symbolData.get("week52High")));
 					} catch (NumberFormatException Ex) {
 						outString[6] = String.format("%9s", "-");
 					}
 
 					// 52 Week Low
 					try {
-						outString[7] = String.format("%,9.2f", Float.valueOf(symbolData.query("week52Low")));
+						outString[7] = String.format("%,9.2f", Float.valueOf(symbolData.get("week52Low")));
 					} catch (NumberFormatException Ex) {
 						outString[7] = String.format("%9s", "-");
 					}
 
 					// Year to date
 					try {
-						outString[8] = String.format("%+,9.2f%%", (Float.valueOf(symbolData.query("ytdChange")) * 100));
+						outString[8] = String.format("%+,9.2f%%", (Float.valueOf(symbolData.get("ytdChange")) * 100));
 					} catch (NumberFormatException Ex) {
 						outString[8] = String.format("%9s", "-");
 					}
@@ -243,7 +249,7 @@ public class Main {
 				// Determine the color based on the change amount
 				Ansi.Color outputColor = Ansi.Color.WHITE;
 				try {
-					if (Float.valueOf(symbolData.query("change")) < 0) {
+					if (Float.valueOf(symbolData.get("change")) < 0) {
 						outputColor = Ansi.Color.RED;
 					}
 
@@ -258,7 +264,7 @@ public class Main {
 
 				// Set the latest time for output later. Since they should all be the same, just keep that last
 				// symbol's data
-				latestTime = symbolData.query("latestUpdate");
+				latestTime = symbolData.get("latestUpdate");
 
 				// Start a new line for the next security
 				Output.println("");
@@ -330,14 +336,36 @@ public class Main {
 		// just index data is displayed, grab a security in order to get the date
 		if (symbolList.isEmpty()) {
 			Symbol getTime = new Symbol("IBM", Prefs.QueryString("iexcloudtoken"));
-			latestTime = getTime.query("latestUpdate");
+			latestTime = getTime.get("latestUpdate");
 		}
 		Output.printColorln(Ansi.Color.CYAN, "\nData as of " + latestTime);
 
-		// Flush and close export file if needed
-		if (exportFlag == true) {
-			exporter.close();
-			Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
+		// Display detailed stock information if selected with the -d switch
+		if (detailedFlag == true && !symbolList.isEmpty()) {
+			final int HEADERWIDTH = 80;
+			String[] detailedFields = { "symbol", "companyName", "primaryExchange", "open", "openTime", "close", "closeTime", "high", "highTime", "low",
+					"lowTime", "latestPrice", "latestVolume", "previousClose", "previousVolume", "change", "changePercent", "agTotalVolume", "marketCap",
+					"peRatio", "week52High", "week52Low" };
+
+			Output.printColorln(Ansi.Color.WHITE, "\nDetailed Security Information:");
+
+			// Loop through each symbol and show the detailed display
+			for (String symb : symbolList) {
+				// Create the symbol data object
+				Symbol symbolData = new Symbol(symb, Prefs.QueryString("iexcloudtoken"));
+
+				// Display Header
+				Output.printColorln(Ansi.Color.CYAN, "-".repeat(HEADERWIDTH));
+				Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + symbolData.get("companyName"));
+				Output.printColorln(Ansi.Color.CYAN, "-".repeat(HEADERWIDTH));
+
+				// Loop through each detailed field and display it
+				for (String field : detailedFields) {
+					Output.printColorln(Ansi.Color.WHITE, " " + String.format("%-16s", field) + " " + symbolData.get(field));
+				}
+
+				Output.println("");
+			}
 		}
 
 		// Display trending data if -t was provided and there is at least one symbol
@@ -347,6 +375,11 @@ public class Main {
 			}
 		}
 
-	}
+		// Flush and close export file if needed
+		if (exportFlag == true) {
+			exporter.close();
+			Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
+		}
 
+	}
 }

@@ -1,5 +1,5 @@
 name: quoter
-version: '2.1.2'
+version: '2.1.3'
 summary: Command line utility to pull stock and index quotes
 description: |
   Quote fetches stock quotes and index data from IEXCloud.IO.
@@ -20,7 +20,7 @@ parts:
     plugin: maven
     source: https://github.com/frossm/library.git
     source-type: git
-    source-tag: 'v2.0.0'
+    source-tag: 'v2.0.3'
     maven-options: [install]
 
   quoter:

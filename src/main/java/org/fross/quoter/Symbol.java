@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.fross.library.Debug;
+import org.fross.library.Format;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
 
@@ -54,12 +55,12 @@ public class Symbol {
 	}
 
 	/**
-	 * query(): Returns security
+	 * get(): Returns security detail based on passed field
 	 * 
 	 * @param field
 	 * @return
 	 */
-	protected String query(String field) {
+	protected String get(String field) {
 		try {
 			return this.symbolData.get(field);
 		} catch (Exception ex) {
@@ -70,11 +71,27 @@ public class Symbol {
 	}
 
 	/**
-	 * queryAllFieldNames(): Return an array of all of the keys in the HashMap
+	 * put(): Update a value in the objects symbolData HashMap
+	 * 
+	 * @param field
+	 * @param value
+	 * @return
+	 */
+	protected boolean put(String field, String value) {
+		try {
+			symbolData.put(field, value);
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * getAllFieldNames(): Return an array of all of the keys in the HashMap
 	 * 
 	 * @return
 	 */
-	protected List<String> queryAllFieldNames() {
+	protected List<String> getAllFieldNames() {
 		List<String> returnList = new ArrayList<String>();
 
 		for (String i : this.symbolData.keySet()) {
@@ -103,6 +120,17 @@ public class Symbol {
 		}
 
 		return (returnString);
+	}
+
+	/**
+	 * epochTime2String(): Take a string and return a human readable date string
+	 * 
+	 * @param epochTime
+	 * @return
+	 */
+	protected static String epochTime2String(String epochTime) {
+		String result = String.format("%.0f", Double.parseDouble(epochTime));
+		return (epochTime2String(Long.parseLong(result)));
 	}
 
 	/**
@@ -158,15 +186,25 @@ public class Symbol {
 				}
 			}
 
-			// Convert latest date to a readable string and replace the value in the map
+			// Process the time fields to be human readable
 			try {
-				String dateString = String.format("%.0f", Double.parseDouble(returnData.get("latestUpdate")));
-				dateString = epochTime2String(Long.parseLong(dateString));
-				returnData.put("latestUpdate", dateString);
-
-			} catch (NullPointerException Ex) {
-				returnData.put("latestUpdate", "[Error Retrieving Date]");
+				if (returnData.get("latestUpdate") != "-")
+					returnData.put("latestUpdate", Symbol.epochTime2String(returnData.get("latestUpdate")));
+				if (returnData.get("openTime") != "-")
+					returnData.put("openTime", Symbol.epochTime2String(returnData.get("openTime")));
+				if (returnData.get("closeTime") != "-")
+					returnData.put("closeTime", Symbol.epochTime2String(returnData.get("closeTime")));
+				if (returnData.get("highTime") != "-")
+					returnData.put("highTime", Symbol.epochTime2String(returnData.get("highTime")));
+				if (returnData.get("lowTime") != "-")
+					returnData.put("lowTime", Symbol.epochTime2String(returnData.get("lowTime")));
+			} catch (Exception Ex) {
+				// Leave them as dashes if there is an error
 			}
+
+			// Process Market Cap into a more easily read string
+			if (returnData.get("marketCap") != "-")
+				returnData.put("marketCap", Format.Comma(Double.valueOf(returnData.get("marketCap")).longValue()));
 
 			// If we are in debug mode, display the values we are returning
 			if (Debug.query() == true) {
