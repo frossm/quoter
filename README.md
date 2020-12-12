@@ -38,7 +38,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |-t | After the initial quote information, display a three month historical view of close prices.  Please note that this call is heavily weighted by IEXCLOUD and will use quite a few messages|
 |-x FileName| Export the results into the specified file in CSV format.  Note it needs to be a location can can be written to by the user|
 
-#### Misc
+#### Miscellaneous
 |Option|Description|
 |------|-----------|
 |-D | Start in Debug Mode which will display additional debugging data. Normally not used|
