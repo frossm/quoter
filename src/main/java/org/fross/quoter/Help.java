@@ -59,7 +59,8 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -s  Save securities as default and show them automatically");
 		Output.printColorln(Ansi.Color.WHITE, "  -r  Remove saved securities");
 		Output.printColorln(Ansi.Color.WHITE, "  -i  Ignore saved queries for this execution only");
-		
+		Output.printColorln(Ansi.Color.WHITE, "  -z  Disable colorized output");
+
 		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
 		Output.printColorln(Ansi.Color.WHITE, "  -d      Display more detailed security information");
 		Output.printColorln(Ansi.Color.WHITE, "  -t      Include a 3 month historical trend");

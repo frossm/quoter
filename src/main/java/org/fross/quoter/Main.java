@@ -80,7 +80,7 @@ public class Main {
 		}
 
 		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvh?");
+		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzh?");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			// Turn on Debug Mode
@@ -140,6 +140,11 @@ public class Main {
 				Output.println("Quoter Version: v" + VERSION);
 				Output.println(COPYRIGHT);
 				System.exit(0);
+				break;
+				
+			// Disable colorized output
+			case 'z':
+				Output.setColor(false);
 				break;
 
 			// Access in program help

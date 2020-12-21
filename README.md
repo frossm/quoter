@@ -30,6 +30,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |-s | Save the securities provided into the preferences system to be executed each time Quoter is run.  If a `-d` Detailed or `-t` Trend is requested, the saved securities will be included.  If a symbol is added on the command line it will be shown along with those that are saved.  If `-s` is provided and there are already saved securities, the current list will overwrite the old list |
 |-r | Remove saved securities.  If you'd like them back you'll need to re-save them |
 |-i | Ignore saved queries for this execution.  They will remain saved |
+|-z | Disable colorized output|
 
 #### Security Information
 |Option|Description|
