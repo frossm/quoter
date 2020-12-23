@@ -74,7 +74,7 @@ public class Main {
 			prop.load(iStream);
 			VERSION = prop.getProperty("Application.version");
 			COPYRIGHT = "Copyright " + prop.getProperty("Application.inceptionYear") + "-" + org.fross.library.Date.getCurrentYear()
-					+ " by Michael Fross.  All rights reserved";
+					+ " by Michael Fross";
 		} catch (IOException ex) {
 			Output.fatalError("Unable to read property file '" + PROPERTIES_FILE + "'", 3);
 		}
@@ -144,7 +144,7 @@ public class Main {
 				
 			// Disable colorized output
 			case 'z':
-				Output.setColor(false);
+				Output.enableColor(false);
 				break;
 
 			// Access in program help

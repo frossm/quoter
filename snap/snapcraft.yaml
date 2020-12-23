@@ -1,5 +1,5 @@
 name: quoter
-version: '2.3.0'
+version: '2.3.1'
 summary: Command line utility to pull stock and index quotes
 description: |
   Quote fetches stock quotes and index data from IEXCloud.IO.
@@ -11,6 +11,9 @@ grade: stable
 confinement: strict
 base: core18
 
+# Enable faszter LZO compression
+compression: lzo
+
 apps:
   quoter:
     command: bin/java -Djava.util.prefs.userRoot="$SNAP_USER_DATA" -jar $SNAP/jar/quoter.jar
@@ -20,7 +23,7 @@ parts:
     plugin: maven
     source: https://github.com/frossm/library.git
     source-type: git
-    source-tag: 'v2020.12.21'
+    source-tag: 'v2020.12.23'
     maven-options: [install]
 
   quoter:
