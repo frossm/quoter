@@ -202,9 +202,13 @@ public class Symbol {
 				// Leave them as dashes if there is an error
 			}
 
-			// Process Market Cap into a more easily read string
+			// Format Market Cap, volume, and previous volume into a more easily read string
 			if (returnData.get("marketCap") != "-")
 				returnData.put("marketCap", Format.Comma(Double.valueOf(returnData.get("marketCap")).longValue()));
+			if (returnData.get("latestVolume") != "-")
+				returnData.put("latestVolume", Format.Comma(Double.valueOf(returnData.get("latestVolume")).longValue()));
+			if (returnData.get("previousVolume") != "-")
+				returnData.put("previousVolume", Format.Comma(Double.valueOf(returnData.get("previousVolume")).longValue()));
 
 			// If we are in debug mode, display the values we are returning
 			if (Debug.query() == true) {
