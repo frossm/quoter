@@ -1,5 +1,5 @@
 name: quoter
-version: '2.3.2'
+version: '2.3.3'
 summary: Command line utility to pull stock and index quotes
 description: |
   Quote fetches stock quotes and index data from IEXCloud.IO.

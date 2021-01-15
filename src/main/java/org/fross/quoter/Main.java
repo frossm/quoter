@@ -73,8 +73,7 @@ public class Main {
 			Properties prop = new Properties();
 			prop.load(iStream);
 			VERSION = prop.getProperty("Application.version");
-			COPYRIGHT = "Copyright " + prop.getProperty("Application.inceptionYear") + "-" + org.fross.library.Date.getCurrentYear()
-					+ " by Michael Fross";
+			COPYRIGHT = "Copyright " + prop.getProperty("Application.inceptionYear") + "-" + org.fross.library.Date.getCurrentYear() + " by Michael Fross";
 		} catch (IOException ex) {
 			Output.fatalError("Unable to read property file '" + PROPERTIES_FILE + "'", 3);
 		}
@@ -141,7 +140,7 @@ public class Main {
 				Output.println(COPYRIGHT);
 				System.exit(0);
 				break;
-				
+
 			// Disable colorized output
 			case 'z':
 				Output.enableColor(false);
@@ -334,11 +333,12 @@ public class Main {
 
 		// Loop through the three indexes and display the results
 		String[] indexList = { "DOW", "NASDAQ", "S&P" };
-		try {
-			for (int i = 0; i < indexList.length; i++) {
+		for (int i = 0; i < indexList.length; i++) {
+			String[] outString = new String[6];
+			String[] result = Index.getIndex(indexList[i]);
+			try {
 				// Download the web page and return the results array
 				Output.debugPrint("Getting Index data for: " + indexList[i]);
-				String[] result = Index.getIndex(indexList[i]);
 
 				// Determine the color based on the change amount
 				Ansi.Color outputColor = Ansi.Color.WHITE;
@@ -347,21 +347,18 @@ public class Main {
 				}
 
 				// Format the Output
-				// Index Name
-				String[] outString = new String[6];
-
 				// Symbol
 				outString[0] = String.format("%-10s", result[0]);
 				// Current
-				outString[1] = String.format("%,10.2f", Float.valueOf(result[1]));
+				outString[1] = String.format("%,10.2f", Float.valueOf(result[1].replace(",", "")));
 				// Change Amount
-				outString[2] = String.format("%+,10.2f", Float.valueOf(result[2]));
+				outString[2] = String.format("%+,10.2f", Float.valueOf(result[2].replace(",", "")));
 				// Change Percentage
-				outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3]));
+				outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3].replace("%", "")));
 				// 52Week High
-				outString[4] = String.format("%,14.2f", Float.valueOf(result[4]));
+				outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
 				// 52Week Low
-				outString[5] = String.format("%,14.2f", Float.valueOf(result[5]));
+				outString[5] = String.format("%,14.2f", Float.valueOf(result[5].replace(",", "")));
 
 				// Display Index results to the screen
 				for (int k = 0; k < outString.length; k++) {
@@ -375,10 +372,10 @@ public class Main {
 				if (exportFlag == true && exporter.canWrite()) {
 					exporter.exportIndexes(result);
 				}
-			}
+			} catch (Exception Ex) {
+				Output.printColorln(Ansi.Color.RED, outString[0] + ": No Data");
 
-		} catch (Exception Ex) {
-			Output.printColor(Ansi.Color.RED, "No Data");
+			}
 		}
 
 		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
