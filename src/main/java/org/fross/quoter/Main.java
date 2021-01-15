@@ -136,8 +136,10 @@ public class Main {
 
 			// Display version of Quoter and exit
 			case 'v':
-				Output.println("Quoter Version: v" + VERSION);
-				Output.println(COPYRIGHT);
+				Output.printColorln(Ansi.Color.WHITE, "Quoter Version: v" + VERSION);
+				Output.printColorln(Ansi.Color.CYAN, COPYRIGHT);
+				Output.printColorln(Ansi.Color.WHITE, "\nLatest Release on GitHub: " + URLOps.updateCheck("quoter"));
+				Output.printColorln(Ansi.Color.CYAN, "HomePage: https://github.com/frossm/quoter");
 				System.exit(0);
 				break;
 

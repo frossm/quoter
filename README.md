@@ -43,7 +43,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |Option|Description|
 |------|-----------|
 |-D | Start in Debug Mode which will display additional debugging data. Normally not used|
-|-v | Display the version and exit|
+|-v | Display the version and exit.  The `-v` version check will also check GitHub and display the latest released version|
 |-h or -?| Display the help page|
 
 ## Parameters
