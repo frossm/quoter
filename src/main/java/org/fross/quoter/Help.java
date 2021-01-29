@@ -62,9 +62,9 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -z  Disable colorized output");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
-		Output.printColorln(Ansi.Color.WHITE, "  -d      Display more detailed security information");
-		Output.printColorln(Ansi.Color.WHITE, "  -t      Include a 3 month historical trend");
-		Output.printColorln(Ansi.Color.WHITE, "  -x File Export data to the provided filename");
+		Output.printColorln(Ansi.Color.WHITE, "  -d        Display more detailed security information");
+		Output.printColorln(Ansi.Color.WHITE, "  -t        Include a 3 month historical trend");
+		Output.printColorln(Ansi.Color.WHITE, "  -x FILE   Export data to the provided filename");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nMisc:");
 		Output.printColorln(Ansi.Color.WHITE, "  -D        Start in debug mode and display developer information");
