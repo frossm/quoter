@@ -3,7 +3,7 @@
  * 
  * Quoter is a command line program that display stock quotes and index data.
  * 
- *  Copyright (c) 2019 Michael Fross
+ *  Copyright (c) 2019-2021 Michael Fross
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -35,6 +35,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import org.fross.library.Debug;
+import org.fross.library.GitHub;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
 
@@ -138,7 +139,7 @@ public class Main {
 			case 'v':
 				Output.printColorln(Ansi.Color.WHITE, "Quoter Version: v" + VERSION);
 				Output.printColorln(Ansi.Color.CYAN, COPYRIGHT);
-				Output.printColorln(Ansi.Color.WHITE, "\nLatest Release on GitHub: " + URLOps.updateCheck("quoter"));
+				Output.printColorln(Ansi.Color.WHITE, "\nLatest Release on GitHub: " + GitHub.updateCheck("quoter"));
 				Output.printColorln(Ansi.Color.CYAN, "HomePage: https://github.com/frossm/quoter");
 				System.exit(0);
 				break;

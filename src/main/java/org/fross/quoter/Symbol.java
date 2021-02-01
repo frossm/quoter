@@ -3,7 +3,7 @@
  * 
  * Quoter is a command line program that display stock quotes and index data.
  * 
- *  Copyright (c) 2019 Michael Fross
+ *  Copyright (c) 2019-2021 Michael Fross
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ import java.util.Map;
 import org.fross.library.Debug;
 import org.fross.library.Format;
 import org.fross.library.Output;
+import org.fross.library.URLOperations;
 import org.fusesource.jansi.Ansi;
 
 import com.google.gson.Gson;
@@ -157,7 +158,7 @@ public class Symbol {
 
 		// Query IEXCloud's REST API and get the security information in JSON format
 		try {
-			quoteDetail = URLOps.ReadURL(quoteURL);
+			quoteDetail = URLOperations.ReadURL(quoteURL);
 
 		} catch (Exception ex) {
 			returnData.put("symbol", symb);

@@ -3,7 +3,7 @@
  * 
  * Quoter is a command line program that display stock quotes and index data.
  * 
- *  Copyright (c) 2019 Michael Fross
+ * *  Copyright (c) 2019-2021 Michael Fross
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,7 @@ import java.util.regex.Pattern;
 
 import org.fross.library.Debug;
 import org.fross.library.Output;
+import org.fross.library.URLOperations;
 import org.fusesource.jansi.Ansi;
 
 public class Index {
@@ -68,7 +69,7 @@ public class Index {
 
 		try {
 			// Download the web page with
-			idxPage = URLOps.ReadURL(URL);
+			idxPage = URLOperations.ReadURL(URL);
 
 			// Define the regular expression patterns to look for in the URL provided above
 			searchPatterns[1] = "\"last\":\"(.*?)\"";
