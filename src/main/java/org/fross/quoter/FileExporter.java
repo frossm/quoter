@@ -117,13 +117,13 @@ public class FileExporter {
 		try {
 			// Dump the header information to the export file
 			if (this.exportIndexHeaderWritten == false) {
-				exportFileFW.append("\nSymbol,Current,Chng,Chng%\n");
+				exportFileFW.append("\nSymbol,Current,Chng,Chng%,52WeekHigh,52WeekLow\n");
 				this.exportIndexHeaderWritten = true;
 			}
 
 			// Dump the index data
 			for (int k = 0; k < indexData.length; k++) {
-				exportFileFW.append(indexData[k] + ",");
+				exportFileFW.append("\"" + indexData[k] + "\"" + ",");
 			}
 			exportFileFW.append("\n");
 
@@ -131,9 +131,9 @@ public class FileExporter {
 			Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());
 		}
 	}
-	
+
 	/**
-	 * close():  Flush and close the export file
+	 * close(): Flush and close the export file
 	 */
 	public void close() {
 		try {
@@ -142,11 +142,12 @@ public class FileExporter {
 		} catch (IOException ex) {
 			Output.printColorln(Ansi.Color.RED, "Error closing export file: " + ex.getMessage());
 		}
-		
+
 	}
-	
+
 	/**
 	 * queryExportFilename(): Return the name of the export file as a string
+	 * 
 	 * @return
 	 */
 	public String queryExportFilename() {
