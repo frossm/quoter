@@ -2,7 +2,9 @@
 
 # quoter - The Console Based Stock Quote Tool
 
-<img align="right" width="200" src="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg">Quoter is a small command line tool to fetch stock quotes.  In order to minimize HTML scraping, it retrieves quotes from [IEXCloud](https://iexcloud.io).  You can signup for free and get 500k stock quotes per month.  Please check their usage agreements prior to signing up and ensure you are allowed to user their service.
+<img align="right" width="200" src="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg">Quoter is a small command line tool to fetch stock quotes.  It's a single executable JAR file.  No installation needed, just download the file and run it from the command line with `java -jar quoter.jar`
+
+In order to minimize HTML scraping, it retrieves quotes from [IEXCloud](https://iexcloud.io).  You can signup for free and get 500k stock quotes per month.  Please check their usage agreements prior to signing up and ensure you are allowed to user their service.
 
 After getting an account, log into the dashboard and you can see your API tokens.  You'll need the secret token to use this program.  The secret key starts with ``sk_``
 
