@@ -179,10 +179,9 @@ public class HistoricalQuotes {
 		Output.printColorln(Ansi.Color.WHITE, "+" + "-".repeat(GRAPHWIDTH + 12) + "+\n");
 
 		// Display trending title bar
-		int quoteLength = resultTreeMap.get(resultTreeMap.keySet().toArray()[0].toString())[0].toString().length() + 1;
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(GRAPHWIDTH - sv.toString().length() - lv.toString().length() + 1) + lv);
 		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH + 1) + "+");
-		Output.printColorln(Ansi.Color.CYAN, "  Close" + String.format("%" + quoteLength + "s", "High") + String.format("%" + quoteLength + "s", "Low"));
+		Output.printColorln(Ansi.Color.CYAN, "  Low\tClose\tHigh");
 
 		// Loop through the sorted data and display the graph
 		for (Map.Entry<String, Float[]> i : resultTreeMap.entrySet()) {
@@ -211,7 +210,7 @@ public class HistoricalQuotes {
 				Output.printColor(Ansi.Color.WHITE, "-".repeat(numHighSpaces));
 				Output.print(" ".repeat(numFinalSpaces));
 				Output.printColorln(Ansi.Color.CYAN,
-						"| " + String.format("%7.2f", close) + " " + String.format("%7.2f", dailyHigh) + " " + String.format("%7.2f", dailyLow));
+						"| " + String.format("%7.2f", dailyLow) + " " + String.format("%7.2f", close) + " " + String.format("%7.2f", dailyHigh));
 			} catch (IllegalArgumentException ex) {
 				System.out.println("**ERROR**");
 			}
