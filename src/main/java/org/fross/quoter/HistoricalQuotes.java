@@ -41,13 +41,18 @@ public class HistoricalQuotes {
 	/**
 	 * GetHistorical3M(): Return map of date/closePrice for 3 months
 	 * 
+	 * In the value portion of the returned map: [0]=close price [1]=day high price [2]=day low price
+	 * 
 	 * @return
 	 */
-	public static Map<String, Float> getHistoricalQuotes(String symb, String token) {
-		String QUOTEURLTEMPLATE = "https://cloud.iexapis.com/stable/stock/SYMBOLHERE/chart/3m?token=TOKENHERE";
+	public static Map<String, Float[]> getHistoricalQuotes(String symb, String token) {
+		String QUOTEURLTEMPLATE = Main.IEXCloudBaseURL + "/stable/stock/SYMBOLHERE/chart/3m?token=TOKENHERE";
 		String quoteURL = "";
 		String rawChartData = "";
-		Map<String, Float> resultMap = new TreeMap<String, Float>();	// TreeMaps are sorted
+
+		// Key is a date string
+		// Value is an array: [0]=close [1]=day high [2]=day low
+		Map<String, Float[]> resultMap = new TreeMap<String, Float[]>();
 
 		// Rewrite the template URL with the provided values
 		Output.debugPrint("Processing Trending for Symbol: '" + symb + "'");
@@ -85,7 +90,17 @@ public class HistoricalQuotes {
 				// In Gson, convert the JSON into a map
 				@SuppressWarnings("unchecked")
 				Map<String, Object> gsonMap = gson.fromJson(rawChartArray[i], Map.class);
-				resultMap.put(gsonMap.get("date").toString(), Float.parseFloat(gsonMap.get("close").toString()));
+
+				// Populate the array (which becomes resultMap value) with data fields from IEXCloud
+				Float tempArray[] = new Float[3];
+				tempArray[0] = Float.parseFloat(gsonMap.get("close").toString());
+				tempArray[1] = Float.parseFloat(gsonMap.get("high").toString());
+				tempArray[2] = Float.parseFloat(gsonMap.get("low").toString());
+
+				// Show the array in debug mode
+				Output.debugPrint(gsonMap.get("date").toString() + "\tClose:" + tempArray[0] + "\tHigh:" + tempArray[1] + "\tLow:" + tempArray[2]);
+
+				resultMap.put(gsonMap.get("date").toString(), tempArray);
 			}
 
 		} catch (Exception ex) {
@@ -96,34 +111,34 @@ public class HistoricalQuotes {
 	}
 
 	/**
-	 * LargestMapValue(): Return largest float value of the provided map
+	 * LargestMapValue(): Return largest daily high value of the provided map
 	 * 
 	 * @param map
 	 */
-	public static Float largestMapValue(Map<String, Float> map) {
+	public static Float largestMapValue(Map<String, Float[]> map) {
 		Float largestValue = Float.MIN_VALUE;
 
-		for (Map.Entry<String, Float> i : map.entrySet()) {
+		for (Map.Entry<String, Float[]> i : map.entrySet()) {
 			String key = i.getKey();
-			if (map.get(key) > largestValue)
-				largestValue = map.get(key);
+			if (map.get(key)[1] > largestValue)
+				largestValue = map.get(key)[1];
 		}
 		return largestValue;
 
 	}
 
 	/**
-	 * SmallestMapValue(): Return smallest float value of the provided map
+	 * SmallestMapValue(): Return smallest daily lowvalue of the provided map
 	 * 
 	 * @param map
 	 */
-	public static Float smallestMapValue(Map<String, Float> map) {
+	public static Float smallestMapValue(Map<String, Float[]> map) {
 		Float smallestValue = Float.MAX_VALUE;
 
-		for (Map.Entry<String, Float> i : map.entrySet()) {
+		for (Map.Entry<String, Float[]> i : map.entrySet()) {
 			String key = i.getKey();
-			if (map.get(key) < smallestValue)
-				smallestValue = map.get(key);
+			if (map.get(key)[2] < smallestValue)
+				smallestValue = map.get(key)[2];
 		}
 		return smallestValue;
 
@@ -139,7 +154,7 @@ public class HistoricalQuotes {
 		Float slotsPerCostUnit;
 
 		// Get the historical quotes
-		Map<String, Float> resultTreeMap = getHistoricalQuotes(symb, token);
+		Map<String, Float[]> resultTreeMap = getHistoricalQuotes(symb, token);
 
 		// Calculate the largest and smallest security value in the historical data
 		Float lv = largestMapValue(resultTreeMap);
@@ -164,19 +179,42 @@ public class HistoricalQuotes {
 		Output.printColorln(Ansi.Color.WHITE, "+" + "-".repeat(GRAPHWIDTH + 12) + "+\n");
 
 		// Display trending title bar
+		int quoteLength = resultTreeMap.get(resultTreeMap.keySet().toArray()[0].toString())[0].toString().length() + 1;
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(GRAPHWIDTH - sv.toString().length() - lv.toString().length() + 1) + lv);
-		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH + 1) + "+");
+		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH + 1) + "+");
+		Output.printColorln(Ansi.Color.CYAN, "  Close" + String.format("%" + quoteLength + "s", "High") + String.format("%" + quoteLength + "s", "Low"));
 
 		// Loop through the sorted data and display the graph
-		for (Map.Entry<String, Float> i : resultTreeMap.entrySet()) {
+		for (Map.Entry<String, Float[]> i : resultTreeMap.entrySet()) {
 			String date = i.getKey();
-			Float value = resultTreeMap.get(date);
-			int numSpaces = (int) ((value - sv) * slotsPerCostUnit);
+			Float close = resultTreeMap.get(date)[0];
+			Float dailyHigh = resultTreeMap.get(date)[1];
+			Float dailyLow = resultTreeMap.get(date)[2];
 
-			// Display the row of data
-			Output.printColor(Ansi.Color.CYAN, date + " |");
-			Output.printColor(Ansi.Color.YELLOW, " ".repeat(numSpaces) + "o");
-			Output.printColorln(Ansi.Color.CYAN, " ".repeat(GRAPHWIDTH - numSpaces) + "| " + String.format("%.2f", value));
+			// Calculate the number of spaces (slots) until we get to daily low value
+			int numInitialSpaces = (int) ((dailyLow - sv) * slotsPerCostUnit);
+
+			// Calculate number of dashes from low to close
+			int numLowSpaces = (int) ((close - dailyLow) * slotsPerCostUnit);
+
+			// Calculate number of dashes from close to high
+			int numHighSpaces = (int) ((dailyHigh - close) * slotsPerCostUnit);
+
+			// Calculate number of dashes at the end
+			int numFinalSpaces = (GRAPHWIDTH - numInitialSpaces - numLowSpaces - numHighSpaces);
+
+			try {
+				Output.printColor(Ansi.Color.CYAN, date + " |");
+				Output.print(" ".repeat(numInitialSpaces));
+				Output.printColor(Ansi.Color.WHITE, "-".repeat(numLowSpaces));
+				Output.printColor(Ansi.Color.YELLOW, "o");
+				Output.printColor(Ansi.Color.WHITE, "-".repeat(numHighSpaces));
+				Output.print(" ".repeat(numFinalSpaces));
+				Output.printColorln(Ansi.Color.CYAN,
+						"| " + String.format("%7.2f", close) + " " + String.format("%7.2f", dailyHigh) + " " + String.format("%7.2f", dailyLow));
+			} catch (IllegalArgumentException ex) {
+				System.out.println("**ERROR**");
+			}
 		}
 
 		// Footer

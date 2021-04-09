@@ -142,7 +142,7 @@ public class Symbol {
 	 * @return
 	 */
 	private static HashMap<String, String> getQuote(String symb, String token) {
-		String QUOTEURLTEMPLATE = "https://cloud.iexapis.com/stable/stock/SYMBOLHERE/quote?token=TOKENHERE";
+		String QUOTEURLTEMPLATE = Main.IEXCloudBaseURL + "/stable/stock/SYMBOLHERE/quote?token=TOKENHERE";
 		String quoteURL = "";
 		String quoteDetail = "";
 		HashMap<String, String> returnData = new HashMap<String, String>();

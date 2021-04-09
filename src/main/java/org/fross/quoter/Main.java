@@ -52,7 +52,15 @@ public class Main {
 	public static final String PROPERTIES_FILE = "app.properties";
 	public static final String PREFS_IEXCLOUDTOKEN = "iexcloudtoken";
 	public static final String PREFS_SAVED_SYMBOLS = "savedsymbols";
+	public static final String IEXCLOUDPRODURL = "https://cloud.iexapis.com";
+	public static final String IEXCLOUDSANDBOXURL = "https://sandbox.iexapis.com";
+	public static String IEXCloudBaseURL = IEXCLOUDPRODURL;
 
+	/**
+	 * Main(): Program entry point
+	 * 
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		int optionEntry;
 		String latestTime = "None";
@@ -80,7 +88,7 @@ public class Main {
 		}
 
 		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzh?");
+		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzbh?");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			// Turn on Debug Mode
@@ -147,6 +155,11 @@ public class Main {
 			// Disable colorized output
 			case 'z':
 				Output.enableColor(false);
+				break;
+
+			// Enable IEXCloud Sandbox instead of normal production enviornment
+			case 'b':
+				IEXCloudBaseURL = IEXCLOUDSANDBOXURL;
 				break;
 
 			// Access in program help
@@ -226,9 +239,13 @@ public class Main {
 				Symbol symbolData = new Symbol(currentSymbol, Prefs.queryString(PREFS_IEXCLOUDTOKEN));
 
 				// Validate the provided quote is valid
+				// If invalid, remove it from symbol list so it doesn't get processed later with trend or export
 				if (symbolData.get("status").compareTo("Error") == 0) {
-					// Display error and skip to the next iteration
+					// Display error
 					Output.printColorln(Ansi.Color.BLUE, "'" + symbolData.get("symbol") + "' is invalid");
+
+					// Remove this invalid symbol from the list and continue to the next iteration
+					j.remove();
 					continue;
 				}
 
@@ -417,7 +434,7 @@ public class Main {
 			}
 		}
 
-		// Display trending data if -t was provided and there is at least one symbol
+		// Display trending data if -t was provided and there is at least one valid symbol
 		if (trendFlag == true && !symbolList.isEmpty()) {
 			for (String i : symbolList) {
 				HistoricalQuotes.displayTrendingMap(i, Prefs.queryString(PREFS_IEXCLOUDTOKEN));

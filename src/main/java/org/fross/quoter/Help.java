@@ -60,6 +60,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -r  Remove saved securities");
 		Output.printColorln(Ansi.Color.WHITE, "  -i  Ignore saved queries for this execution only");
 		Output.printColorln(Ansi.Color.WHITE, "  -z  Disable colorized output");
+		Output.printColorln(Ansi.Color.WHITE, "  -b  Use IEXCloud Sandbox instead of production (remember to set new key");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
 		Output.printColorln(Ansi.Color.WHITE, "  -d        Display more detailed security information");
