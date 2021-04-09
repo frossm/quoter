@@ -39,7 +39,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |Option|Description|
 |------|-----------|
 |-d | Display detailed stock information for the symbols provided.  This is simply additional information retreived from IEXCloud|
-|-t | After the initial quote information, display a three month historical view of close prices.  Please note that this call is heavily weighted by IEXCLOUD and will use quite a few messages|
+|-t | After the initial quote information, display a three month historical view of close prices.  See the picture to the right, but this view will include the daily high and low values as well as the end close price. Please note that this call is heavily weighted by IEXCLOUD and will use quite a few messages|
 |-x FileName| Export the results into the specified file in CSV format.  Note it needs to be a location can can be written to by the user|
 
 #### Miscellaneous
