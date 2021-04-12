@@ -179,8 +179,14 @@ public class HistoricalQuotes {
 		Output.printColorln(Ansi.Color.WHITE, "+" + "-".repeat(GRAPHWIDTH + 12) + "+\n");
 
 		// Display trending title bar
-		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(GRAPHWIDTH - sv.toString().length() - lv.toString().length() + 1) + lv);
-		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH + 1) + "+");
+		// Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(GRAPHWIDTH -
+		// sv.toString().length() - lv.toString().length() + 1) + lv);
+		String midNumber = String.format("%.2f", ((sv + lv) / 2));
+		int titleSpaces1 = (GRAPHWIDTH / 2) - sv.toString().length() - (int) midNumber.length() / 2;
+		int titleSpaces2 = GRAPHWIDTH - sv.toString().length() - titleSpaces1 - lv.toString().length() - lv.toString().length();
+
+		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv);
+		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH / 2) + "+" + "-".repeat(GRAPHWIDTH / 2) + "+");
 		Output.printColorln(Ansi.Color.CYAN, "  Low\tClose\tHigh");
 
 		// Loop through the sorted data and display the graph
@@ -217,8 +223,7 @@ public class HistoricalQuotes {
 		}
 
 		// Footer
-		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH + 1) + "+\n\n");
-
+		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH / 2) + "+" + "-".repeat(GRAPHWIDTH / 2) + "+\n\n");
 	}
 
 }
