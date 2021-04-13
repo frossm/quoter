@@ -27,13 +27,13 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 #### Configuration
 |Option|Description|
 |------|-----------|
-|-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key|
-|-k | Display the configured IEX secret API key and exit|
+|-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key.  If you are in sandbox mode with `-b` it will configure the sandbox key.  Please ensure that the `-b` is entered on the command line prior to the `-c`|
+|-k | Display the configured IEX secret API key and exit.  It will display the production key normally, but if we're in sandbox mode (`-b`) it will display the sandbox key|
 |-s | Save the securities provided into the preferences system to be executed each time Quoter is run.  If a `-d` Detailed or `-t` Trend is requested, the saved securities will be included.  If a symbol is added on the command line it will be shown along with those that are saved.  If `-s` is provided and there are already saved securities, the current list will overwrite the old list |
 |-r | Remove saved securities.  If you'd like them back you'll need to re-save them |
 |-i | Ignore saved queries for this execution.  They will remain saved |
 |-z | Disable colorized output|
-|-b | Use the IEXCloud.io sandbox instead of the production environment.  This is just needed during development.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via the IEXCloud dashboard and set with the `-c` command line switch |
+|-b | Use the IEXCloud.io sandbox instead of the production environment.  This is just needed during development.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via the IEXCloud dashboard and set with the `-c` command line switch when in sandbox (`-b`) mode|
 
 #### Security Information
 |Option|Description|
@@ -61,7 +61,7 @@ Example:
     java -jar quoter.jar -x outputfile.csv t bp cmcsa ni vz 
 
 ## Trending
-<img align="right" width="300" src="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot-Trending.jpg">This feature will allow for approximately three months of trending.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.  It's probably 90 degrees to what I'd like, but it's not a GUI application and there are limited capabilities of doing this in the console.  
+<img align="right" width="300" src="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot-Trending.jpg">This feature will allow for approximately three months of trending.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.
 
 It's executed by giving Quoter the **`-t`** command line switch.  If there are 5 symbols on the command line, it will trend them all.
 

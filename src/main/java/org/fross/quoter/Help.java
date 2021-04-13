@@ -54,7 +54,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "Command Line Options");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nConfiguration:");
-		Output.printColorln(Ansi.Color.WHITE, "  -c  Configure the IEXCloud secret key. See link above for details.");
+		Output.printColorln(Ansi.Color.WHITE, "  -c  Configure the IEXCloud secret key. See GitHub readme.md at above link for details.");
 		Output.printColorln(Ansi.Color.WHITE, "  -k  Display the IEXCloud secret key being used");
 		Output.printColorln(Ansi.Color.WHITE, "  -s  Save securities as default and show them automatically");
 		Output.printColorln(Ansi.Color.WHITE, "  -r  Remove saved securities");

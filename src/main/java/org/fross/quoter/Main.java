@@ -50,7 +50,6 @@ public class Main {
 	public static String VERSION;
 	public static String COPYRIGHT;
 	public static final String PROPERTIES_FILE = "app.properties";
-	public static final String PREFS_IEXCLOUDTOKEN = "iexcloudtoken";
 	public static final String PREFS_SAVED_SYMBOLS = "savedsymbols";
 	public static final String IEXCLOUDPRODURL = "https://cloud.iexapis.com";
 	public static final String IEXCLOUDSANDBOXURL = "https://sandbox.iexapis.com";
@@ -62,6 +61,9 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		final String PREFS_IEXCLOUDPRODTOKEN = "iexcloudtoken";
+		final String PREFS_IEXCLOUDSBOXTOKEN = "iexcloudsboxtoken";
+		String IEXCloudToken = "";
 		int optionEntry;
 		String latestTime = "None";
 		FileExporter exporter = null;
@@ -71,8 +73,9 @@ public class Main {
 		boolean exportFlag = false;
 		boolean trendFlag = false;
 		boolean detailedFlag = false;
-		boolean saveSymbolsflag = false;
+		boolean saveSymbolsFlag = false;
 		boolean ignoreSavedFlag = false;
+		boolean sandboxFlag = false;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -108,7 +111,7 @@ public class Main {
 
 			// Save command line securities
 			case 's':
-				saveSymbolsflag = true;
+				saveSymbolsFlag = true;
 				break;
 
 			// Remove saved securities
@@ -121,19 +124,35 @@ public class Main {
 				ignoreSavedFlag = true;
 				break;
 
+			// Enable IEXCloud Sandbox mode instead of normal production environment
+			case 'b':
+				IEXCloudBaseURL = IEXCLOUDSANDBOXURL;
+				sandboxFlag = true;
+				break;
+
 			// Configure IEXCloud Secret Key
 			case 'c':
 				Scanner scanner = new Scanner(System.in);
-				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
-				Prefs.set(PREFS_IEXCLOUDTOKEN, scanner.next());
-				Output.debugPrint("Setting Preference for iexcloudtoken: " + Prefs.queryString(PREFS_IEXCLOUDTOKEN));
-				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDTOKEN) + "'");
+				if (sandboxFlag == true) {
+					Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token for the Sandbox environment: ");
+					Prefs.set(PREFS_IEXCLOUDSBOXTOKEN, scanner.next());
+					Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Sandbox Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN) + "'");
+				} else {
+					Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
+					Prefs.set(PREFS_IEXCLOUDPRODTOKEN, scanner.next());
+					Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Production Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN) + "'");
+				}
+				scanner.close();
 				System.exit(0);
 				break;
 
-			// Display Configured IEXCloud Secret Key
+			// Display Configured IEXCloud Secret Key in use
 			case 'k':
-				Output.println(Prefs.queryString(PREFS_IEXCLOUDTOKEN));
+				if (sandboxFlag == true) {
+					Output.println("Sandbox Environment Key:\n" + Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN));
+				} else {
+					Output.println("Production Environment Key:\n" + Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN));
+				}
 				System.exit(0);
 				break;
 
@@ -157,11 +176,6 @@ public class Main {
 				Output.enableColor(false);
 				break;
 
-			// Enable IEXCloud Sandbox instead of normal production enviornment
-			case 'b':
-				IEXCloudBaseURL = IEXCLOUDSANDBOXURL;
-				break;
-
 			// Access in program help
 			case '?':
 			case 'h':
@@ -177,9 +191,13 @@ public class Main {
 			}
 		}
 
-		// Read the preferences and make sure that an API key has been entered with the -c
-		// option
-		if (Prefs.queryString(PREFS_IEXCLOUDTOKEN) == "Error") {
+		// Read the preferences and make sure that a production API key has been entered with the -c option
+		if (sandboxFlag == true) {
+			IEXCloudToken = Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN);
+		} else {
+			IEXCloudToken = Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN);
+		}
+		if (IEXCloudToken == "Error") {
 			Output.fatalError("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
 		}
 
@@ -194,7 +212,7 @@ public class Main {
 		}
 
 		// Save the symbols on the command line to preferences as a space delimited list
-		if (saveSymbolsflag == true && symbolList.isEmpty() == false) {
+		if (saveSymbolsFlag == true && symbolList.isEmpty() == false) {
 			String flatSymbolList = "";
 			for (String i : symbolList) {
 				flatSymbolList += i + " ";
@@ -236,7 +254,7 @@ public class Main {
 				String[] outString = new String[9];
 
 				// Create the symbol object
-				Symbol symbolData = new Symbol(currentSymbol, Prefs.queryString(PREFS_IEXCLOUDTOKEN));
+				Symbol symbolData = new Symbol(currentSymbol, IEXCloudToken);
 
 				// Validate the provided quote is valid
 				// If invalid, remove it from symbol list so it doesn't get processed later with trend or export
@@ -401,7 +419,7 @@ public class Main {
 		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
 		// just index data is displayed, grab a security in order to get the date
 		if (symbolList.isEmpty()) {
-			Symbol getTime = new Symbol("IBM", Prefs.queryString(PREFS_IEXCLOUDTOKEN));
+			Symbol getTime = new Symbol("IBM", IEXCloudToken);
 			latestTime = getTime.get("latestUpdate");
 		}
 		Output.printColorln(Ansi.Color.CYAN, "\nData as of " + latestTime);
@@ -418,7 +436,7 @@ public class Main {
 			// Loop through each symbol and show the detailed display
 			for (String symb : symbolList) {
 				// Create the symbol data object
-				Symbol symbolData = new Symbol(symb, Prefs.queryString(PREFS_IEXCLOUDTOKEN));
+				Symbol symbolData = new Symbol(symb, IEXCloudToken);
 
 				// Display Header
 				Output.printColorln(Ansi.Color.CYAN, "-".repeat(HEADERWIDTH));
@@ -437,7 +455,7 @@ public class Main {
 		// Display trending data if -t was provided and there is at least one valid symbol
 		if (trendFlag == true && !symbolList.isEmpty()) {
 			for (String i : symbolList) {
-				HistoricalQuotes.displayTrendingMap(i, Prefs.queryString(PREFS_IEXCLOUDTOKEN));
+				HistoricalQuotes.displayTrendingMap(i, IEXCloudToken);
 			}
 		}
 
