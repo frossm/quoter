@@ -10,7 +10,7 @@ After getting an account, log into the dashboard and you can see your API tokens
 
 Unfortunately, IEXCloud does not provide index data.  Therefore they are scraped from a finance website to get the DOW, NASDAQ, and S&P500 data.  I don't really like this, but it seems the only option at this point.  It does mean that there is a likelihood that I'll probably have to keep updating the program if the web page format changes.
 
-I live in the US and have no idea how this will perform for stock exchanges.  For indexes, it only pulls the DOW, S&P500, and the NASDAQ.  
+I live in the US and quoter is configured to pull indexes from the three common US exchanges:  DOW, S&P500, and the NASDAQ.  However, stock values should be able to be pulled for any that IEXCloud supports.  This would include the trending and detailed capabilities.
 
 ## Program Setup
 
