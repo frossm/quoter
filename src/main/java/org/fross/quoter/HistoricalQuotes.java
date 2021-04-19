@@ -203,7 +203,7 @@ public class HistoricalQuotes {
 			// Calculate number of dashes from close to high
 			int numHighSpaces = (int) ((dailyHigh - close) * slotsPerCostUnit);
 
-			// Calculate number of dashes at the end
+			// Calculate number of spaces at the end
 			int numFinalSpaces = (GRAPHWIDTH - numInitialSpaces - numLowSpaces - numHighSpaces);
 
 			try {
