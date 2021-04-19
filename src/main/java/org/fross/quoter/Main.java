@@ -77,6 +77,7 @@ public class Main {
 		boolean saveSymbolsFlag = false;
 		boolean ignoreSavedFlag = false;
 		boolean sandboxFlag = false;
+		boolean displayIndexDataFlag = true;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -92,7 +93,7 @@ public class Main {
 		}
 
 		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzbw:h?");
+		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzbw:nh?");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			// Turn on Debug Mode
@@ -129,6 +130,11 @@ public class Main {
 			case 'b':
 				IEXCloudBaseURL = IEXCLOUDSANDBOXURL;
 				sandboxFlag = true;
+				break;
+
+			// Disable displaying the index data
+			case 'n':
+				displayIndexDataFlag = false;
 				break;
 
 			// Set custom console width to use with the trending display
@@ -372,58 +378,60 @@ public class Main {
 				}
 			}
 
-			Output.println("");
 		}
 
-		// Display Index Output Header
-		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
-		Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh        52WLow");
-		Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
+		// Unless disabled, display the index data
+		if (displayIndexDataFlag == true) {
+			// Display Index Output Header
+			Output.printColorln(Ansi.Color.CYAN, "\n-------------------------------------------------------------------------------");
+			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh        52WLow");
+			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
-		// Loop through the three indexes and display the results
-		String[] indexList = { "DOW", "NASDAQ", "S&P" };
-		for (int i = 0; i < indexList.length; i++) {
-			String[] outString = new String[6];
-			String[] result = Index.getIndex(indexList[i]);
-			try {
-				// Download the web page and return the results array
-				Output.debugPrint("Getting Index data for: " + indexList[i]);
+			// Loop through the three indexes and display the results
+			String[] indexList = { "DOW", "NASDAQ", "S&P" };
+			for (int i = 0; i < indexList.length; i++) {
+				String[] outString = new String[6];
+				String[] result = Index.getIndex(indexList[i]);
+				try {
+					// Download the web page and return the results array
+					Output.debugPrint("Getting Index data for: " + indexList[i]);
 
-				// Determine the color based on the change amount
-				Ansi.Color outputColor = Ansi.Color.WHITE;
-				if (Float.valueOf(result[2]) < 0) {
-					outputColor = Ansi.Color.RED;
+					// Determine the color based on the change amount
+					Ansi.Color outputColor = Ansi.Color.WHITE;
+					if (Float.valueOf(result[2]) < 0) {
+						outputColor = Ansi.Color.RED;
+					}
+
+					// Format the Output
+					// Symbol
+					outString[0] = String.format("%-10s", result[0]);
+					// Current
+					outString[1] = String.format("%,10.2f", Float.valueOf(result[1].replace(",", "")));
+					// Change Amount
+					outString[2] = String.format("%+,10.2f", Float.valueOf(result[2].replace(",", "")));
+					// Change Percentage
+					outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3].replace("%", "")));
+					// 52Week High
+					outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
+					// 52Week Low
+					outString[5] = String.format("%,14.2f", Float.valueOf(result[5].replace(",", "")));
+
+					// Display Index results to the screen
+					for (int k = 0; k < outString.length; k++) {
+						Output.printColor(outputColor, outString[k]);
+					}
+
+					// Start a new line for the next index
+					Output.println("");
+
+					// If export is chosen, dump this index's data to the export file
+					if (exportFlag == true && exporter.canWrite()) {
+						exporter.exportIndexes(result);
+					}
+				} catch (Exception Ex) {
+					Output.printColorln(Ansi.Color.RED, outString[0] + ": No Data");
+
 				}
-
-				// Format the Output
-				// Symbol
-				outString[0] = String.format("%-10s", result[0]);
-				// Current
-				outString[1] = String.format("%,10.2f", Float.valueOf(result[1].replace(",", "")));
-				// Change Amount
-				outString[2] = String.format("%+,10.2f", Float.valueOf(result[2].replace(",", "")));
-				// Change Percentage
-				outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3].replace("%", "")));
-				// 52Week High
-				outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
-				// 52Week Low
-				outString[5] = String.format("%,14.2f", Float.valueOf(result[5].replace(",", "")));
-
-				// Display Index results to the screen
-				for (int k = 0; k < outString.length; k++) {
-					Output.printColor(outputColor, outString[k]);
-				}
-
-				// Start a new line for the next index
-				Output.println("");
-
-				// If export is chosen, dump this index's data to the export file
-				if (exportFlag == true && exporter.canWrite()) {
-					exporter.exportIndexes(result);
-				}
-			} catch (Exception Ex) {
-				Output.printColorln(Ansi.Color.RED, outString[0] + ": No Data");
-
 			}
 		}
 

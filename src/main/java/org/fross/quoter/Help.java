@@ -62,7 +62,8 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -z        Disable colorized output");
 		Output.printColorln(Ansi.Color.WHITE, "  -b        Use IEXCloud Sandbox URL instead of production");
 		Output.printColorln(Ansi.Color.WHITE, "  -w WIDTH  Width, in columns, of output for the trending display");
-
+		Output.printColorln(Ansi.Color.WHITE, "  -n        Hide the Index display and just show stock quotes");
+		
 		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
 		Output.printColorln(Ansi.Color.WHITE, "  -d        Display more detailed security information");
 		Output.printColorln(Ansi.Color.WHITE, "  -t        Include a 3 month historical trend");
