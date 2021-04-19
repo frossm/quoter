@@ -150,8 +150,9 @@ public class HistoricalQuotes {
 	 * @param symb, token
 	 */
 	public static void displayTrendingMap(String symb, String token) {
-		int GRAPHWIDTH = 80;
+		int graphWidth;
 		Float slotsPerCostUnit;
+		int lengthOfCurrentPrice;
 
 		// Get the historical quotes
 		Map<String, Float[]> resultTreeMap = getHistoricalQuotes(symb, token);
@@ -162,30 +163,35 @@ public class HistoricalQuotes {
 		Output.debugPrint("Largest Value in Historical Data:  " + lv);
 		Output.debugPrint("Smallest Value in Historical Data: " + sv);
 
-		// Determine how many spaces per dollar
-		slotsPerCostUnit = GRAPHWIDTH / (lv - sv);
-		Output.debugPrint("Map Slots: " + GRAPHWIDTH);
-		Output.debugPrint("Slots per Cost Unit: " + slotsPerCostUnit);
-
 		// Create a symbol object with IEXCloud Data
 		Symbol symbolData = new Symbol(symb, token);
 
+		// Determine the output width. GraphWidth is TotalWidth - DateWidth - dailyLow/Close/High
+		lengthOfCurrentPrice = symbolData.get("latestPrice").toString().length();
+		graphWidth = Main.trendingWidth - 12 - (lengthOfCurrentPrice * 3 + 10);
+		Output.debugPrint("Trending Graph Width set to: " + graphWidth);
+
+		// Determine how many spaces per dollar
+		slotsPerCostUnit = graphWidth / (lv - sv);
+		Output.debugPrint("Map Slots: " + graphWidth);
+		Output.debugPrint("Slots per Cost Unit: " + slotsPerCostUnit);
+
 		// Display the symbol informational header
-		Output.printColorln(Ansi.Color.WHITE, "\n\n+--Three Month Trend" + "-".repeat(GRAPHWIDTH - 7) + "+");
+		Output.printColorln(Ansi.Color.WHITE, "\n\n+--Three Month Trend" + "-".repeat(graphWidth - 7) + "+");
 		Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + symbolData.get("companyName"));
 		Output.printColorln(Ansi.Color.YELLOW, "Exchange:    " + symbolData.get("primaryExchange"));
 		Output.printColorln(Ansi.Color.YELLOW, "PE Ratio:    " + symbolData.get("peRatio"));
 		Output.printColorln(Ansi.Color.YELLOW, "Market Cap:  " + symbolData.get("marketCap"));
-		Output.printColorln(Ansi.Color.WHITE, "+" + "-".repeat(GRAPHWIDTH + 12) + "+\n");
+		Output.printColorln(Ansi.Color.WHITE, "+" + "-".repeat(graphWidth + 12) + "+\n");
 
 		// Display trending title bar
 		String midNumber = String.format("%.2f", ((sv + lv) / 2));
-		int titleSpaces1 = (GRAPHWIDTH / 2) - sv.toString().length() - (int) midNumber.length() / 2;
-		int titleSpaces2 = GRAPHWIDTH - sv.toString().length() - titleSpaces1 - lv.toString().length() - lv.toString().length();
+		int titleSpaces1 = (graphWidth / 2) - sv.toString().length() - (int) midNumber.length() / 2;
+		int titleSpaces2 = graphWidth - sv.toString().length() - titleSpaces1 - lv.toString().length() - lv.toString().length();
 
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv);
-		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH / 2) + "+" + "-".repeat(GRAPHWIDTH / 2) + "+");
-		Output.printColorln(Ansi.Color.CYAN, "  Low\tClose\tHigh");
+		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
+		Output.printColorln(Ansi.Color.CYAN, "  Low" + " ".repeat(lengthOfCurrentPrice - 1) + "Close" + " ".repeat(lengthOfCurrentPrice - 3) + "High");
 
 		// Loop through the sorted data and display the graph
 		for (Map.Entry<String, Float[]> i : resultTreeMap.entrySet()) {
@@ -204,7 +210,7 @@ public class HistoricalQuotes {
 			int numHighSpaces = (int) ((dailyHigh - close) * slotsPerCostUnit);
 
 			// Calculate number of spaces at the end
-			int numFinalSpaces = (GRAPHWIDTH - numInitialSpaces - numLowSpaces - numHighSpaces);
+			int numFinalSpaces = (graphWidth - numInitialSpaces - numLowSpaces - numHighSpaces);
 
 			try {
 				Output.printColor(Ansi.Color.CYAN, date + " |");
@@ -221,7 +227,7 @@ public class HistoricalQuotes {
 		}
 
 		// Display the Footer
-		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(GRAPHWIDTH / 2) + "+" + "-".repeat(GRAPHWIDTH / 2) + "+");
+		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv + "\n\n");
 	}
 

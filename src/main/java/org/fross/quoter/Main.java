@@ -49,6 +49,7 @@ public class Main {
 	// Class Constants
 	public static String VERSION;
 	public static String COPYRIGHT;
+	public static int trendingWidth = 127;
 	public static final String PROPERTIES_FILE = "app.properties";
 	public static final String PREFS_SAVED_SYMBOLS = "savedsymbols";
 	public static final String IEXCLOUDPRODURL = "https://cloud.iexapis.com";
@@ -91,7 +92,7 @@ public class Main {
 		}
 
 		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzbh?");
+		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzbw:h?");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			// Turn on Debug Mode
@@ -128,6 +129,16 @@ public class Main {
 			case 'b':
 				IEXCloudBaseURL = IEXCLOUDSANDBOXURL;
 				sandboxFlag = true;
+				break;
+
+			// Set custom console width to use with the trending display
+			case 'w':
+				try {
+					trendingWidth = Integer.parseInt(optG.getOptarg());
+					Output.debugPrint("Setting custom trending screen width to: " + trendingWidth);
+				} catch (Exception ex) {
+					Output.fatalError("Illegal value for trending width (-w)", 1);
+				}
 				break;
 
 			// Configure IEXCloud Secret Key

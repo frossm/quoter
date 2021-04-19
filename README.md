@@ -34,6 +34,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |-i | Ignore saved queries for this execution.  They will remain saved |
 |-z | Disable colorized output|
 |-b | Use the IEXCloud.io sandbox instead of the production environment.  Note, the `-b` sandbox switch must be the first command line switch.  It's used during development and probably not much use for normal users.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via the IEXCloud dashboard and set with the `-c` command line switch when in sandbox (`-b`) mode|
+|-w COLUMNS| Set a custom width for the trending display.  This is the number of columns the output should use.  I have quoter aliased and I call it with my current column width|
 
 #### Security Information
 |Option|Description|

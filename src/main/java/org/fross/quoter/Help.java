@@ -54,13 +54,14 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "Command Line Options");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nConfiguration:");
-		Output.printColorln(Ansi.Color.WHITE, "  -c  Configure the IEXCloud secret key. See GitHub readme.md at above link for details.");
-		Output.printColorln(Ansi.Color.WHITE, "  -k  Display the IEXCloud secret key being used");
-		Output.printColorln(Ansi.Color.WHITE, "  -s  Save securities as default and show them automatically");
-		Output.printColorln(Ansi.Color.WHITE, "  -r  Remove saved securities");
-		Output.printColorln(Ansi.Color.WHITE, "  -i  Ignore saved queries for this execution only");
-		Output.printColorln(Ansi.Color.WHITE, "  -z  Disable colorized output");
-		Output.printColorln(Ansi.Color.WHITE, "  -b  Use IEXCloud Sandbox instead of production (remember to set new key");
+		Output.printColorln(Ansi.Color.WHITE, "  -c        Configure the IEXCloud secret key. See GitHub at for details.");
+		Output.printColorln(Ansi.Color.WHITE, "  -k        Display the IEXCloud secret key being used");
+		Output.printColorln(Ansi.Color.WHITE, "  -s        Save securities as default and show them automatically");
+		Output.printColorln(Ansi.Color.WHITE, "  -r        Remove saved securities");
+		Output.printColorln(Ansi.Color.WHITE, "  -i        Ignore saved queries for this execution only");
+		Output.printColorln(Ansi.Color.WHITE, "  -z        Disable colorized output");
+		Output.printColorln(Ansi.Color.WHITE, "  -b        Use IEXCloud Sandbox URL instead of production");
+		Output.printColorln(Ansi.Color.WHITE, "  -w WIDTH  Width, in columns, of output for the trending display");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
 		Output.printColorln(Ansi.Color.WHITE, "  -d        Display more detailed security information");
@@ -73,7 +74,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -? | -h   Display this help information");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nNotes:");
-		Output.printColorln(Ansi.Color.WHITE, " - Quoter data is sourced from IEXCloud.io. You'll need minimally a free account");
+		Output.printColorln(Ansi.Color.WHITE, " - Quoter data is sourced from IEXCloud.io. You'll need, minimally, the free account");
 		Output.printColorln(Ansi.Color.WHITE, " - The Index data is pulled from a financial website\n");
 	}
 }
