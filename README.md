@@ -1,14 +1,14 @@
 <p align="center"> <img width="70%" src ="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot.jpg"> </p> 
 
-# quoter - The Console Based Stock Quote Tool
+# Quoter - The Console Based Stock Quote Tool
 
-<img align="right" width="200" src="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg">Quoter is a small command line tool to fetch stock quotes.  It's a single executable JAR file.  No installation needed, just download the file and run it from the command line with `java -jar quoter.jar`
+<img align="right" width="200" src="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg">Quoter is a small command line tool to fetch stock quotes and US index data.  It's a single executable JAR file.  No installation needed, just download the file and run it from the command line with `java -jar quoter.jar`
 
 In order to minimize HTML scraping, it retrieves quotes from [IEXCloud](https://iexcloud.io).  You can signup for free and get 500k stock quotes per month.  Please check their usage agreements prior to signing up and ensure you are allowed to user their service.
 
-After getting an account, log into the dashboard and you can see your API tokens.  You'll need the secret token to use this program.  The secret key starts with ``sk_``
+After getting an account, log into the IEXCloud dashboard and you can see your API tokens.  You'll need the secret token to use with Quoter.  The secret key starts with ``sk_``
 
-Unfortunately, IEXCloud does not provide index data.  Therefore they are scraped from a finance website to get the DOW, NASDAQ, and S&P500 data.  I don't really like this, but it seems the only option at this point.  It does mean that there is a likelihood that I'll probably have to keep updating the program if the web page format changes.
+Unfortunately, IEXCloud does not provide index data.  Therefore the DOW, NASDAQ, and S&P500 index data is scraped from a finance website.  I don't really like this, but it seems the only option at this point.  It does mean that there is a likelihood that I'll probably have to keep updating the program if the web page format changes.  If IEXCloud starts to provide these for free, I'll switch over to that.
 
 I live in the US and quoter is configured to pull indexes from the three common US exchanges:  DOW, S&P500, and the NASDAQ.  However, stock values should be able to be pulled for any that IEXCloud supports.  This would include the trending and detailed capabilities.
 
@@ -33,7 +33,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |-r | Remove saved securities.  If you'd like them back you'll need to re-save them |
 |-i | Ignore saved queries for this execution.  They will remain saved |
 |-z | Disable colorized output|
-|-b | Use the IEXCloud.io sandbox instead of the production environment.  This is just needed during development.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via the IEXCloud dashboard and set with the `-c` command line switch when in sandbox (`-b`) mode|
+|-b | Use the IEXCloud.io sandbox instead of the production environment.  Note, the `-b` sandbox switch must be the first command line switch.  It's used during development and probably not much use for normal users.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via the IEXCloud dashboard and set with the `-c` command line switch when in sandbox (`-b`) mode|
 
 #### Security Information
 |Option|Description|
