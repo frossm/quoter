@@ -119,6 +119,8 @@ public class Main {
 			// Remove saved securities
 			case 'r':
 				Prefs.remove(PREFS_SAVED_SYMBOLS);
+				Output.printColor(Ansi.Color.YELLOW, "Saved securities have been removed\n");
+				System.exit(0);
 				break;
 
 			// Ignore saved securities
@@ -234,7 +236,7 @@ public class Main {
 			for (String i : symbolList) {
 				flatSymbolList += i + " ";
 			}
-			Output.debugPrint("Saving the following symbols to preferences: '" + flatSymbolList.trim() + "'");
+			Output.printColorln(Ansi.Color.YELLOW, " - Saving the following symbols: '" + flatSymbolList.trim() + "'");
 			Prefs.set(PREFS_SAVED_SYMBOLS, flatSymbolList.trim());
 
 			// Empty the symbol list after saving as they will be added back below. Don't want it twice

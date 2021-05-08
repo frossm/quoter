@@ -30,10 +30,10 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key.  If you are in sandbox mode with `-b` it will configure the sandbox key.  Please ensure that the `-b` is entered on the command line prior to the `-c`|
 |-k | Display the configured IEX secret API key and exit.  It will display the production key normally, but if we're in sandbox mode (`-b`) it will display the sandbox key|
 |-s | Save the securities provided into the preferences system to be executed each time Quoter is run.  If a `-d` Detailed or `-t` Trend is requested, the saved securities will be included.  If a symbol is added on the command line it will be shown along with those that are saved.  If `-s` is provided and there are already saved securities, the current list will overwrite the old list |
-|-r | Remove saved securities.  If you'd like them back you'll need to re-save them |
+|-r | Remove saved securities and exit program.  If you'd like them back you'll simply need to re-save them with the `-s` flag|
 |-i | Ignore saved queries for this execution.  They will remain saved |
 |-z | Disable colorized output|
-|-b | Use the IEXCloud.io sandbox instead of the production environment.  Note, the `-b` sandbox switch must be the first command line switch.  It's used during development and probably not much use for normal users.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via the IEXCloud dashboard and set with the `-c` command line switch when in sandbox (`-b`) mode|
+|-b | Use the IEXCloud.io sandbox instead of the production environment.  Note, the `-b` sandbox switch must be the first command line switch.  It's used during development and probably not much use for normal users.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via your IEXCloud dashboard and set with the `-c` command line switch when in sandbox (`-b`) mode|
 |-w COLUMNS| Set a custom width for the trending display.  This is the number of columns the output should use.  I have quoter aliased and I call it with my current column width|
 |-n| Hide the index display and just show the stock quotes.  If no stocks are provided, then nothing will happen|
 
@@ -48,7 +48,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |Option|Description|
 |------|-----------|
 |-D | Start in Debug Mode which will display additional debugging data. Normally not used|
-|-v | Display the version and exit.  The `-v` version check will also check GitHub and display the latest released version|
+|-v | Display the current program version as well as check for an updated release on GitHub.  If you installed via the Quoter SNAP, updates will occur automatically and you won't need to do anything.  If you installed via GitHub, just download the latest .JAR file and replace the old one.  No installation necessary.|
 |-h or -?| Display the help page|
 
 ## Parameters
@@ -62,23 +62,28 @@ Example:
     java -jar quoter.jar amzn msft acn ibm
     java -jar quoter.jar -x outputfile.csv t bp cmcsa ni vz 
 
+## Saved Securities
+If you frequently check the same set of securities, as I do, you can save them in your preferences file so you don't need to type them in each time or setup an alias.  By simply adding `-s` to your quoter command line, the provided securities will be saved overwriting any that were previously saved.  Then by running Quoter, those will be be used in addition to any you've added to the command line.
+
+Running Quoter with `-r` will remove any saved quotes.  Running with `-i` will ignore the saved quotes for that execution.
+
 ## Trending
-<img align="right" width="300" src="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot-Trending.jpg">This feature will allow for approximately three months of trending.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.
+<img align="right" width="300" src="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot-Trending.jpg">This powerful feature will display approximately three months of trending data.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.
 
 It's executed by giving Quoter the **`-t`** command line switch.  If there are 5 symbols on the command line, it will trend them all.
 
 The display will show you the last three months of data with the daily range and the close price.
 
-Please note that this call to IEXCloud is weighted heavily and will use quite a few of your allowed monthly calls.  However, given you get 500,000 calls per month, there is probably plenty if it's not massively over used.
+Please note that this call to IEXCloud is weighted heavily and will use quite a few of your allowed monthly credits.  However, IEXCloud kinds provides users with a large number of credits and as long as it's not massively overused, there are probably enough for individual usage.
 
 
 ### SNAP Installation
 
 [![quoter](https://snapcraft.io//quoter/badge.svg)](https://snapcraft.io/quoter)
 
-I would encourage anyone with a supported Linux platform to use snap.  See [Snapcraft Homepage](https://snapcraft.io) for more information. You can download, install, and keep the application up to date automatically by installing the snap via :
+I would encourage anyone with a supported Linux platform to install Quoter as a snap.  See [Snapcraft Homepage](https://snapcraft.io) for more information. You can download, install, and keep the application up to date automatically by installing the snap via :
 
-`sudo snap install quoter`  (Assuming snap is installed)
+`sudo snap install quoter`  (Assuming snap is installed.  Ubuntu has it by default)
 
 This will install the application into a sandbox where it is separate from other applications.  Java is even included in the SNAP package so you don't evey have to have it elsewhere.  I do want to look at packaging it via Flatpak as well, but my understanding is that Maven is not well supported.  However, I need to do more investigation.
 
