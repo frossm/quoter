@@ -35,6 +35,7 @@ import java.util.Properties;
 import java.util.Scanner;
 
 import org.fross.library.Debug;
+import org.fross.library.Format;
 import org.fross.library.GitHub;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
@@ -49,7 +50,7 @@ public class Main {
 	// Class Constants
 	public static String VERSION;
 	public static String COPYRIGHT;
-	public static int trendingWidth = 127;
+	public static int trendingWidth = 120;
 	public static final String PROPERTIES_FILE = "app.properties";
 	public static final String PREFS_SAVED_SYMBOLS = "savedsymbols";
 	public static final String IEXCLOUDPRODURL = "https://cloud.iexapis.com";
@@ -78,6 +79,7 @@ public class Main {
 		boolean ignoreSavedFlag = false;
 		boolean sandboxFlag = false;
 		boolean displayIndexDataFlag = true;
+		boolean displayCreditInfo = false;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -93,7 +95,7 @@ public class Main {
 		}
 
 		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzbw:nh?");
+		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzbw:nIh?");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			// Turn on Debug Mode
@@ -181,6 +183,11 @@ public class Main {
 				exporter = new FileExporter(optG.getOptarg());
 				break;
 
+			// Display IEXCloud Account Credit Information
+			case 'I':
+				displayCreditInfo = true;
+				break;
+
 			// Display version of Quoter and exit
 			case 'v':
 				Output.printColorln(Ansi.Color.WHITE, "Quoter Version: v" + VERSION);
@@ -252,6 +259,26 @@ public class Main {
 					symbolList.add(i);
 				}
 			}
+		}
+
+		// If requested, display the IEXCloud account credits and exit
+		if (displayCreditInfo == true) {
+			Output.printColorln(Ansi.Color.WHITE, "\nIEXCloud Account Credit Limits for Current Month");
+			try {
+				IEXCloudAPICall metaData = new IEXCloudAPICall("https://cloud.iexapis.com/stable/account/metadata", IEXCloudToken);
+				long creditsUsed = Long.parseLong(metaData.get("creditsUsed").substring(0, metaData.get("creditsUsed").indexOf('.')).strip());
+				long creditLimit = Long.parseLong(metaData.get("creditLimit").substring(0, metaData.get("creditLimit").indexOf('.')).strip());
+
+				Output.printColor(Ansi.Color.WHITE, "Current Credits Used:");
+				Output.printColorln(Ansi.Color.YELLOW, String.format("%12s", Format.Comma(creditsUsed)));
+
+				Output.printColor(Ansi.Color.WHITE, "Total Credits Available:");
+				Output.printColorln(Ansi.Color.YELLOW, String.format("%9s", Format.Comma(creditLimit)));
+
+			} catch (Exception ex) {
+				Output.fatalError("Could not display IEXCloud credit usage", 4);
+			}
+			System.exit(0);
 		}
 
 		// If symbols were entered, display the header for them

@@ -70,6 +70,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -x FILE   Export data to the provided filename");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nMisc:");
+		Output.printColorln(Ansi.Color.WHITE, "  -I        Display IEXCloud credit information for month");
 		Output.printColorln(Ansi.Color.WHITE, "  -D        Start in debug mode and display developer information");
 		Output.printColorln(Ansi.Color.WHITE, "  -v        Display program version and lastest GitHub release and exit");
 		Output.printColorln(Ansi.Color.WHITE, "  -? | -h   Display this help information");

@@ -47,6 +47,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 #### Miscellaneous
 |Option|Description|
 |------|-----------|
+|-I | Display information on your IEXCloud credits.  This will show the number of credits used out of your allowed totals for the current month|
 |-D | Start in Debug Mode which will display additional debugging data. Normally not used|
 |-v | Display the current program version as well as check for an updated release on GitHub.  If you installed via the Quoter SNAP, updates will occur automatically and you won't need to do anything.  If you installed via GitHub, just download the latest .JAR file and replace the old one.  No installation necessary.|
 |-h or -?| Display the help page|
