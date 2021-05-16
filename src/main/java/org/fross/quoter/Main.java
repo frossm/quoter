@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.Properties;
 import java.util.Scanner;
 
+import org.fross.library.Date;
 import org.fross.library.Debug;
 import org.fross.library.Format;
 import org.fross.library.GitHub;
@@ -263,17 +264,21 @@ public class Main {
 
 		// If requested, display the IEXCloud account credits and exit
 		if (displayCreditInfo == true) {
-			Output.printColorln(Ansi.Color.WHITE, "\nIEXCloud Account Credit Limits for Current Month");
+			Output.printColorln(Ansi.Color.YELLOW, "\nIEXCloud Account Credit Limits for " + Date.getCurrentMonthNameLong() + " " + Date.getCurrentYear());
 			try {
 				IEXCloudAPICall metaData = new IEXCloudAPICall("https://cloud.iexapis.com/stable/account/metadata", IEXCloudToken);
 				long creditsUsed = Long.parseLong(metaData.get("creditsUsed").substring(0, metaData.get("creditsUsed").indexOf('.')).strip());
 				long creditLimit = Long.parseLong(metaData.get("creditLimit").substring(0, metaData.get("creditLimit").indexOf('.')).strip());
+				double creditUsedPercentage = ((double) creditsUsed / creditLimit) * 100;
+
+				Output.printColor(Ansi.Color.WHITE, "Credit Used Percentage:");
+				Output.printColorln(Ansi.Color.YELLOW, String.format("%10.2f%%", creditUsedPercentage));
 
 				Output.printColor(Ansi.Color.WHITE, "Current Credits Used:");
-				Output.printColorln(Ansi.Color.YELLOW, String.format("%12s", Format.Comma(creditsUsed)));
+				Output.printColorln(Ansi.Color.YELLOW, String.format("%13s", Format.Comma(creditsUsed)));
 
-				Output.printColor(Ansi.Color.WHITE, "Total Credits Available:");
-				Output.printColorln(Ansi.Color.YELLOW, String.format("%9s", Format.Comma(creditLimit)));
+				Output.printColor(Ansi.Color.WHITE, "Total Monthly Credits:");
+				Output.printColorln(Ansi.Color.YELLOW, String.format("%12s", Format.Comma(creditLimit)));
 
 			} catch (Exception ex) {
 				Output.fatalError("Could not display IEXCloud credit usage", 4);
