@@ -480,27 +480,38 @@ public class Main {
 		// Display detailed stock information if selected with the -d switch
 		if (detailedFlag == true && !symbolList.isEmpty()) {
 			final int HEADERWIDTH = 80;
-			String[] detailedFields = { "symbol", "companyName", "primaryExchange", "open", "openTime", "close", "closeTime", "high", "highTime", "low",
-					"lowTime", "latestPrice", "latestVolume", "previousClose", "previousVolume", "change", "changePercent", "agTotalVolume", "marketCap",
-					"peRatio", "week52High", "week52Low" };
+			String[] companyFields = { "symbol", "companyName", "exchange", "industry", "website", "description", "CEO", "securityName", "issueType", "sector",
+					"primarySicCode", "employees", "address", "address2", "city", "state", "zip", "country", "phone" };
+
+			String[] symbolFields = { "open", "openTime", "close", "closeTime", "high", "highTime", "low", "lowTime", "latestPrice", "latestVolume",
+					"previousClose", "previousVolume", "change", "changePercent", "agTotalVolume", "marketCap", "peRatio", "week52High", "week52Low" };
 
 			Output.printColorln(Ansi.Color.WHITE, "\nDetailed Security Information:");
 
-			// Loop through each symbol and show the detailed display
+			// Display detail of each symbol provided on command line
 			for (String symb : symbolList) {
-				// Create the symbol data object
-				Symbol symbolData = new Symbol(symb, IEXCloudToken);
+				// Query company data
+				IEXCloudAPICall companyDetail = new IEXCloudAPICall(Main.IEXCloudBaseURL + "/stable/stock/" + symb + "/company", IEXCloudToken);
+
+				// Query symbol data
+				Symbol symbolDetail = new Symbol(symb, IEXCloudToken);
 
 				// Display Header
 				Output.printColorln(Ansi.Color.CYAN, "-".repeat(HEADERWIDTH));
-				Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + symbolData.get("companyName"));
+				Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + companyDetail.get("companyName"));
 				Output.printColorln(Ansi.Color.CYAN, "-".repeat(HEADERWIDTH));
 
-				// Loop through each detailed field and display it
-				for (String field : detailedFields) {
-					Output.printColorln(Ansi.Color.WHITE, " " + String.format("%-16s", field) + " " + symbolData.get(field));
+				// Display company information
+				for (String field : companyFields) {
+					Output.printColor(Ansi.Color.WHITE, " " + String.format("%-16s", field) + ": ");
+					Output.printColorln(Ansi.Color.CYAN, " " + companyDetail.get(field));
 				}
+				Output.println("");
 
+				// Loop through each detailed field and display it
+				for (String field : symbolFields) {
+					Output.printColorln(Ansi.Color.WHITE, " " + String.format("%-16s", field) + " " + symbolDetail.get(field));
+				}
 				Output.println("");
 			}
 		}

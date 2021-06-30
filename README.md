@@ -40,7 +40,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 #### Security Information
 |Option|Description|
 |------|-----------|
-|-d | Display detailed stock information for the symbols provided.  This is simply additional information retreived from IEXCloud|
+|-d | Display detailed information on the company as well as enhanced stock information for the symbols provided.  This is simply additional information retrieved from IEXCloud|
 |-t | After the initial quote information, display a three month historical view of close prices.  Please see the discussion on trending below. Please note that this call is heavily weighted by IEXCLOUD and will use quite a few credits|
 |-x FileName| Export the results into the specified file in CSV format.  Note it needs to be a location can can be written to by the user|
 
