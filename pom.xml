@@ -5,7 +5,7 @@
 
 	<groupId>org.fross</groupId>
 	<artifactId>quoter</artifactId>
-	<version>2.7.6</version>
+	<version>2.7.7</version>
 	<packaging>jar</packaging>
 
 	<name>quoter</name>
@@ -80,7 +80,6 @@
 				</executions>
 			</plugin>
 
-
 			<!-- Copy the jar with dependencies output to one simply called the <ProjectName>.jar -->
 			<plugin>
 				<groupId>com.coderplus.maven.plugins</groupId>
@@ -101,7 +100,6 @@
 				</executions>
 			</plugin>
 
-
 			<!-- Set a pom variable to the version numbers of the defined dependencies -->
 			<!-- https://gitlab.com/josh-cain/dependencyversion-maven-plugin -->
 			<!-- Example: The library dependency version reference is ${org.fross:library:jar.version} -->
@@ -118,7 +116,6 @@
 					</execution>
 				</executions>
 			</plugin>
-
 
 			<!-- Update snapcraft.yaml file to set the program and library version -->
 			<plugin>
@@ -146,6 +143,30 @@
 						</replacement>
 					</replacements>
 				</configuration>
+			</plugin>
+
+			<!-- Run the GenChecksums.py file to create the MD5, SHA1, and SHA256 
+				checksum files -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.6.0</version>
+				<executions>
+					<execution>
+						<configuration>
+							<executable>python</executable>
+							<workingDirectory>${basedir}</workingDirectory>
+							<arguments>
+								<argument>${basedir}/tools/GenChecksums.py</argument>
+							</arguments>
+						</configuration>
+						<id>python_build</id>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 		</plugins>
