@@ -177,11 +177,13 @@ public class HistoricalQuotes {
 		Output.debugPrint("Slots per Cost Unit: " + slotsPerCostUnit);
 
 		// Display the symbol informational header
-		Output.printColorln(Ansi.Color.WHITE, "\n\n+--Three Month Trend" + "-".repeat(graphWidth - 7) + "+");
+		Output.printColorln(Ansi.Color.WHITE, "\n\n+--Three Month Trend" + "-".repeat(graphWidth + 12 - 19) + "+");
 		Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + symbolData.get("companyName"));
-		Output.printColorln(Ansi.Color.YELLOW, "Exchange:    " + symbolData.get("primaryExchange"));
-		Output.printColorln(Ansi.Color.YELLOW, "PE Ratio:    " + symbolData.get("peRatio"));
-		Output.printColorln(Ansi.Color.YELLOW, "Market Cap:  " + symbolData.get("marketCap"));
+		Output.printColorln(Ansi.Color.YELLOW, "Exchange:      " + symbolData.get("primaryExchange"));
+		Output.printColorln(Ansi.Color.YELLOW, "PE Ratio:      " + symbolData.get("peRatio"));
+		Output.printColorln(Ansi.Color.YELLOW, "Market Cap:    " + symbolData.get("marketCap"));
+		Output.printColorln(Ansi.Color.YELLOW, "3 Month Low:   " + String.format("%,.2f", sv));
+		Output.printColorln(Ansi.Color.YELLOW, "3 Month High:  " + String.format("%,.2f", lv));
 		Output.printColorln(Ansi.Color.WHITE, "+" + "-".repeat(graphWidth + 12) + "+\n");
 
 		// Display trending title bar
@@ -210,7 +212,7 @@ public class HistoricalQuotes {
 			int numHighSpaces = (int) ((dailyHigh - close) * slotsPerCostUnit);
 
 			// Calculate number of spaces at the end
-			int numFinalSpaces = (graphWidth - numInitialSpaces - numLowSpaces - numHighSpaces);
+			int numFinalSpaces = graphWidth - numInitialSpaces - numLowSpaces - numHighSpaces;
 
 			try {
 				Output.printColor(Ansi.Color.CYAN, date + " |");
@@ -220,7 +222,7 @@ public class HistoricalQuotes {
 				Output.printColor(Ansi.Color.WHITE, "-".repeat(numHighSpaces));
 				Output.print(" ".repeat(numFinalSpaces));
 				Output.printColorln(Ansi.Color.CYAN,
-						"| " + String.format("%7.2f", dailyLow) + " " + String.format("%7.2f", close) + " " + String.format("%7.2f", dailyHigh));
+						"| " + String.format("%7.2f ", dailyLow) + String.format("%7.2f ", close) + String.format("%7.2f", dailyHigh));
 			} catch (IllegalArgumentException ex) {
 				System.out.println("**ERROR**");
 			}
