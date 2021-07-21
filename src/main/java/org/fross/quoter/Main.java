@@ -503,14 +503,14 @@ public class Main {
 
 				// Display company information
 				for (String field : companyFields) {
-					Output.printColor(Ansi.Color.WHITE, " " + String.format("%-16s", field + ":") + " ");
+					Output.printColor(Ansi.Color.WHITE, " " + String.format("%-16s", Format.Capitalize(field) + ":") + " ");
 					Output.printColorln(Ansi.Color.CYAN, " " + companyDetail.get(field));
 				}
 				Output.println("");
 
 				// Loop through each detailed field and display it
 				for (String field : symbolFields) {
-					Output.printColorln(Ansi.Color.WHITE, " " + String.format("%-16s", field + ":") + "  " + symbolDetail.get(field));
+					Output.printColorln(Ansi.Color.WHITE, " " + String.format("%-16s", Format.Capitalize(field) + ":") + "  " + symbolDetail.get(field));
 				}
 				Output.println("");
 			}
