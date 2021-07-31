@@ -193,7 +193,7 @@ public class HistoricalQuotes {
 
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv);
 		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
-		Output.printColorln(Ansi.Color.CYAN, "  Low" + " ".repeat(lengthOfCurrentPrice - 1) + "Close" + " ".repeat(lengthOfCurrentPrice - 3) + "High");
+		Output.printColorln(Ansi.Color.WHITE, "  Low" + " ".repeat(lengthOfCurrentPrice - 1) + "Close" + " ".repeat(lengthOfCurrentPrice - 3) + "High");
 
 		// Loop through the sorted data and display the graph
 		for (Map.Entry<String, Float[]> i : resultTreeMap.entrySet()) {
