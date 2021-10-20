@@ -475,7 +475,7 @@ public class Main {
 			Symbol getTime = new Symbol("IBM", IEXCloudToken);
 			latestTime = getTime.get("latestUpdate");
 		}
-		Output.printColorln(Ansi.Color.CYAN, "\n" + latestTime + " - Data may be 15 minutes delayed");
+		Output.printColorln(Ansi.Color.CYAN, "\nDownloaded on " + latestTime + " and may be 15min delayed");
 
 		// Display detailed stock information if selected with the -d switch
 		if (detailedFlag == true && !symbolList.isEmpty()) {
