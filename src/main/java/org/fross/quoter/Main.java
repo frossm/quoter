@@ -424,7 +424,7 @@ public class Main {
 			// Loop through the three indexes and display the results
 			String[] indexList = { "DOW", "NASDAQ", "S&P" };
 			for (int i = 0; i < indexList.length; i++) {
-				String[] outString = new String[6];
+				String[] outString = new String[4];
 				String[] result = Index.getIndex(indexList[i]);
 				try {
 					// Download the web page and return the results array
@@ -446,9 +446,9 @@ public class Main {
 					// Change Percentage
 					outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3].replace("%", "")));
 					// 52Week High
-					outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
+					// outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
 					// 52Week Low
-					outString[5] = String.format("%,14.2f", Float.valueOf(result[5].replace(",", "")));
+					// outString[5] = String.format("%,14.2f", Float.valueOf(result[5].replace(",", "")));
 
 					// Display Index results to the screen
 					for (int k = 0; k < outString.length; k++) {
@@ -462,9 +462,8 @@ public class Main {
 					if (exportFlag == true && exporter.canWrite()) {
 						exporter.exportIndexes(result);
 					}
-				} catch (Exception Ex) {
+				} catch (Exception ex) {
 					Output.printColorln(Ansi.Color.RED, outString[0] + ": No Data");
-
 				}
 			}
 		}

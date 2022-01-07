@@ -37,29 +37,29 @@ import org.fusesource.jansi.Ansi;
 
 public class Index {
 	/**
-	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P data. Unfortunately
-	 * I have to scrape a web page for this information as IEX Cloud does not contain index data.
+	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P data. Unfortunately I have to scrape a
+	 * web page for this information as IEX Cloud does not contain index data.
 	 * 
 	 * @param idx
 	 * @return
 	 */
 	protected static String[] getIndex(String idx) {
-		String[] retArray = new String[6];
+		String[] retArray = new String[4];
 		String idxPage;
-		String URLTEMPLATE = "https://www.cnbc.com/quotes/?symbol=SYMBOLHERE";
+		String URLTEMPLATE = "https://www.marketwatch.com/investing/index/SYMBOLHERE";
 		String URL = "ERROR";
-		String[] searchPatterns = new String[6];
+		String[] searchPatterns = new String[4];
 
 		// Ensure a valid value was passed
 		switch (idx.toUpperCase()) {
 		case "DOW":
-			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", ".dji");
+			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", "djia");
 			break;
 		case "NASDAQ":
-			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", ".ixic");
+			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", "comp");
 			break;
 		case "S&P":
-			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", ".inx");
+			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", "spx");
 			break;
 		default:
 			Output.fatalError("Call to getIndex() must be 'DOW', 'NASDAQ', or 'S&P'", 4);
@@ -72,18 +72,24 @@ public class Index {
 			idxPage = URLOperations.ReadURL(URL);
 
 			// Define the regular expression patterns to look for in the URL provided above
-			searchPatterns[1] = "\"last\":\"(.*?)\"";
-			searchPatterns[2] = "\"change\":\"(.*?)\"";
-			searchPatterns[3] = "\"change_pct\":\"(.*?)\"";
-			searchPatterns[4] = "QuoteStrip-fiftyTwoWeekRange\"\\>(.*?)\\<";
-			searchPatterns[5] = "QuoteStrip-fiftyTwoWeekRange.*? - .*?\\>(.*?)\\<";
+			// Current Price
+			searchPatterns[1] = "\"price\"\\s+content=\"(.*?)\"";
+			// Change
+			searchPatterns[2] = "\"priceChange\"\\s+content=\"(.*?)\"";
+			// Change Percent
+			searchPatterns[3] = "\"priceChangePercent\"\\s+content=\"(.*?)\"";
+			// 52Week Low
+			// searchPatterns[4] = "0";
+			// 52Week High
+			// searchPatterns[5] = "0";
 
 			retArray[0] = idx;
 			for (int i = 1; i < searchPatterns.length; i++) {
 				Pattern pat = Pattern.compile(searchPatterns[i]);
 				Matcher m = pat.matcher(idxPage);
 				if (m.find()) {
-					retArray[i] = m.group(1).trim();
+					// Remove any commas / percent signs and return
+					retArray[i] = m.group(1).replaceAll("%", "").trim();
 				}
 			}
 
