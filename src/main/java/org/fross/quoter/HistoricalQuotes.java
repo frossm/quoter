@@ -191,7 +191,7 @@ public class HistoricalQuotes {
 		int titleSpaces1 = (graphWidth / 2) - sv.toString().length() - (int) midNumber.length() / 2;
 		int titleSpaces2 = graphWidth - sv.toString().length() - titleSpaces1 - lv.toString().length() - lv.toString().length();
 
-		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv);
+		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv);
 		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
 		Output.printColorln(Ansi.Color.WHITE, "  Low" + " ".repeat(lengthOfCurrentPrice - 1) + "Close" + " ".repeat(lengthOfCurrentPrice - 3) + "High");
 
@@ -230,7 +230,7 @@ public class HistoricalQuotes {
 
 		// Display the Footer
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
-		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv + "\n\n");
+		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv + "\n\n");
 	}
 
 }

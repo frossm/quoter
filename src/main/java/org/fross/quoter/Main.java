@@ -271,14 +271,12 @@ public class Main {
 				long creditLimit = Long.parseLong(metaData.get("creditLimit").substring(0, metaData.get("creditLimit").indexOf('.')).strip());
 				double creditUsedPercentage = ((double) creditsUsed / creditLimit) * 100;
 
-				Output.printColor(Ansi.Color.WHITE, "Credit Used Percentage:");
-				Output.printColorln(Ansi.Color.YELLOW, String.format("%10.2f%%", creditUsedPercentage));
-
 				Output.printColor(Ansi.Color.WHITE, "Current Credits Used:");
-				Output.printColorln(Ansi.Color.YELLOW, String.format("%13s", Format.Comma(creditsUsed)));
+				Output.printColor(Ansi.Color.YELLOW, String.format("%8s", Format.Comma(creditsUsed)));
+				Output.printColorln(Ansi.Color.YELLOW, " / " + String.format("%3.2f%%", creditUsedPercentage));
 
 				Output.printColor(Ansi.Color.WHITE, "Total Monthly Credits:");
-				Output.printColorln(Ansi.Color.YELLOW, String.format("%12s", Format.Comma(creditLimit)));
+				Output.printColorln(Ansi.Color.YELLOW, String.format("%9s", Format.Comma(creditLimit)));
 
 			} catch (Exception ex) {
 				Output.fatalError("Could not display IEXCloud credit usage", 4);
