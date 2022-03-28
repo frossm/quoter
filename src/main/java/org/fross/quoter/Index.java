@@ -44,11 +44,11 @@ public class Index {
 	 * @return
 	 */
 	protected static String[] getIndex(String idx) {
-		String[] retArray = new String[4];
+		String[] retArray = new String[6];
 		String idxPage;
 		String URLTEMPLATE = "https://www.marketwatch.com/investing/index/SYMBOLHERE";
 		String URL = "ERROR";
-		String[] searchPatterns = new String[4];
+		String[] searchPatterns = new String[6];
 
 		// Ensure a valid value was passed
 		switch (idx.toUpperCase()) {
@@ -79,17 +79,20 @@ public class Index {
 			// Change Percent
 			searchPatterns[3] = "\"priceChangePercent\"\\s+content=\"(.*?)\"";
 			// 52Week Low
-			// searchPatterns[4] = "0";
+			searchPatterns[4] = "\"label\"\\>52 Week Range\\<\\/small>\\n.+?primary\\s+\"\\>(.+?)\\s";
 			// 52Week High
-			// searchPatterns[5] = "0";
+			searchPatterns[5] = "\"label\"\\>52 Week Range\\<\\/small>\\n.+?primary\\s+\"\\>.*?\\s-\\s(.+?)\\<";
 
+			// Set the first element of the return array to the index name
 			retArray[0] = idx;
+
+			// Loop through each search condition and look for matches
 			for (int i = 1; i < searchPatterns.length; i++) {
-				Pattern pat = Pattern.compile(searchPatterns[i]);
+				Pattern pat = Pattern.compile(searchPatterns[i], Pattern.MULTILINE);
 				Matcher m = pat.matcher(idxPage);
 				if (m.find()) {
-					// Remove any commas / percent signs and return
-					retArray[i] = m.group(1).replaceAll("%", "").trim();
+					// Remove any commas / percent signs and assign to return array
+					retArray[i] = m.group(1).trim().replaceAll("[%,]", "");
 				}
 			}
 

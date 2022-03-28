@@ -416,13 +416,13 @@ public class Main {
 		if (displayIndexDataFlag == true) {
 			// Display Index Output Header
 			Output.printColorln(Ansi.Color.CYAN, "\n-------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh        52WLow");
+			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow   52WChng%");
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 			// Loop through the three indexes and display the results
 			String[] indexList = { "DOW", "NASDAQ", "S&P" };
 			for (int i = 0; i < indexList.length; i++) {
-				String[] outString = new String[4];
+				String[] outString = new String[7];
 				String[] result = Index.getIndex(indexList[i]);
 				try {
 					// Download the web page and return the results array
@@ -437,16 +437,26 @@ public class Main {
 					// Format the Output
 					// Symbol
 					outString[0] = String.format("%-10s", result[0]);
+					
 					// Current
 					outString[1] = String.format("%,10.2f", Float.valueOf(result[1].replace(",", "")));
+					
 					// Change Amount
 					outString[2] = String.format("%+,10.2f", Float.valueOf(result[2].replace(",", "")));
+					
 					// Change Percentage
 					outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3].replace("%", "")));
+					
 					// 52Week High
-					// outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
+					outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
+					
 					// 52Week Low
-					// outString[5] = String.format("%,14.2f", Float.valueOf(result[5].replace(",", "")));
+					outString[5] = String.format("%,13.2f", Float.valueOf(result[5].replace(",", "")));
+					
+					// 52Week Change Percentage between low value and high value
+					Float h = Float.valueOf(result[4]);
+					Float l = Float.valueOf(result[5]);
+					outString[6] = String.format("%+10.2f%%", ((h - l) / l) * 100);
 
 					// Display Index results to the screen
 					for (int k = 0; k < outString.length; k++) {
