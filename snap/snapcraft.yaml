@@ -1,15 +1,24 @@
 name: quoter
-version: '2.7.17'
+version: '3.0.0'
 summary: Command line utility to pull stock and index quotes
 description: |
-  Quote fetches stock quotes and index data from IEXCloud.IO.
-  You'll need a free private key from them to use it.  
+  Quoter fetches stock quotes and index data for easy display on
+  the command line.  Quote are obtained from IEXCloud.IO, and index
+  information is scrapped from a financial website.
+  To use IEXCloud, you'll need a free private key from them to use it.  
   You can register and get one on iexcloud.io.
   http://github.com/frossm/quoter
 
 grade: stable
 confinement: strict
 base: core18
+
+title: Quoter
+website: https://github.com/frossm/quoter
+contact: quoter@fross.org
+issues: https://github.com/frossm/quoter/issues
+icon: graphics/PostIt-512x512.png
+license: MIT
 
 # Enable faszter LZO compression
 compression: lzo
@@ -40,3 +49,4 @@ plugs:
    # Quoter requires network access to download quotes
    quoter-network:
       interface: network
+
