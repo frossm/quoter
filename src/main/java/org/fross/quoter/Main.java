@@ -437,22 +437,22 @@ public class Main {
 					// Format the Output
 					// Symbol
 					outString[0] = String.format("%-10s", result[0]);
-					
+
 					// Current
 					outString[1] = String.format("%,10.2f", Float.valueOf(result[1].replace(",", "")));
-					
+
 					// Change Amount
 					outString[2] = String.format("%+,10.2f", Float.valueOf(result[2].replace(",", "")));
-					
+
 					// Change Percentage
 					outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3].replace("%", "")));
-					
+
 					// 52Week High
 					outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
-					
+
 					// 52Week Low
 					outString[5] = String.format("%,13.2f", Float.valueOf(result[5].replace(",", "")));
-					
+
 					// 52Week Change Percentage between low value and high value
 					Float h = Float.valueOf(result[4]);
 					Float l = Float.valueOf(result[5]);

@@ -74,14 +74,18 @@ public class Index {
 			// Define the regular expression patterns to look for in the URL provided above
 			// Current Price
 			searchPatterns[1] = "\"price\"\\s+content=\"(.*?)\"";
+
 			// Change
 			searchPatterns[2] = "\"priceChange\"\\s+content=\"(.*?)\"";
+
 			// Change Percent
 			searchPatterns[3] = "\"priceChangePercent\"\\s+content=\"(.*?)\"";
-			// 52Week Low
-			searchPatterns[4] = "\"label\"\\>52 Week Range\\<\\/small>\\n.+?primary\\s+\"\\>(.+?)\\s";
+
 			// 52Week High
-			searchPatterns[5] = "\"label\"\\>52 Week Range\\<\\/small>\\n.+?primary\\s+\"\\>.*?\\s-\\s(.+?)\\<";
+			searchPatterns[4] = "\"label\"\\>52 Week Range\\<\\/small>\\n.+?primary\\s+\"\\>.*?\\s-\\s(.+?)\\<";
+
+			// 52Week Low
+			searchPatterns[5] = "\"label\"\\>52 Week Range\\<\\/small>\\n.+?primary\\s+\"\\>(.+?)\\s";
 
 			// Set the first element of the return array to the index name
 			retArray[0] = idx;
