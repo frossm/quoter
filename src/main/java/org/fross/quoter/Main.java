@@ -416,18 +416,19 @@ public class Main {
 		if (displayIndexDataFlag == true) {
 			// Display Index Output Header
 			Output.printColorln(Ansi.Color.CYAN, "\n-------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow   52WChng%");
+			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow      YTD%");
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 			// Loop through the three indexes and display the results
 			String[] indexList = { "DOW", "NASDAQ", "S&P" };
 			for (int i = 0; i < indexList.length; i++) {
+				// Download the web page and return the results array
+				Output.debugPrint("Getting Index data for: " + indexList[i]);
+
 				String[] outString = new String[7];
 				String[] result = Index.getIndex(indexList[i]);
-				try {
-					// Download the web page and return the results array
-					Output.debugPrint("Getting Index data for: " + indexList[i]);
 
+				try {
 					// Determine the color based on the change amount
 					Ansi.Color outputColor = Ansi.Color.WHITE;
 					if (Float.valueOf(result[2]) < 0) {
@@ -439,24 +440,22 @@ public class Main {
 					outString[0] = String.format("%-10s", result[0]);
 
 					// Current
-					outString[1] = String.format("%,10.2f", Float.valueOf(result[1].replace(",", "")));
+					outString[1] = String.format("%,10.2f", Float.valueOf(result[1]));
 
 					// Change Amount
-					outString[2] = String.format("%+,10.2f", Float.valueOf(result[2].replace(",", "")));
+					outString[2] = String.format("%+,10.2f", Float.valueOf(result[2]));
 
 					// Change Percentage
-					outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3].replace("%", "")));
+					outString[3] = String.format("%+,10.2f%%", Float.valueOf(result[3]));
 
 					// 52Week High
-					outString[4] = String.format("%,14.2f", Float.valueOf(result[4].replace(",", "")));
+					outString[4] = String.format("%,14.2f", Float.valueOf(result[4]));
 
 					// 52Week Low
-					outString[5] = String.format("%,13.2f", Float.valueOf(result[5].replace(",", "")));
+					outString[5] = String.format("%,13.2f", Float.valueOf(result[5]));
 
-					// 52Week Change Percentage between low value and high value
-					Float h = Float.valueOf(result[4]);
-					Float l = Float.valueOf(result[5]);
-					outString[6] = String.format("%+10.2f%%", ((h - l) / l) * 100);
+					// Year to Date
+					outString[6] = String.format("%+9.2f%%", Float.valueOf(result[6]));
 
 					// Display Index results to the screen
 					for (int k = 0; k < outString.length; k++) {

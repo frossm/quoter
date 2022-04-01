@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.fross</groupId>
 	<artifactId>quoter</artifactId>
-	<version>3.0.2</version>
+	<version>4.0.0</version>
 	<packaging>jar</packaging>
 
 	<name>quoter</name>
@@ -183,6 +181,13 @@
 			<version>2.9.0</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/us.codecraft/xsoup -->
+		<dependency>
+			<groupId>us.codecraft</groupId>
+			<artifactId>xsoup</artifactId>
+			<version>0.3.2</version>
+		</dependency>
+
 		<!-- Fross library functions: https://github.com/frossm/library -->
 		<dependency>
 			<groupId>org.fross</groupId>
@@ -190,4 +195,5 @@
 			<version>2021.10.24</version>
 		</dependency>
 	</dependencies>
+
 </project>

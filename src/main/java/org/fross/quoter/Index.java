@@ -27,28 +27,33 @@
 
 package org.fross.quoter;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
 
 import org.fross.library.Debug;
 import org.fross.library.Output;
-import org.fross.library.URLOperations;
 import org.fusesource.jansi.Ansi;
+import org.jsoup.HttpStatusException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
+import us.codecraft.xsoup.Xsoup;
 
 public class Index {
 	/**
 	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P data. Unfortunately I have to scrape a
 	 * web page for this information as IEX Cloud does not contain index data.
 	 * 
+	 * The XPaths were determined by using the dev tools in Chrome, selecting the element, and using copy XPath
+	 * 
 	 * @param idx
 	 * @return
 	 */
 	protected static String[] getIndex(String idx) {
-		String[] retArray = new String[6];
-		String idxPage;
+		String[] retArray = new String[7];
 		String URLTEMPLATE = "https://www.marketwatch.com/investing/index/SYMBOLHERE";
 		String URL = "ERROR";
-		String[] searchPatterns = new String[6];
+		Document htmlPage = null;
 
 		// Ensure a valid value was passed
 		switch (idx.toUpperCase()) {
@@ -65,46 +70,56 @@ public class Index {
 			Output.fatalError("Call to getIndex() must be 'DOW', 'NASDAQ', or 'S&P'", 4);
 			break;
 		}
+		
 		Output.debugPrint("Index URL rewritten to: " + URL);
 
 		try {
-			// Download the web page with
-			idxPage = URLOperations.ReadURL(URL);
-
-			// Define the regular expression patterns to look for in the URL provided above
-			// Current Price
-			searchPatterns[1] = "\"price\"\\s+content=\"(.*?)\"";
-
-			// Change
-			searchPatterns[2] = "\"priceChange\"\\s+content=\"(.*?)\"";
-
-			// Change Percent
-			searchPatterns[3] = "\"priceChangePercent\"\\s+content=\"(.*?)\"";
-
-			// 52Week High
-			searchPatterns[4] = "\"label\"\\>52 Week Range\\<\\/small>\\n.+?primary\\s+\"\\>.*?\\s-\\s(.+?)\\<";
-
-			// 52Week Low
-			searchPatterns[5] = "\"label\"\\>52 Week Range\\<\\/small>\\n.+?primary\\s+\"\\>(.+?)\\s";
+			// Download and parse the the webpage with xsoup
+			try {
+				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
+			} catch (HttpStatusException ex) {
+				Output.fatalError("Unable to connect to: " + URL + "\n" + ex.getMessage(), 4);
+			}
 
 			// Set the first element of the return array to the index name
 			retArray[0] = idx;
 
-			// Loop through each search condition and look for matches
-			for (int i = 1; i < searchPatterns.length; i++) {
-				Pattern pat = Pattern.compile(searchPatterns[i], Pattern.MULTILINE);
-				Matcher m = pat.matcher(idxPage);
-				if (m.find()) {
-					// Remove any commas / percent signs and assign to return array
-					retArray[i] = m.group(1).trim().replaceAll("[%,]", "");
-				}
+			// Current Price
+			String xPath = "//*[@id=\"maincontent\"]/div[2]/div[3]/div/div[2]/h2/span";
+			List<Element> elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
+			retArray[1] = elements.get(0).text();
+
+			// Change
+			xPath = "//*[@id=\"maincontent\"]/div[2]/div[3]/div/div[2]/bg-quote/span[1]";
+			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
+			retArray[2] = elements.get(0).text();
+
+			// Change Percent
+			xPath = "//*[@id=\"maincontent\"]/div[2]/div[3]/div/div[2]/bg-quote/span[2]";
+			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
+			retArray[3] = elements.get(0).text();
+
+			// 52 Week High & Low
+			xPath = "//*[@id=\"maincontent\"]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
+			retArray[4] = elements.get(0).text().split(" - ")[0];
+			retArray[5] = elements.get(0).text().split(" - ")[1];
+
+			// Year to Date
+			xPath = "//*[@id=\"maincontent\"]/div[7]/div[1]/div[2]/div/table/tbody/tr[3]/td[2]/ul/li[1]";
+			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
+			retArray[6] = elements.get(0).text();
+
+			// Remove any commas & percent signs in the data and trim any whitespace
+			for (int i = 0; i < retArray.length; i++) {
+				retArray[i] = retArray[i].replaceAll("[,%]", "").trim();
 			}
 
 			// If we are in debug mode, display the values we are returning
 			if (Debug.query() == true) {
-				Output.debugPrint("Index Data Returned from Web:");
+				Output.debugPrint("Index Data Results:");
 				for (int i = 0; i < retArray.length; i++) {
-					Output.debugPrint("    " + i + ": " + retArray[i]);
+					Output.debugPrint("   " + i + ": " + retArray[i]);
 				}
 			}
 
