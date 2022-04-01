@@ -75,8 +75,7 @@ It's executed by giving Quoter the **`-t`** command line switch.  If there are 5
 
 The display will show you the last three months of data with the daily range and the close price.
 
-Please note that this call to IEXCloud is weighted heavily and will use quite a few of your allowed monthly credits.  However, IEXCloud kinds provides users with a large number of credits and as long as it's not massively overused, there are probably enough for individual usage.
-
+Please note that this call to IEXCloud is weighted heavily and will use quite a few of your allowed monthly credits.  However, IEXCloud kinds provides users with a large number of credits and as long as it's not massively overused, there are probably enough for individual usage.  Credits are reset each month and you can check your current usage with the `-I` switch.
 
 ### SNAP Installation
 
