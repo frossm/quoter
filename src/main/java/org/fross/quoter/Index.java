@@ -102,8 +102,8 @@ public class Index {
 			// 52 Week High & Low
 			xPath = "//*[@id=\"maincontent\"]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
 			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
-			retArray[4] = elements.get(0).text().split(" - ")[0];
-			retArray[5] = elements.get(0).text().split(" - ")[1];
+			retArray[4] = elements.get(0).text().split(" - ")[1];
+			retArray[5] = elements.get(0).text().split(" - ")[0];
 
 			// Year to Date
 			xPath = "//*[@id=\"maincontent\"]/div[7]/div[1]/div[2]/div/table/tbody/tr[3]/td[2]/ul/li[1]";
