@@ -53,6 +53,7 @@ public class Index {
 		String[] retArray = new String[7];
 		String URLTEMPLATE = "https://www.marketwatch.com/investing/index/SYMBOLHERE";
 		String URL = "ERROR";
+		String[] xPathList = new String[7];
 		Document htmlPage = null;
 
 		// Ensure a valid value was passed
@@ -70,7 +71,7 @@ public class Index {
 			Output.fatalError("Call to getIndex() must be 'DOW', 'NASDAQ', or 'S&P'", 4);
 			break;
 		}
-		
+
 		Output.debugPrint("Index URL rewritten to: " + URL);
 
 		try {
@@ -84,36 +85,53 @@ public class Index {
 			// Set the first element of the return array to the index name
 			retArray[0] = idx;
 
-			// Current Price
-			String xPath = "//*[@id=\"maincontent\"]/div[2]/div[3]/div/div[2]/h2/span";
-			List<Element> elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
-			retArray[1] = elements.get(0).text();
+			// Determine if the market is open or closed as there are different xPaths
+			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
+			if (queryPageItem(htmlPage, marketOpenXPath).contains("Closed") == true) {
+				// Market is CLOSED
+				Output.debugPrint("Market is currently CLOSED");
 
-			// Change
-			xPath = "//*[@id=\"maincontent\"]/div[2]/div[3]/div/div[2]/bg-quote/span[1]";
-			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
-			retArray[2] = elements.get(0).text();
+				// Current Price
+				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span";
+				// Change
+				xPathList[2] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]";
+				// Change Percent
+				xPathList[3] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]";
+				// 52 Week High
+				xPathList[4] = "/html/body/div[3]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				// 52 Week Low
+				xPathList[5] = "/html/body/div[3]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				// Year to Date
+				xPathList[6] = "/html/body/div[3]/div[7]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
 
-			// Change Percent
-			xPath = "//*[@id=\"maincontent\"]/div[2]/div[3]/div/div[2]/bg-quote/span[2]";
-			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
-			retArray[3] = elements.get(0).text();
+			} else {
+				// Market is OPEN
+				Output.debugPrint("Market is currently OPEN");
 
-			// 52 Week High & Low
-			xPath = "//*[@id=\"maincontent\"]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
-			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
-			retArray[4] = elements.get(0).text().split(" - ")[1];
-			retArray[5] = elements.get(0).text().split(" - ")[0];
+				// Current Price
+				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+				// Change
+				xPathList[2] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
+				// Change Percent
+				xPathList[3] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
+				// 52 Week High
+				xPathList[4] = "/html/body/div[3]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				// 52 Week Low
+				xPathList[5] = "/html/body/div[3]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				// Year to Date
+				xPathList[6] = "/html/body/div[3]/div[7]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
+			}
 
-			// Year to Date
-			xPath = "//*[@id=\"maincontent\"]/div[7]/div[1]/div[2]/div/table/tbody/tr[3]/td[2]/ul/li[1]";
-			elements = Xsoup.compile(xPath).evaluate(htmlPage).getElements();
-			retArray[6] = elements.get(0).text();
-
-			// Remove any commas & percent signs in the data and trim any whitespace
-			for (int i = 0; i < retArray.length; i++) {
+			// Populate the return array with the values pointed to by the XPath locations
+			// Remove any commas or percent signs from the output
+			for (int i = 1; i < xPathList.length; i++) {
+				retArray[i] = queryPageItem(htmlPage, xPathList[i]);
 				retArray[i] = retArray[i].replaceAll("[,%]", "").trim();
 			}
+
+			// Assign the 52 Week high and low since the return is a range
+			retArray[4] = retArray[4].split(" - ")[1];
+			retArray[5] = retArray[5].split(" - ")[0];
 
 			// If we are in debug mode, display the values we are returning
 			if (Debug.query() == true) {
@@ -128,6 +146,18 @@ public class Index {
 		}
 
 		return retArray;
+	}
+
+	/**
+	 * queryPageItem():Find the specific value in the provided doc with the xPath given
+	 * 
+	 * @param doc
+	 * @param xPath
+	 * @return
+	 */
+	public static String queryPageItem(Document doc, String xPath) {
+		List<Element> elements = Xsoup.compile(xPath).evaluate(doc).getElements();
+		return elements.get(0).text();
 	}
 
 }
