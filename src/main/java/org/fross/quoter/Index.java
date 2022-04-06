@@ -40,6 +40,8 @@ import org.jsoup.nodes.Element;
 import us.codecraft.xsoup.Xsoup;
 
 public class Index {
+	static boolean marketOpen;
+
 	/**
 	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P data. Unfortunately I have to scrape a
 	 * web page for this information as IEX Cloud does not contain index data.
@@ -85,9 +87,16 @@ public class Index {
 			// Set the first element of the return array to the index name
 			retArray[0] = idx;
 
-			// Determine if the market is open or closed as there are different xPaths
+			// Determine if the market is open or closed
 			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
 			if (queryPageItem(htmlPage, marketOpenXPath).contains("Closed") == true) {
+				marketOpen = false;
+			} else {
+				marketOpen = true;
+			}
+
+			// MarketWatch has different XPaths depending if the market is open or closed
+			if (marketOpen == false) {
 				// Market is CLOSED
 				Output.debugPrint("Market is currently CLOSED");
 

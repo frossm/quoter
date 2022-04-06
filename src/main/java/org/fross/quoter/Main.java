@@ -475,13 +475,21 @@ public class Main {
 			}
 		}
 
+		// Display the open/closed status of the market
+		Output.printColor(Ansi.Color.CYAN, "\nThe market is currently ");
+		if (Index.marketOpen == true) {
+			Output.printColorln(Ansi.Color.WHITE, "Open");
+		} else {
+			Output.printColorln(Ansi.Color.WHITE, "Closed");
+		}
+
 		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
 		// just index data is displayed, grab a security in order to get the date
 		if (symbolList.isEmpty()) {
 			Symbol getTime = new Symbol("IBM", IEXCloudToken);
 			latestTime = getTime.get("latestUpdate");
 		}
-		Output.printColorln(Ansi.Color.CYAN, "\nDownloaded on " + latestTime + " and may be 15min delayed");
+		Output.printColorln(Ansi.Color.CYAN, "Data as of " + latestTime + " and may be 15min delayed");
 
 		// Display detailed stock information if selected with the -d switch
 		if (detailedFlag == true && !symbolList.isEmpty()) {
