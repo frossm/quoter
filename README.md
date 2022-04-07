@@ -20,7 +20,7 @@ Before you can start to use the tool, you'll need to store your API Secret Key. 
 
 This will prompt you for the key which will be stored in the java preferences system.  On Windows this is the registry.  In Linux it's a hidden directory inside your home directory. Currently it is not encrypted, but I'll need to look into this at some point.  
 
-Note that if Quoter has been installed via a snap, `quoter -c` is all that is needed.
+Note that if Quoter has been installed via a snap, `quoter -c` is all that is needed as Java is built into the snap.
 
 ## Program Options
 
@@ -28,10 +28,11 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |Option|Description|
 |------|-----------|
 |-c | Configure the [IEXCloud.IO](https://iexcloud.io) API key.  If you are in sandbox mode with `-b` it will configure the sandbox key.  Please ensure that the `-b` is entered on the command line prior to the `-c`|
-|-k | Display the configured IEX secret API key and exit.  It will display the production key normally, but if we're in sandbox mode (`-b`) it will display the sandbox key|
-|-s | Save the securities provided into the preferences system to be executed each time Quoter is run.  If a `-d` Detailed or `-t` Trend is requested, the saved securities will be included.  If a symbol is added on the command line it will be shown along with those that are saved.  If `-s` is provided and there are already saved securities, the current list will overwrite the old list |
-|-r | Remove saved securities and exit program.  If you'd like them back you'll simply need to re-save them with the `-s` flag|
-|-i | Ignore saved queries for this execution.  They will remain saved |
+|-k | Display the configured IEX secret API key and exit.  It will display the production key normally, but if we're in sandbox mode (`-b`) it will display the sandbox key.  Sandbox returns incorrect information, but is valuable during testing|
+|-s | Save the securities provided into the preferences system as a favorite that will be executed each time Quoter is run.  If a `-d` Detailed or `-t` Trend is requested, the saved securities will be included.  If an symbol is added on the command line it will be shown along with those that are saved.  If `-s` is provided and there are already saved securities, the current list will overwrite the existing list |
+|-l | List the current saved favorites|
+|-r | Remove saved favorites and exit program.  If you'd like them back you'll simply need to re-save them with the `-s` flag|
+|-i | Ignore saved favorites for this execution.  They will remain saved|
 |-z | Disable colorized output|
 |-b | Use the IEXCloud.io sandbox instead of the production environment.  Note, the `-b` sandbox switch must be the first command line switch.  It's used during development and probably not much use for normal users.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via your IEXCloud dashboard and set with the `-c` command line switch when in sandbox (`-b`) mode|
 |-w COLUMNS| Set a custom width for the trending display.  This is the number of columns the output should use.  I have quoter aliased and I call it with my current column width|

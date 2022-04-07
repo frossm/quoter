@@ -95,8 +95,11 @@ public class Main {
 			Output.fatalError("Unable to read property file '" + PROPERTIES_FILE + "'", 3);
 		}
 
+		// Display the header
+		Output.printColorln(Ansi.Color.CYAN, "\nQuoter v" + VERSION + " " + COPYRIGHT);
+
 		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "ckdtx:sriDvzbw:nIh?");
+		Getopt optG = new Getopt("quote", args, "ckdtx:slriDvzbw:nIh?");
 		while ((optionEntry = optG.getopt()) != -1) {
 			switch (optionEntry) {
 			// Turn on Debug Mode
@@ -114,12 +117,25 @@ public class Main {
 				trendFlag = true;
 				break;
 
-			// Save command line securities
+			// Save command line securities to favorites
 			case 's':
 				saveSymbolsFlag = true;
 				break;
 
-			// Remove saved securities
+			// List current favorites
+			case 'l':
+				Output.printColorln(Ansi.Color.YELLOW, "Current Favorites:");
+				for (String i : Prefs.queryString(PREFS_SAVED_SYMBOLS).split(" ")) {
+					if (i != "Error") {
+						Output.printColorln(Ansi.Color.CYAN, "  - " + i);
+					} else {
+						Output.printColorln(Ansi.Color.CYAN, "  - There are no saved favorites");
+					}
+				}
+				System.exit(0);
+				break;
+
+			// Remove saved favorites
 			case 'r':
 				Prefs.remove(PREFS_SAVED_SYMBOLS);
 				Output.printColor(Ansi.Color.YELLOW, "Saved securities have been removed\n");
@@ -227,9 +243,6 @@ public class Main {
 		if (IEXCloudToken == "Error") {
 			Output.fatalError("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
 		}
-
-		// Display the header
-		Output.printColorln(Ansi.Color.CYAN, "\nQuoter v" + VERSION + " " + COPYRIGHT);
 
 		// Build an array list of symbols entered on the command line
 		Output.debugPrint("Number of Symbols entered on command line: " + (args.length - optG.getOptind()));
