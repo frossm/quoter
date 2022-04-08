@@ -65,9 +65,9 @@ Example:
     java -jar quoter.jar -x outputfile.csv t bp cmcsa ni vz 
 
 ## Saved Securities
-If you frequently check the same set of securities, as I do, you can save them in your preferences file so you don't need to type them in each time or setup an alias.  By simply adding `-s` to your quoter command line, the provided securities will be saved overwriting any that were previously saved.  Then by running Quoter, those will be be used in addition to any you've added to the command line.
+If you frequently check the same set of securities, as I do, you can save them in your preferences file as facorites so you don't need to type them in each time or setup an alias.  By simply adding `-s` to your quoter command line, the provided securities will be saved overwriting any that were previously saved.  Then by running Quoter, those will be be used in addition to any you've added to the command line.
 
-Running Quoter with `-r` will remove any saved quotes.  Running with `-i` will ignore the saved quotes for that execution.
+Running Quoter with `-r` will remove any saved quotes.  Running with `-i` will ignore the saved quotes for that execution. Running with a `-l` will list your current saved favorites.
 
 ## Trending
 <img align="right" width="200" src="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg">This powerful feature will display approximately three months of trending data.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.
