@@ -58,7 +58,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -c        Configure the IEXCloud secret key. See GitHub homepage for details.");
 		Output.printColorln(Ansi.Color.WHITE, "  -k        Display the IEXCloud secret key being used");
 		Output.printColorln(Ansi.Color.WHITE, "  -s        Save securities provided as favorites and show them automatically");
-		Output.printColorln(Ansi.Color.WHITE, "  -l        List currently saved favorites");
+		Output.printColorln(Ansi.Color.WHITE, "  -l        List currently saved favorites and exit");
 		Output.printColorln(Ansi.Color.WHITE, "  -r        Remove saved favorites");
 		Output.printColorln(Ansi.Color.WHITE, "  -i        Ignore favorites for this execution");
 		Output.printColorln(Ansi.Color.WHITE, "  -z        Disable colorized output");
@@ -77,7 +77,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -? | -h   Display this help information");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nNotes:");
-		Output.printColorln(Ansi.Color.WHITE, " - Quoter data is sourced from IEXCloud.io. You'll need, minimally, the free account");
+		Output.printColorln(Ansi.Color.WHITE, " - Quoter security data is sourced from IEXCloud.io. You'll need at least the free account");
 		Output.printColorln(Ansi.Color.WHITE, " - The Index data is pulled from a financial website\n");
 	}
 }
