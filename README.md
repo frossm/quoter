@@ -1,8 +1,8 @@
-<p align="center"> <img width="60%" src ="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot.jpg"></p> 
+<p align="center"> <img width="60%" src ="https://github.com/frossm/quoter/raw/master/graphics/ScreenShot.jpg"></p> 
 
 # Quoter - The Console Based Stock Quote Tool
 
-<img align="right" width="450" src="https://github.com/frossm/quoter/blob/master/graphics/ScreenShot-Trending.jpg">Quoter is a small command line tool to fetch stock quotes and US index data.  It's a single executable JAR file.  No installation needed, just download the file and run it from the command line with `java -jar quoter.jar`
+<img align="right" width="450" src="https://github.com/frossm/quoter/raw/master/graphics/ScreenShot-Trending.jpg">Quoter is a small command line tool to fetch stock quotes and US index data.  It's a single executable JAR file.  No installation needed, just download the file and run it from the command line with `java -jar quoter.jar`
 
 In order to minimize HTML scraping, it retrieves quotes from [IEXCloud](https://iexcloud.io).  You can signup for free and get 500k stock quotes per month.  Please check their usage agreements prior to signing up and ensure you are allowed to user their service.
 
@@ -70,7 +70,7 @@ If you frequently check the same set of securities, as I do, you can save them i
 Running Quoter with `-r` will remove any saved quotes.  Running with `-i` will ignore the saved quotes for that execution. Running with a `-l` will list your current saved favorites.
 
 ## Trending
-<img align="right" width="200" src="https://github.com/frossm/quoter/blob/master/graphics/PostIt-512x512.jpg">This powerful feature will display approximately three months of trending data.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.
+<img align="right" width="200" src="https://github.com/frossm/quoter/raw/master/graphics/PostIt-512x512.jpg">This powerful feature will display approximately three months of trending data.  Quoter will pull the data from IEXCloud.io and show a simple time based graph.  The dates are on the Y axis, an the cost is on the X axis.
 
 It's executed by giving Quoter the **`-t`** command line switch.  If there are 5 symbols on the command line, it will trend them all.
 
