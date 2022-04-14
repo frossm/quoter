@@ -488,10 +488,11 @@ public class Main {
 		}
 
 		// Display the open/closed status of the market
+		Output.printColor(Ansi.Color.CYAN, "\nThe US index markets are currently: ");
 		if (Index.marketOpen == true) {
-			Output.printColorln(Ansi.Color.CYAN, "\nThe US index markets are currently: OPEN");
+			Output.printColorln(Ansi.Color.YELLOW, "OPEN");
 		} else {
-			Output.printColorln(Ansi.Color.CYAN, "\nThe US index markets are currently: CLOSED");
+			Output.printColorln(Ansi.Color.YELLOW, "CLOSED");
 		}
 
 		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
