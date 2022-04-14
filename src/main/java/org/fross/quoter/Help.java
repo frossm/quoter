@@ -48,36 +48,38 @@ public class Help {
 		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, "Quoter  v" + Main.VERSION) + "+");
 		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, Main.COPYRIGHT) + "+");
 		Output.printColorln(Ansi.Color.CYAN, "+" + "-".repeat(HEADERWIDTH - 2) + "+");
-		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Quoter is a tool to display stock quotes and index data"));
-		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "https://github.com/frossm/quoter") + "\n");
+		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Quoter displays stock quotes, US index data, and more"));
+		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Hompage: https://github.com/frossm/quoter") + "\n");
 
-		Output.printColorln(Ansi.Color.WHITE, "Command Line Options");
+		Output.printColorln(Ansi.Color.YELLOW, "Command Line Options");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nConfiguration:");
 		Output.printColorln(Ansi.Color.WHITE, "  -b        Use IEXCloud Sandbox for testing instead of production. Must be FIRST switch");
 		Output.printColorln(Ansi.Color.WHITE, "  -c        Configure the IEXCloud secret key. See GitHub homepage for details.");
 		Output.printColorln(Ansi.Color.WHITE, "  -k        Display the IEXCloud secret key being used");
-		Output.printColorln(Ansi.Color.WHITE, "  -s        Save securities provided as favorites and show them automatically");
-		Output.printColorln(Ansi.Color.WHITE, "  -l        List currently saved favorites and exit");
-		Output.printColorln(Ansi.Color.WHITE, "  -r        Remove saved favorites");
-		Output.printColorln(Ansi.Color.WHITE, "  -i        Ignore favorites for this execution");
 		Output.printColorln(Ansi.Color.WHITE, "  -z        Disable colorized output");
 		Output.printColorln(Ansi.Color.WHITE, "  -w WIDTH  Width, in columns, of the trending display");
 		Output.printColorln(Ansi.Color.WHITE, "  -n        Hide the Index information and just show the stock quotes");
-		
-		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
-		Output.printColorln(Ansi.Color.WHITE, "  -d        Display more detailed security information");
-		Output.printColorln(Ansi.Color.WHITE, "  -t        Include a 3 month historical trend");
 		Output.printColorln(Ansi.Color.WHITE, "  -x FILE   Export data to the provided filename");
 
+		Output.printColorln(Ansi.Color.YELLOW, "\nSaved Favorites:");
+		Output.printColorln(Ansi.Color.WHITE, "  -s        Save securities provided as favorites and show them automatically");
+		Output.printColorln(Ansi.Color.WHITE, "  -l        List currently saved favorites");
+		Output.printColorln(Ansi.Color.WHITE, "  -r        Remove saved favorites");
+		Output.printColorln(Ansi.Color.WHITE, "  -i        Ignore favorites for this execution");
+
+		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
+		Output.printColorln(Ansi.Color.WHITE, "  -d        Inlcude more detailed information on each security");
+		Output.printColorln(Ansi.Color.WHITE, "  -t        Include a 3 month historical trend");
+
 		Output.printColorln(Ansi.Color.YELLOW, "\nMisc:");
-		Output.printColorln(Ansi.Color.WHITE, "  -I        Display IEXCloud credit information for month");
+		Output.printColorln(Ansi.Color.WHITE, "  -I        Display current IEXCloud credits. They reset monthly");
 		Output.printColorln(Ansi.Color.WHITE, "  -D        Start in debug mode and display details for developers");
 		Output.printColorln(Ansi.Color.WHITE, "  -v        Display program version and lastest GitHub release and exit");
 		Output.printColorln(Ansi.Color.WHITE, "  -? | -h   Display this help information");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nNotes:");
-		Output.printColorln(Ansi.Color.WHITE, " - Quoter security data is sourced from IEXCloud.io. You'll need at least the free account");
-		Output.printColorln(Ansi.Color.WHITE, " - The Index data is pulled from a financial website\n");
+		Output.printColorln(Ansi.Color.WHITE, "  - Quoter security data is sourced from IEXCloud.io. You'll need at least the free account");
+		Output.printColorln(Ansi.Color.WHITE, "  - The Index data is pulled from a financial website\n");
 	}
 }
