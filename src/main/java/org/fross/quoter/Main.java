@@ -546,6 +546,9 @@ public class Main {
 		if (trendFlag == true && !symbolList.isEmpty()) {
 			for (String i : symbolList) {
 				HistoricalQuotes.displayTrendingMap(i, IEXCloudToken);
+				if (sandboxFlag == true) {
+					Output.printColorln(Ansi.Color.RED, Format.CenterText(trendingWidth, "**** SANDBOX MODE ENABLED - DATA IS INCORRECT ****"));
+				}
 			}
 		}
 

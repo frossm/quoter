@@ -230,7 +230,7 @@ public class HistoricalQuotes {
 
 		// Display the Footer
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
-		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv + "\n\n");
+		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv + "\n");
 	}
 
 }
