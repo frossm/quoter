@@ -36,9 +36,9 @@ compression: lzo
 apps:
    quoter:
       command: bin/java -Djava.util.prefs.userRoot="$SNAP_USER_DATA" -jar $SNAP/jar/quoter.jar
-   plugs:
-      - network
-      - home
+      plugs:
+         - network
+         - home
 
 parts:
    library:
