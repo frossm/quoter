@@ -80,6 +80,10 @@ public class Help {
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nNotes:");
 		Output.printColorln(Ansi.Color.WHITE, "  - Quoter security data is sourced from IEXCloud.io. You'll need at least the free account");
-		Output.printColorln(Ansi.Color.WHITE, "  - The Index data is pulled from a financial website\n");
+		Output.printColorln(Ansi.Color.WHITE, "  - The Index data is pulled from a financial website");
+		
+		Output.printColorln(Ansi.Color.YELLOW, "\nSNAP Installation Notes:");
+		Output.printColorln(Ansi.Color.WHITE, "  - To export data, you must assign Quoter access to your home directory via:");
+		Output.printColorln(Ansi.Color.CYAN, "  - sudo snap connect quoter:home");
 	}
 }
