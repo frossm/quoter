@@ -1,5 +1,5 @@
 name: quoter
-version: '4.0.10'
+version: '4.0.11'
 summary: Command line utility to pull stock and index quotes
 description: |
   Quoter fetches online stock quotes and index data for easy display on
@@ -36,6 +36,9 @@ compression: lzo
 apps:
    quoter:
       command: bin/java -Djava.util.prefs.userRoot="$SNAP_USER_DATA" -jar $SNAP/jar/quoter.jar
+   plugs:
+      - network
+      - home
 
 parts:
    library:
@@ -54,9 +57,3 @@ parts:
       override-prime: |
          snapcraftctl prime
          rm -vf usr/lib/jvm/java-11-openjdk-*/lib/security/blacklisted.certs
-
-plugs:
-   # Quoter requires network access to download quotes
-   quoter-network:
-      interface: network
-

@@ -84,9 +84,13 @@ Please note that this call to IEXCloud is weighted heavily and will use quite a 
 
 I would encourage anyone with a supported Linux platform to install Quoter as a snap.  See [Snapcraft Homepage](https://snapcraft.io) for more information. You can download, install, and keep the application up to date automatically by installing the snap via :
 
-`sudo snap install quoter`  (Assuming snap is installed.  Ubuntu has it by default)
+``sudo snap install quoter``  (Assuming snap is installed.  Ubuntu has it by default)
 
 This will install the application into a sandbox where it is separate from other applications.  Java is even included in the SNAP package so you don't evey have to have it elsewhere.  I do want to look at packaging it via Flatpak as well, but my understanding is that Maven is not well supported.  However, I need to do more investigation.
+
+If you are going to use the export capability, you'll need to give the snap access to your home directory.  This is done after the snap installation by connecting quoter to the home interface.  Simply run the following:
+
+``sudo snap connect quoter:home``
 
 [![Get it from the Snap Store](https://snapcraft.io/static/images/badges/en/snap-store-black.svg)](https://snapcraft.io/quoter)
 
