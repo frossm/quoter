@@ -3,7 +3,7 @@
 
 	<groupId>org.fross</groupId>
 	<artifactId>quoter</artifactId>
-	<version>4.0.12</version>
+	<version>4.0.13</version>
 	<packaging>jar</packaging>
 
 	<name>quoter</name>

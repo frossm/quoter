@@ -202,7 +202,7 @@ public class Main {
 
 			// Display IEXCloud Account Credit Information
 			case 'I':
-				displayCreditInfo = true;
+				DisplayIEXQuota(Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN));
 				break;
 
 			// Display version of Quoter and exit
@@ -272,28 +272,6 @@ public class Main {
 					symbolList.add(i);
 				}
 			}
-		}
-
-		// If requested, display the IEXCloud account credits and exit
-		if (displayCreditInfo == true) {
-			Output.printColorln(Ansi.Color.YELLOW, "\nIEXCloud Account Credit Limits for " + Date.getCurrentMonthNameLong() + " " + Date.getCurrentYear());
-			try {
-				IEXCloudAPICall metaData = new IEXCloudAPICall("https://cloud.iexapis.com/stable/account/metadata", IEXCloudToken);
-				long creditsUsed = Long.parseLong(metaData.get("creditsUsed").substring(0, metaData.get("creditsUsed").indexOf('.')).strip());
-				long creditLimit = Long.parseLong(metaData.get("creditLimit").substring(0, metaData.get("creditLimit").indexOf('.')).strip());
-				double creditUsedPercentage = ((double) creditsUsed / creditLimit) * 100;
-
-				Output.printColor(Ansi.Color.WHITE, "Current Credits Used:");
-				Output.printColor(Ansi.Color.YELLOW, String.format("%8s", Format.Comma(creditsUsed)));
-				Output.printColorln(Ansi.Color.YELLOW, " / " + String.format("%3.2f%%", creditUsedPercentage));
-
-				Output.printColor(Ansi.Color.WHITE, "Total Monthly Credits:");
-				Output.printColorln(Ansi.Color.YELLOW, String.format("%9s", Format.Comma(creditLimit)));
-
-			} catch (Exception ex) {
-				Output.fatalError("Could not display IEXCloud credit usage", 4);
-			}
-			System.exit(0);
 		}
 
 		// If symbols were entered, display the header for them
@@ -558,5 +536,34 @@ public class Main {
 			Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
 		}
 
-	}
+	} // END OF MAIN
+
+	/**
+	 * DisplayIEXQuote(): Display the current IEXCloud quota left and exit
+	 * 
+	 * @param IEXCloudToken
+	 */
+	private static void DisplayIEXQuota(String IEXCloudToken) {
+		Output.printColorln(Ansi.Color.YELLOW, "\nIEXCloud Account Credit Limits for " + Date.getCurrentMonthNameLong() + " " + Date.getCurrentYear());
+
+		try {
+			IEXCloudAPICall metaData = new IEXCloudAPICall("https://cloud.iexapis.com/stable/account/metadata", IEXCloudToken);
+			long creditsUsed = Long.parseLong(metaData.get("creditsUsed").substring(0, metaData.get("creditsUsed").indexOf('.')).strip());
+			long creditLimit = Long.parseLong(metaData.get("creditLimit").substring(0, metaData.get("creditLimit").indexOf('.')).strip());
+			double creditUsedPercentage = ((double) creditsUsed / creditLimit) * 100;
+
+			Output.printColor(Ansi.Color.WHITE, "   Total Monthly Credits:");
+			Output.printColorln(Ansi.Color.YELLOW, String.format("%10s", Format.Comma(creditLimit)));
+
+			Output.printColor(Ansi.Color.WHITE, "   Current Credits Used:");
+			Output.printColor(Ansi.Color.YELLOW, String.format("%11s", Format.Comma(creditsUsed)));
+			Output.printColorln(Ansi.Color.YELLOW, "  (" + String.format("%3.2f%%", creditUsedPercentage) + ")");
+
+		} catch (Exception ex) {
+			Output.fatalError("Could not display IEXCloud credit usage", 4);
+		}
+		System.exit(0);
+
+	} // END OF DISPLAYIEXQUOTA
+
 }
