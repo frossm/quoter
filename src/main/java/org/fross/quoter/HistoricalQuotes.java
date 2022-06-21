@@ -157,9 +157,12 @@ public class HistoricalQuotes {
 		// Get the historical quotes
 		Map<String, Float[]> resultTreeMap = getHistoricalQuotes(symb, token);
 
-		// Calculate the largest and smallest security value in the historical data
+		// Calculate the largest value and smallest value for the security in the historical data
 		Float lv = largestMapValue(resultTreeMap);
+		String lvStr = String.format("%.2f", lv);		// lv String to 2 decimals
 		Float sv = smallestMapValue(resultTreeMap);
+		String svStr = String.format("%.2f", sv);		// sv String to 2 decimals
+		
 		Output.debugPrint("Largest Value in Historical Data:  " + lv);
 		Output.debugPrint("Smallest Value in Historical Data: " + sv);
 
@@ -188,10 +191,10 @@ public class HistoricalQuotes {
 
 		// Display trending title bar
 		String midNumber = String.format("%.2f", ((sv + lv) / 2));
-		int titleSpaces1 = (graphWidth / 2) - sv.toString().length() - (int) midNumber.length() / 2;
-		int titleSpaces2 = graphWidth - sv.toString().length() - titleSpaces1 - lv.toString().length() - lv.toString().length();
+		int titleSpaces1 = (graphWidth / 2) - svStr.length() - (int) midNumber.length() / 2;
+		int titleSpaces2 = graphWidth - svStr.length() - titleSpaces1 - lvStr.length() - lvStr.length();
 
-		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv);
+		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + svStr + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lvStr);
 		Output.printColor(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
 		Output.printColorln(Ansi.Color.WHITE, "  Low" + " ".repeat(lengthOfCurrentPrice - 1) + "Close" + " ".repeat(lengthOfCurrentPrice - 3) + "High");
 
@@ -230,7 +233,7 @@ public class HistoricalQuotes {
 
 		// Display the Footer
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
-		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + sv + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lv + "\n");
+		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + svStr + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lvStr + "\n");
 	}
 
 }
