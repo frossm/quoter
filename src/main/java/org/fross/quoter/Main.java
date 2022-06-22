@@ -521,12 +521,16 @@ public class Main {
 		}
 
 		// Display trending data if -t was provided and there is at least one valid symbol
-		if (trendFlag == true && !symbolList.isEmpty()) {
-			for (String i : symbolList) {
-				HistoricalQuotes.displayTrendingMap(i, IEXCloudToken);
-				if (sandboxFlag == true) {
-					Output.printColorln(Ansi.Color.RED, Format.CenterText(trendingWidth, "**** SANDBOX MODE ENABLED - DATA IS INCORRECT ****"));
+		if (trendFlag == true) {
+			if (!symbolList.isEmpty()) {
+				for (String i : symbolList) {
+					HistoricalQuotes.displayTrendingMap(i, IEXCloudToken);
+					if (sandboxFlag == true) {
+						Output.printColorln(Ansi.Color.RED, Format.CenterText(trendingWidth, "**** SANDBOX MODE ENABLED - DATA IS INCORRECT ****"));
+					}
 				}
+			} else {
+				Output.printColorln(Ansi.Color.RED, "\nUnable to display security trend (-t) as no securities have been provided. Please see help (-h)");
 			}
 		}
 
