@@ -406,7 +406,7 @@ public class Main {
 		if (displayIndexDataFlag == true) {
 			// Display Index Output Header
 			Output.printColorln(Ansi.Color.CYAN, "\n-------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow       YTD");
+			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow      YTD%");
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 
 			// Loop through the three indexes and display the results

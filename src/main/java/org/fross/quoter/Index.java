@@ -88,7 +88,7 @@ public class Index {
 			retArray[0] = idx;
 
 			// Determine if the market is open or closed
-			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
+			String marketOpenXPath = "/html/body/div[3]/div[1]/div[3]/div/small/div";
 			if (queryPageItem(htmlPage, marketOpenXPath).contains("Closed") == true) {
 				marketOpen = false;
 			} else {
@@ -101,34 +101,34 @@ public class Index {
 				Output.debugPrint("Market is currently CLOSED");
 
 				// Current Price
-				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span";
+				xPathList[1] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/h2/span";
 				// Change
-				xPathList[2] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]";
+				xPathList[2] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[1]";
 				// Change Percent
-				xPathList[3] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]";
+				xPathList[3] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[2]";
 				// 52 Week High
-				xPathList[4] = "/html/body/div[3]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				xPathList[4] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
 				// 52 Week Low
-				xPathList[5] = "/html/body/div[3]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				xPathList[5] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
 				// Year to Date
-				xPathList[6] = "/html/body/div[3]/div[7]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
+				xPathList[6] = "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
 
 			} else {
 				// Market is OPEN
 				Output.debugPrint("Market is currently OPEN");
 
 				// Current Price
-				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+				xPathList[1] = "/html/body/section[1]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[1]/td[3]/bg-quote";
 				// Change
-				xPathList[2] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
+				xPathList[2] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
 				// Change Percent
-				xPathList[3] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
+				xPathList[3] = "//html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
 				// 52 Week High
-				xPathList[4] = "/html/body/div[3]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				xPathList[4] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
 				// 52 Week Low
-				xPathList[5] = "/html/body/div[3]/div[7]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				xPathList[5] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
 				// Year to Date
-				xPathList[6] = "/html/body/div[3]/div[7]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
+				xPathList[6] = "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
 			}
 
 			// Populate the return array with the values pointed to by the XPath locations
