@@ -162,7 +162,7 @@ public class HistoricalQuotes {
 		String lvStr = String.format("%.2f", lv);		// lv String to 2 decimals
 		Float sv = smallestMapValue(resultTreeMap);
 		String svStr = String.format("%.2f", sv);		// sv String to 2 decimals
-		
+
 		Output.debugPrint("Largest Value in Historical Data:  " + lv);
 		Output.debugPrint("Smallest Value in Historical Data: " + sv);
 
@@ -172,6 +172,7 @@ public class HistoricalQuotes {
 		// Determine the output width. GraphWidth is TotalWidth - DateWidth - dailyLow/Close/High
 		lengthOfCurrentPrice = symbolData.get("latestPrice").toString().length();
 		graphWidth = Main.trendingWidth - 12 - (lengthOfCurrentPrice * 3 + 10);
+
 		Output.debugPrint("Trending Graph Width set to: " + graphWidth);
 
 		// Determine how many spaces per dollar
@@ -191,7 +192,7 @@ public class HistoricalQuotes {
 
 		// Display trending title bar
 		String midNumber = String.format("%.2f", ((sv + lv) / 2));
-		int titleSpaces1 = (graphWidth / 2) - svStr.length() - (int) midNumber.length() / 2;
+		int titleSpaces1 = (graphWidth / 2) - svStr.length() - ((int) midNumber.length() / 2);
 		int titleSpaces2 = graphWidth - svStr.length() - titleSpaces1 - lvStr.length() - lvStr.length();
 
 		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + svStr + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lvStr);
@@ -234,6 +235,10 @@ public class HistoricalQuotes {
 		// Display the Footer
 		Output.printColorln(Ansi.Color.CYAN, " ".repeat(11) + "+" + "-".repeat(graphWidth / 2) + "+" + "-".repeat(graphWidth / 2) + "+");
 		Output.printColorln(Ansi.Color.WHITE, " ".repeat(12) + svStr + " ".repeat(titleSpaces1) + midNumber + " ".repeat(titleSpaces2) + lvStr + "\n");
+
+		// Show the dollars / space in the graph
+		String costPerSlotStr = String.format("Note: Each space on the graph is $%.2f\n", ((lv - sv) / graphWidth));
+		Output.printColorln(Ansi.Color.CYAN, " ".repeat(12 + graphWidth / 2 - costPerSlotStr.length() / 2) + costPerSlotStr);
 	}
 
 }

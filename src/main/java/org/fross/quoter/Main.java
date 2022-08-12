@@ -80,7 +80,6 @@ public class Main {
 		boolean ignoreSavedFlag = false;
 		boolean sandboxFlag = false;
 		boolean displayIndexDataFlag = true;
-		boolean displayCreditInfo = false;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
