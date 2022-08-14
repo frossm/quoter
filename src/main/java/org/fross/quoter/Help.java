@@ -69,7 +69,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -i        Ignore favorites for this execution");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nSecurity Information:");
-		Output.printColorln(Ansi.Color.WHITE, "  -d        Inlcude more detailed information on each security");
+		Output.printColorln(Ansi.Color.WHITE, "  -d        Include more detailed information on each security");
 		Output.printColorln(Ansi.Color.WHITE, "  -t        Include a 3 month historical trend");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nMisc:");

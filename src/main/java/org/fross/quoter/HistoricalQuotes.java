@@ -171,7 +171,7 @@ public class HistoricalQuotes {
 
 		// Determine the output width. GraphWidth is TotalWidth - DateWidth - dailyLow/Close/High
 		lengthOfCurrentPrice = symbolData.get("latestPrice").toString().length();
-		graphWidth = Main.trendingWidth - 12 - (lengthOfCurrentPrice * 3 + 10);
+		graphWidth = Main.cli.clWidth - 12 - (lengthOfCurrentPrice * 3 + 10);
 
 		Output.debugPrint("Trending Graph Width set to: " + graphWidth);
 

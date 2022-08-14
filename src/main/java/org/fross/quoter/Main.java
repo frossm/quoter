@@ -29,7 +29,6 @@ package org.fross.quoter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Properties;
 import java.util.Scanner;
@@ -41,7 +40,8 @@ import org.fross.library.GitHub;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
 
-import gnu.getopt.Getopt;
+import com.beust.jcommander.JCommander;
+import com.beust.jcommander.ParameterException;
 
 /**
  * Main execution class
@@ -51,12 +51,14 @@ public class Main {
 	// Class Constants
 	public static String VERSION;
 	public static String COPYRIGHT;
-	public static int trendingWidth = 120;
 	public static final String PROPERTIES_FILE = "app.properties";
 	public static final String PREFS_SAVED_SYMBOLS = "savedsymbols";
 	public static final String IEXCLOUDPRODURL = "https://cloud.iexapis.com";
 	public static final String IEXCLOUDSANDBOXURL = "https://sandbox.iexapis.com";
 	public static String IEXCloudBaseURL = IEXCLOUDPRODURL;
+
+	// Class Variables
+	static CommandLineParser cli = new CommandLineParser();
 
 	/**
 	 * Main(): Program entry point
@@ -67,19 +69,8 @@ public class Main {
 		final String PREFS_IEXCLOUDPRODTOKEN = "iexcloudtoken";
 		final String PREFS_IEXCLOUDSBOXTOKEN = "iexcloudsboxtoken";
 		String IEXCloudToken = "";
-		int optionEntry;
 		String latestTime = "None";
 		FileExporter exporter = null;
-		ArrayList<String> symbolList = new ArrayList<String>();
-
-		// Command line flags
-		boolean exportFlag = false;
-		boolean trendFlag = false;
-		boolean detailedFlag = false;
-		boolean saveSymbolsFlag = false;
-		boolean ignoreSavedFlag = false;
-		boolean sandboxFlag = false;
-		boolean displayIndexDataFlag = true;
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
@@ -97,142 +88,95 @@ public class Main {
 		// Display the header
 		Output.printColorln(Ansi.Color.CYAN, "\nQuoter v" + VERSION + " " + COPYRIGHT);
 
-		// Process Command Line Options
-		Getopt optG = new Getopt("quote", args, "ckdtx:slriDvzbw:nIh?");
-		while ((optionEntry = optG.getopt()) != -1) {
-			switch (optionEntry) {
-			// Turn on Debug Mode
-			case 'D':
-				Debug.enable();
-				break;
+		// ---- BEGIN Command Line Parsing -------------------------------------------------------------
 
-			// Show Detailed Stock Information
-			case 'd':
-				detailedFlag = true;
-				break;
+		// ---------------------------------------------------------------------------------------------
+		// Process command line parameters with the following methods
+		// ---------------------------------------------------------------------------------------------
+		JCommander jc = new JCommander();
 
-			// Show Stock Trending
-			case 't':
-				trendFlag = true;
-				break;
-
-			// Save command line securities to favorites
-			case 's':
-				saveSymbolsFlag = true;
-				break;
-
-			// List current favorites
-			case 'l':
-				Output.printColorln(Ansi.Color.YELLOW, "Current Favorites:");
-				for (String i : Prefs.queryString(PREFS_SAVED_SYMBOLS).split(" ")) {
-					if (i != "Error") {
-						Output.printColorln(Ansi.Color.CYAN, "  - " + i);
-					} else {
-						Output.printColorln(Ansi.Color.CYAN, "  - There are no saved favorites");
-					}
-				}
-				System.exit(0);
-				break;
-
-			// Remove saved favorites
-			case 'r':
-				Prefs.remove(PREFS_SAVED_SYMBOLS);
-				Output.printColor(Ansi.Color.YELLOW, "Saved securities have been removed\n");
-				System.exit(0);
-				break;
-
-			// Ignore saved securities
-			case 'i':
-				ignoreSavedFlag = true;
-				break;
-
-			// Enable IEXCloud Sandbox mode instead of normal production environment
-			case 'b':
-				IEXCloudBaseURL = IEXCLOUDSANDBOXURL;
-				sandboxFlag = true;
-				break;
-
-			// Disable displaying the index data
-			case 'n':
-				displayIndexDataFlag = false;
-				break;
-
-			// Set custom console width to use with the trending display
-			case 'w':
-				try {
-					trendingWidth = Integer.parseInt(optG.getOptarg());
-					Output.debugPrint("Setting custom trending screen width to: " + trendingWidth);
-				} catch (Exception ex) {
-					Output.fatalError("Illegal value for trending width (-w)", 1);
-				}
-				break;
-
-			// Configure IEXCloud Secret Key
-			case 'c':
-				Scanner scanner = new Scanner(System.in);
-				if (sandboxFlag == true) {
-					Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token for the Sandbox environment: ");
-					Prefs.set(PREFS_IEXCLOUDSBOXTOKEN, scanner.next());
-					Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Sandbox Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN) + "'");
-				} else {
-					Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
-					Prefs.set(PREFS_IEXCLOUDPRODTOKEN, scanner.next());
-					Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Production Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN) + "'");
-				}
-				scanner.close();
-				System.exit(0);
-				break;
-
-			// Display Configured IEXCloud Secret Key in use
-			case 'k':
-				if (sandboxFlag == true) {
-					Output.println("Sandbox Environment Key:\n" + Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN));
-				} else {
-					Output.println("Production Environment Key:\n" + Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN));
-				}
-				System.exit(0);
-				break;
-
-			// Export Data
-			case 'x':
-				exportFlag = true;
-				exporter = new FileExporter(optG.getOptarg());
-				break;
-
-			// Display IEXCloud Account Credit Information
-			case 'I':
-				DisplayIEXQuota(Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN));
-				break;
-
-			// Display version of Quoter and exit
-			case 'v':
-				Output.printColorln(Ansi.Color.WHITE, "\nLatest Release on GitHub: " + GitHub.updateCheck("quoter"));
-				Output.printColorln(Ansi.Color.CYAN, "HomePage: https://github.com/frossm/quoter");
-				System.exit(0);
-				break;
-
-			// Disable colorized output
-			case 'z':
-				Output.enableColor(false);
-				break;
-
-			// Access in program help
-			case '?':
-			case 'h':
-				Help.Display();
-				System.exit(0);
-				break;
-
-			default:
-				Output.printColor(Ansi.Color.RED, "Unknown Command Line Option: '" + (char) optionEntry + "'");
-				Help.Display();
-				System.exit(0);
-				break;
-			}
+		// JCommander parses the command line
+		try {
+			jc.setProgramName("Quoter");
+			jc = JCommander.newBuilder().addObject(cli).build();
+			jc.parse(args);
+		} catch (ParameterException ex) {
+			System.out.println(ex.getMessage());
+			jc.usage();
+			System.exit(0);
 		}
 
-		// Read the preferences and make sure that a production API key has been entered with the -c option
-		if (sandboxFlag == true) {
+		// CLI: Debug Switch
+		if (cli.clDebug == true)
+			Debug.enable();
+
+		// CLI: list Favorites
+		if (cli.clListFavorites == true) {
+			Output.printColorln(Ansi.Color.YELLOW, "Current Favorites:");
+			for (String i : Prefs.queryString(PREFS_SAVED_SYMBOLS).split(" ")) {
+				if (i != "Error") {
+					Output.printColorln(Ansi.Color.CYAN, "  - " + i);
+				} else {
+					Output.printColorln(Ansi.Color.CYAN, "  - There are no saved favorites");
+				}
+			}
+			System.exit(0);
+		}
+
+		// CLI: Turn on Sandbox Mode
+		if (cli.clSandbox == true) {
+			IEXCloudBaseURL = IEXCLOUDSANDBOXURL;
+		}
+
+		// CLI: Configure IEXCloud Secret Key
+		if (cli.clConfigure == true) {
+			Scanner scanner = new Scanner(System.in);
+			if (cli.clSandbox == true) {
+				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token for the Sandbox environment: ");
+				Prefs.set(PREFS_IEXCLOUDSBOXTOKEN, scanner.next());
+				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Sandbox Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN) + "'");
+			} else {
+				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
+				Prefs.set(PREFS_IEXCLOUDPRODTOKEN, scanner.next());
+				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Production Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN) + "'");
+			}
+			scanner.close();
+			System.exit(0);
+		}
+
+		// CLI: Display the currently configured IEXCloud secret key
+		if (cli.clKeyDisplay == true) {
+			Output.println("Sandbox Environment Key:\t" + Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN));
+			Output.println("Production Environment Key:\t" + Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN));
+			System.exit(0);
+		}
+
+		// CLI: Export Data
+		if (cli.clExport.isEmpty() == false) {
+			exporter = new FileExporter(cli.clExport);
+		}
+
+		// CLI: Display IEXCloud Credit Information
+		if (cli.clIEXCredits == true) {
+			DisplayIEXQuota(Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN));
+		}
+
+		// CLI: Display Version & Latest GitHub Release
+		if (cli.clVersion == true) {
+			Output.printColorln(Ansi.Color.WHITE, "\nLatest Release on GitHub: " + GitHub.updateCheck("quoter"));
+			Output.printColorln(Ansi.Color.CYAN, "HomePage: https://github.com/frossm/quoter");
+			System.exit(0);
+		}
+
+		// CLI: Remove saved securities
+		if (cli.clRemoveFavorites == true) {
+			Prefs.remove(PREFS_SAVED_SYMBOLS);
+			Output.printColor(Ansi.Color.YELLOW, "Saved securities have been removed\n");
+			System.exit(0);
+		}
+
+		// CLI: Read the preferences and make sure that a production API key has been entered with the -c option
+		if (cli.clSandbox == true) {
 			IEXCloudToken = Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN);
 			Output.printColorln(Ansi.Color.RED, Format.CenterText(80, "**** SANDBOX MODE ENABLED - SYMBOL DATA IS INCORRECT ****"));
 		} else {
@@ -242,39 +186,49 @@ public class Main {
 			Output.fatalError("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
 		}
 
-		// Build an array list of symbols entered on the command line
-		Output.debugPrint("Number of Symbols entered on command line: " + (args.length - optG.getOptind()));
-		for (int i = optG.getOptind(); i < args.length; i++) {
-			Output.debugPrint("Symbol entered on commandline: " + args[i]);
-			symbolList.add(args[i]);
+		// CLI: Disable color output
+		if (cli.clNoColor == true) {
+			Output.enableColor(false);
 		}
 
+		// CLI: Show Help and Exit
+		if (cli.clHelp == true) {
+			Help.Display();
+			System.exit(0);
+		}
+
+		// CLI: In debug mode, show the number of symbols listed on the command line
+		Output.debugPrint("Number of Symbols entered on command line: " + cli.symbolList.size());
+
+		// ---- END Command Line Parsing -------------------------------------------------------------
+
 		// Save the symbols on the command line to preferences as a space delimited list
-		if (saveSymbolsFlag == true && symbolList.isEmpty() == false) {
+		if (cli.clSave == true && cli.symbolList.isEmpty() == false) {
 			String flatSymbolList = "";
-			for (String i : symbolList) {
+
+			for (String i : cli.symbolList) {
 				flatSymbolList += i + " ";
 			}
 			Output.printColorln(Ansi.Color.YELLOW, " - Saving the following symbols: '" + flatSymbolList.trim() + "'");
 			Prefs.set(PREFS_SAVED_SYMBOLS, flatSymbolList.trim());
 
 			// Empty the symbol list after saving as they will be added back below. Don't want it twice
-			symbolList.clear();
+			cli.symbolList.clear();
 		}
 
 		// Add any saved symbols to the list of symbols to process
-		if (ignoreSavedFlag == false) {
+		if (cli.clIgnoreFavorites == false) {
 			Output.debugPrint("Adding saved symbols: '" + Prefs.queryString(PREFS_SAVED_SYMBOLS) + "'");
 			String[] savedSymbols = Prefs.queryString(PREFS_SAVED_SYMBOLS).split(" ");
 			for (String i : savedSymbols) {
 				if (i != "Error") {
-					symbolList.add(i);
+					cli.symbolList.add(i);
 				}
 			}
 		}
 
 		// If symbols were entered, display the header for them
-		if (symbolList.size() > 0) {
+		if (cli.symbolList.size() > 0) {
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
 			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow       YTD");
 			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
@@ -282,9 +236,9 @@ public class Main {
 
 		// Display the data for the symbols entered. If no symbols were entered, just
 		// display the index data
-		if (!symbolList.isEmpty()) {
+		if (cli.symbolList.size() > 0) {
 			// Loop through each entered symbol and display it's data
-			Iterator<String> j = symbolList.iterator();
+			Iterator<String> j = cli.symbolList.iterator();
 			String currentSymbol = "";
 
 			while (j.hasNext()) {
@@ -394,7 +348,7 @@ public class Main {
 				Output.println("");
 
 				// If export is chosen, dump this security's data to the export file
-				if (exportFlag == true && exporter.canWrite()) {
+				if (cli.clExport.isEmpty() == false && exporter.canWrite()) {
 					exporter.exportSecurities(symbolData);
 				}
 			}
@@ -402,7 +356,7 @@ public class Main {
 		}
 
 		// Unless disabled, display the index data
-		if (displayIndexDataFlag == true) {
+		if (cli.clHideIndex == false) {
 			// Display Index Output Header
 			Output.printColorln(Ansi.Color.CYAN, "\n-------------------------------------------------------------------------------");
 			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow      YTD%");
@@ -455,7 +409,7 @@ public class Main {
 					Output.println("");
 
 					// If export is chosen, dump this index's data to the export file
-					if (exportFlag == true && exporter.canWrite()) {
+					if (cli.clExport.isEmpty() == false && exporter.canWrite()) {
 						exporter.exportIndexes(result);
 					}
 				} catch (Exception ex) {
@@ -474,14 +428,14 @@ public class Main {
 
 		// Display date of the data as pulled from iecloud.net. If no symbols were provided and
 		// just index data is displayed, grab a security in order to get the date
-		if (symbolList.isEmpty()) {
+		if (cli.symbolList.isEmpty()) {
 			Symbol getTime = new Symbol("IBM", IEXCloudToken);
 			latestTime = getTime.get("latestUpdate");
 		}
 		Output.printColorln(Ansi.Color.CYAN, "Data as of " + latestTime + " and may be 15min delayed");
 
 		// Display detailed stock information if selected with the -d switch
-		if (detailedFlag == true && !symbolList.isEmpty()) {
+		if (cli.clDetailedOutput == true && !cli.symbolList.isEmpty()) {
 			final int HEADERWIDTH = 80;
 			String[] companyFields = { "symbol", "companyName", "exchange", "industry", "website", "description", "CEO", "securityName", "issueType", "sector",
 					"primarySicCode", "employees", "address", "address2", "city", "state", "zip", "country", "phone" };
@@ -492,7 +446,7 @@ public class Main {
 			Output.printColorln(Ansi.Color.WHITE, "\nDetailed Security Information:");
 
 			// Display detail of each symbol provided on command line
-			for (String symb : symbolList) {
+			for (String symb : cli.symbolList) {
 				// Query company data
 				IEXCloudAPICall companyDetail = new IEXCloudAPICall(Main.IEXCloudBaseURL + "/stable/stock/" + symb + "/company", IEXCloudToken);
 
@@ -520,12 +474,12 @@ public class Main {
 		}
 
 		// Display trending data if -t was provided and there is at least one valid symbol
-		if (trendFlag == true) {
-			if (!symbolList.isEmpty()) {
-				for (String i : symbolList) {
+		if (cli.clTrend == true) {
+			if (!cli.symbolList.isEmpty()) {
+				for (String i : cli.symbolList) {
 					HistoricalQuotes.displayTrendingMap(i, IEXCloudToken);
-					if (sandboxFlag == true) {
-						Output.printColorln(Ansi.Color.RED, Format.CenterText(trendingWidth, "**** SANDBOX MODE ENABLED - DATA IS INCORRECT ****"));
+					if (cli.clSandbox == true) {
+						Output.printColorln(Ansi.Color.RED, Format.CenterText(cli.clWidth, "**** SANDBOX MODE ENABLED - DATA IS INCORRECT ****"));
 					}
 				}
 			} else {
@@ -534,7 +488,7 @@ public class Main {
 		}
 
 		// Flush and close export file if needed
-		if (exportFlag == true) {
+		if (cli.clExport.isEmpty() == false) {
 			exporter.close();
 			Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
 		}
