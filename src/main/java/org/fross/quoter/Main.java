@@ -231,6 +231,10 @@ public class Main {
 
 		// Perform async fetches and display ticker information until user cancels application
 		if(cli.clAutoRefresh) {
+			if(!cli.clExport.isEmpty()) {
+				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used with exporting data to file.");
+				System.exit(0);
+			}
 			final FetchLatestTask asyncTimer = new FetchLatestTask(IEXCloudToken, exporter);
 			new Timer().schedule(asyncTimer, REFRESH_TIME_IN_MILLISECONDS, REFRESH_TIME_IN_MILLISECONDS);
 		}
