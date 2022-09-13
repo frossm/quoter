@@ -87,6 +87,9 @@ public class CommandLineParser {
 	@Parameter(names = { "-I", "--credits" }, description = "Display current IEXCloud credits. They reset monthly")
 	protected boolean clIEXCredits = false;
 
+	@Parameter(names = { "-a", "--auto-refresh" }, description = "Automatically refresh quotes every 30 seconds")
+	protected boolean clAutoRefresh = false;
+
 	@Parameter(description = "Stock Symbols")
 	protected List<String> symbolList = new ArrayList<>();
 
