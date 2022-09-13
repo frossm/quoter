@@ -258,7 +258,6 @@ public class Main {
 			Output.debugPrint("Invoking auto-refresh.");
 			flushConsole();
 			quoteConsoleOutput.invokeSymbolOutput(IEXCloudToken, exporter);
-			Output.printColorln(Ansi.Color.RED, String.format("Auto-Refresh flag enabled. Press 'CTRL + C' to exit."));
 		}
 	}
 
