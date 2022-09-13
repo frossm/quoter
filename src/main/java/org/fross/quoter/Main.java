@@ -231,6 +231,7 @@ public class Main {
 
 		// Perform async fetches and display ticker information until user cancels application
 		if(cli.clAutoRefresh) {
+			Output.debugPrint("Starting auto-refresh async timer.");
 			if(!cli.clExport.isEmpty()) {
 				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used with exporting data to file.");
 				System.exit(0);
@@ -254,6 +255,7 @@ public class Main {
 
 		@Override
 		public void run() {
+			Output.debugPrint("Invoking auto-refresh.");
 			flushConsole();
 			quoteConsoleOutput.invokeSymbolOutput(IEXCloudToken, exporter);
 			Output.printColorln(Ansi.Color.RED, String.format("Auto-Refresh flag enabled. Press 'CTRL + C' to exit."));
