@@ -37,6 +37,7 @@ Note that if Quoter has been installed via a snap, `quoter -c` is all that is ne
 |-b | Use the IEXCloud.io sandbox instead of the production environment.  Note, the `-b` sandbox switch must be the first command line switch.  It's used during development and probably not much use for normal users.  Please note that the sandbox requires a sandbox key, not the production key.  This can be obtained via your IEXCloud dashboard and set with the `-c` command line switch when in sandbox (`-b`) mode|
 |-w COLUMNS| Set a custom width for the trending display.  This is the number of columns the output should use.  I have quoter aliased and I call it with my current column width|
 |-n| Hide the index display and just show the stock quotes.  If no stocks are provided, then nothing will happen|
+|-a| Auto refresh the screen every 30 seconds until application is cancelled|
 
 #### Security Information
 |Option|Description|
