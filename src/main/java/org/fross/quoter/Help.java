@@ -61,7 +61,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -w WIDTH  Width, in columns, of the trending display");
 		Output.printColorln(Ansi.Color.WHITE, "  -n        Hide the Index information and just show the stock quotes");
 		Output.printColorln(Ansi.Color.WHITE, "  -x FILE   Export data to the provided filename");
-		Output.printColorln(Ansi.Color.WHITE, "  -a        Set a refresh time for quotes in seconds");
+		Output.printColorln(Ansi.Color.WHITE, "  -a TIME   Set a refresh time for quotes in seconds");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nSaved Favorites:");
 		Output.printColorln(Ansi.Color.WHITE, "  -s        Save securities provided as favorites and show them automatically");
