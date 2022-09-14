@@ -32,7 +32,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-import org.fross.library.Date;
 import org.fross.library.Debug;
 import org.fross.library.Format;
 import org.fross.library.GitHub;
@@ -60,8 +59,6 @@ public class Main {
 	protected static final CommandLineParser cli = new CommandLineParser();
 
 	private static final QuoteConsoleOutput quoteConsoleOutput = new QuoteConsoleOutput(cli);
-
-	private static final long REFRESH_TIME_IN_MILLISECONDS = 30000;
 
 	/**
 	 * Main(): Program entry point
@@ -230,14 +227,14 @@ public class Main {
 		quoteConsoleOutput.invokeSymbolOutput(IEXCloudToken, exporter);
 
 		// Perform async fetches and display ticker information until user cancels application
-		if(cli.clAutoRefresh) {
+		if(cli.clAutoRefresh > 0) {
 			Output.debugPrint("Starting auto-refresh async timer.");
 			if(!cli.clExport.isEmpty()) {
 				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used with exporting data to file.");
 				System.exit(0);
 			}
 			final FetchLatestTask asyncTimer = new FetchLatestTask(IEXCloudToken, exporter);
-			new Timer().schedule(asyncTimer, REFRESH_TIME_IN_MILLISECONDS, REFRESH_TIME_IN_MILLISECONDS);
+			new Timer().schedule(asyncTimer, cli.clAutoRefresh*1000, cli.clAutoRefresh*1000);
 		}
 
 	} // END OF MAIN

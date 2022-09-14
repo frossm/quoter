@@ -296,8 +296,9 @@ public class QuoteConsoleOutput {
             Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
         }
 
-        if(cli.clAutoRefresh) {
-            Output.printColorln(Ansi.Color.RED, String.format("Auto-Refresh flag enabled. Press 'CTRL + C' to exit."));
+        if(cli.clAutoRefresh > 0) {
+            Output.printColorln(Ansi.Color.RED,
+                    String.format("Auto-Refresh flag enabled for %d seconds. Press 'CTRL + C' to exit.", cli.clAutoRefresh));
         }
     }
 

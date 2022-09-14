@@ -29,7 +29,9 @@ package org.fross.quoter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.Parameter;
+import com.beust.jcommander.ParameterException;
 
 public class CommandLineParser {
 	// ---------------------------------------------------------------------------------------------
@@ -87,10 +89,27 @@ public class CommandLineParser {
 	@Parameter(names = { "-I", "--credits" }, description = "Display current IEXCloud credits. They reset monthly")
 	protected boolean clIEXCredits = false;
 
-	@Parameter(names = { "-a", "--auto-refresh" }, description = "Automatically refresh quotes every 30 seconds")
-	protected boolean clAutoRefresh = false;
+	@Parameter(names = { "-a", "--auto-refresh" }, description = "Set a refresh time for quotes in seconds", validateWith = AutoRefreshValidator.class)
+	protected long clAutoRefresh = 0L;
 
 	@Parameter(description = "Stock Symbols")
 	protected List<String> symbolList = new ArrayList<>();
+
+	/** Special Param Validators **/
+	final static public class AutoRefreshValidator implements IParameterValidator {
+		public AutoRefreshValidator() {}
+		@Override
+		public void validate(String name, String value) throws ParameterException {
+			int intVal;
+			try {
+				intVal = Integer.parseInt(value);
+				if(intVal < 1) {
+					throw new ParameterException(String.format("Option %s must be a whole number greater than 0 if used. Value Provided: %s", name, value));
+				}
+			} catch(Exception e) {
+				throw new ParameterException(String.format("Option %s must be a whole number greater than 0 if used. Value Provided: %s", name, value));
+			}
+		}
+	}
 
 }
