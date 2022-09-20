@@ -101,11 +101,11 @@ public class Index {
 				Output.debugPrint("Market is currently CLOSED");
 
 				// Current Price
-				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span";
 				// Change
-				xPathList[2] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[1]";
+				xPathList[2] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]";
 				// Change Percent
-				xPathList[3] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[2]";
+				xPathList[3] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]";
 				// 52 Week High
 				xPathList[4] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
 				// 52 Week Low
