@@ -43,8 +43,8 @@ public class Index {
 	static boolean marketOpen;
 
 	/**
-	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P data. Unfortunately I have to scrape a
-	 * web page for this information as IEX Cloud does not contain index data.
+	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P data. Unfortunately I have to scrape a web
+	 * page for this information as IEX Cloud does not contain index data.
 	 * 
 	 * The XPaths were determined by using the dev tools in Chrome, selecting the element, and using copy XPath
 	 * 
@@ -88,7 +88,7 @@ public class Index {
 			retArray[0] = idx;
 
 			// Determine if the market is open or closed
-			String marketOpenXPath = "/html/body/div[3]/div[1]/div[3]/div/small/div";
+			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
 			if (queryPageItem(htmlPage, marketOpenXPath).contains("Closed") == true) {
 				marketOpen = false;
 			} else {
@@ -101,7 +101,7 @@ public class Index {
 				Output.debugPrint("Market is currently CLOSED");
 
 				// Current Price
-				xPathList[1] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/h2/span";
+				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
 				// Change
 				xPathList[2] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[1]";
 				// Change Percent
@@ -118,11 +118,11 @@ public class Index {
 				Output.debugPrint("Market is currently OPEN");
 
 				// Current Price
-				xPathList[1] = "/html/body/section[1]/div[2]/div/div[2]/div/div[1]/table/tbody/tr[1]/td[3]/bg-quote";
+				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
 				// Change
-				xPathList[2] = "/html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
+				xPathList[2] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
 				// Change Percent
-				xPathList[3] = "//html/body/div[3]/div[1]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
+				xPathList[3] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
 				// 52 Week High
 				xPathList[4] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
 				// 52 Week Low
