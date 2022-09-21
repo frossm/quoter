@@ -160,7 +160,8 @@ public class Main {
 
 		// CLI: Display Version & Latest GitHub Release
 		if (cli.clVersion == true) {
-			Output.printColorln(Ansi.Color.WHITE, "\nLatest Release on GitHub: " + GitHub.updateCheck("quoter"));
+			Output.printColorln(Ansi.Color.YELLOW, "\nCurrent Quoter version:   v" + Main.VERSION);
+			Output.printColorln(Ansi.Color.WHITE, "Latest Release on GitHub: " + GitHub.updateCheck("quoter"));
 			Output.printColorln(Ansi.Color.CYAN, "HomePage: https://github.com/frossm/quoter");
 			System.exit(0);
 		}
