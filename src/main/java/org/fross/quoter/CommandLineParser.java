@@ -97,16 +97,18 @@ public class CommandLineParser {
 
 	/** Special Param Validators **/
 	final static public class AutoRefreshValidator implements IParameterValidator {
-		public AutoRefreshValidator() {}
+		public AutoRefreshValidator() {
+		}
+
 		@Override
 		public void validate(String name, String value) throws ParameterException {
 			int intVal;
 			try {
 				intVal = Integer.parseInt(value);
-				if(intVal < 1) {
+				if (intVal < 1) {
 					throw new ParameterException(String.format("Option %s must be a whole number greater than 0 if used. Value Provided: %s", name, value));
 				}
-			} catch(Exception e) {
+			} catch (Exception e) {
 				throw new ParameterException(String.format("Option %s must be a whole number greater than 0 if used. Value Provided: %s", name, value));
 			}
 		}

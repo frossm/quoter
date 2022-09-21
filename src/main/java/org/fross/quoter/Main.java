@@ -29,8 +29,10 @@ package org.fross.quoter;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Properties;
+import java.util.Scanner;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import org.fross.library.Debug;
 import org.fross.library.Format;
@@ -57,7 +59,6 @@ public class Main {
 
 	// Class Variables
 	protected static final CommandLineParser cli = new CommandLineParser();
-
 	private static final QuoteConsoleOutput quoteConsoleOutput = new QuoteConsoleOutput(cli);
 
 	/**
@@ -227,24 +228,29 @@ public class Main {
 		quoteConsoleOutput.invokeSymbolOutput(IEXCloudToken, exporter);
 
 		// Perform async fetches and display ticker information until user cancels application
-		if(cli.clAutoRefresh > 0) {
+		if (cli.clAutoRefresh > 0) {
 			Output.debugPrint("Starting auto-refresh async timer.");
-			if(!cli.clExport.isEmpty()) {
+			if (!cli.clExport.isEmpty()) {
 				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used with exporting data to file.");
 				System.exit(0);
 			}
 			final FetchLatestTask asyncTimer = new FetchLatestTask(IEXCloudToken, exporter);
-			new Timer().schedule(asyncTimer, cli.clAutoRefresh*1000, cli.clAutoRefresh*1000);
+			new Timer().schedule(asyncTimer, cli.clAutoRefresh * 1000, cli.clAutoRefresh * 1000);
 		}
 
 	} // END OF MAIN
 
+	/**
+	 * FetchLatestTask(): Setup timed task to refresh Quoter
+	 * 
+	 * @author pgalasti
+	 *
+	 */
 	private static class FetchLatestTask extends TimerTask {
 
 		private String IEXCloudToken;
 		private FileExporter exporter;
 
-		private final static SimpleDateFormat dateFormat = new SimpleDateFormat(" HH:mm:ss.SSSZ");
 		public FetchLatestTask(final String IEXCloudToken, final FileExporter exporter) {
 			this.IEXCloudToken = IEXCloudToken;
 			this.exporter = exporter;
@@ -259,7 +265,8 @@ public class Main {
 	}
 
 	private static void flushConsole() {
-		System.out.print("\033[H\033[2J");
+		//System.out.print("\033[H\033[2J");
+		Output.clearScreen();
 		System.out.flush();
 	}
 }
