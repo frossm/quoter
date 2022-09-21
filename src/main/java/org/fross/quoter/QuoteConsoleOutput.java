@@ -24,7 +24,11 @@ public class QuoteConsoleOutput {
 	 * @param exporter
 	 */
 	public void invokeSymbolOutput(final String IEXCloudToken, FileExporter exporter) {
-
+		// Display a warning if we're in sandbox mode
+		if (cli.clSandbox == true) {
+			Output.printColorln(Ansi.Color.RED, Format.CenterText(80, "**** SANDBOX MODE ENABLED - SYMBOL DATA IS INCORRECT ****"));
+		}
+		
 		// Display the header
 		Output.printColorln(Ansi.Color.CYAN, "\nQuoter v" + Main.VERSION + " " + Main.COPYRIGHT);
 
@@ -295,7 +299,7 @@ public class QuoteConsoleOutput {
 		}
 
 		if (cli.clAutoRefresh > 0) {
-			Output.printColorln(Ansi.Color.RED, String.format("Auto-Refresh flag enabled for %d seconds. Press 'CTRL + C' to exit.", cli.clAutoRefresh));
+			Output.printColorln(Ansi.Color.RED, String.format("\nAuto-Refresh flag enabled for %d seconds. Press 'CTRL + C' to exit.", cli.clAutoRefresh));
 		}
 	}
 

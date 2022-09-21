@@ -175,7 +175,6 @@ public class Main {
 		// CLI: Read the preferences and make sure that a production API key has been entered with the -c option
 		if (cli.clSandbox == true) {
 			IEXCloudToken = Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN);
-			Output.printColorln(Ansi.Color.RED, Format.CenterText(80, "**** SANDBOX MODE ENABLED - SYMBOL DATA IS INCORRECT ****"));
 		} else {
 			IEXCloudToken = Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN);
 		}
