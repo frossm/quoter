@@ -71,6 +71,15 @@ public class Main {
 		final String PREFS_IEXCLOUDSBOXTOKEN = "iexcloudsboxtoken";
 		String IEXCloudToken = "";
 		FileExporter exporter = null;
+		
+		Output.printColorln(Ansi.Color.CYAN,"\n--------------------------------------------------------------------------");
+		Output.printColorln(Ansi.Color.RED, "IMPORTANT NOTE:");
+		Output.printColorln(Ansi.Color.YELLOW, "On June 15th, 2023 IEXCloud will no longer be offering free access");
+		Output.printColorln(Ansi.Color.YELLOW, "to their financial data. I, and I believe most of you, are on the free plan.");
+		Output.printColorln(Ansi.Color.YELLOW, "Therefore, Quoter will no longer be able to grab stock quotes from IEXCloud.");
+		Output.printColorln(Ansi.Color.YELLOW, "Indexes will continue to work and I'll start to investigate another source");
+		Output.printColorln(Ansi.Color.YELLOW, "for free quotes.  This is very disappointing...");
+		Output.printColorln(Ansi.Color.CYAN,"--------------------------------------------------------------------------\n");
 
 		// Process application level properties file
 		// Update properties from Maven at build time:
