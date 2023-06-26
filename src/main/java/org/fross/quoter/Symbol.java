@@ -113,6 +113,7 @@ public class Symbol {
 	private void getSymbolData(String symb) {
 		String URL = "https://www.marketwatch.com/investing/stock/SYMBOLHERE";
 		Document htmlPage = null;
+		boolean marketOpen = false;
 
 		// Add the provided symbol to the URL template
 		URL = URL.replaceAll("SYMBOLHERE", symb);
@@ -130,65 +131,129 @@ public class Symbol {
 			this.symbolData.put("symbol", symb.toUpperCase());
 			this.symbolData.put("status", "ok");
 
-			// Market is OPEN
-			Output.debugPrint("Market is currently OPEN");
+			// MarketWatch has different XPaths depending if the market is open or closed
+			if (marketOpen == false) {
+				// Market is CLOSED
+				Output.debugPrint("Market is currently CLOSED");
 
-			// Current Price
-			String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
-			String result = queryPageItem(htmlPage, xPath);
-			symbolData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+				// Current Price
+				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+				String result = queryPageItem(htmlPage, xPath);
+				symbolData.put("latestPrice", result.replaceAll("[,%]", "").trim());
 
-			// Change
-			xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
-			result = queryPageItem(htmlPage, xPath);
-			symbolData.put("change", result.replaceAll("[,%]", "").trim());
+				// Change
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[2]";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("change", result.replaceAll("[,%]", "").trim());
 
-			// Change Percent
-			xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
-			result = queryPageItem(htmlPage, xPath);
-			symbolData.put("changePercent", result.replaceAll("[,%]", "").trim());
+				// Change Percent
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[3]";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("changePercent", result.replaceAll("[,%]", "").trim());
 
-			// 52 Week High / Low - Get range and split into high/low
-			xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
-			result = queryPageItem(htmlPage, xPath);
+				// 52 Week High / Low - Get range and split into high/low
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				result = queryPageItem(htmlPage, xPath);
 
-			String low52 = "";
-			String high52 = "";
-			try {
-				low52 = result.split(" - ")[0];
-				high52 = result.split(" - ")[1];
-			} catch (Exception ex) {
-				low52 = high52 = "-";
+				String low52 = "";
+				String high52 = "";
+				try {
+					low52 = result.split(" - ")[0];
+					high52 = result.split(" - ")[1];
+				} catch (Exception ex) {
+					low52 = high52 = "-";
+				}
+
+				symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
+				symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
+
+				// Day Range - Get range and split into high/low
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]";
+				result = queryPageItem(htmlPage, xPath);
+
+				String lowD = "";
+				String highD = "";
+				try {
+					lowD = result.split(" - ")[0];
+					highD = result.split(" - ")[1];
+				} catch (Exception ex) {
+					lowD = highD = "-";
+				}
+
+				symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
+				symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
+
+				// Year to Date Change
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("ytdChange", result.replaceAll("[,%]", "").trim());
+
+				// TimeStamp
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
+				
+			} else {
+				// Market is OPEN
+				Output.debugPrint("Market is currently OPEN");
+
+				// Current Price
+				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+				String result = queryPageItem(htmlPage, xPath);
+				symbolData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+
+				// Change
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("change", result.replaceAll("[,%]", "").trim());
+
+				// Change Percent
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("changePercent", result.replaceAll("[,%]", "").trim());
+
+				// 52 Week High / Low - Get range and split into high/low
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				result = queryPageItem(htmlPage, xPath);
+
+				String low52 = "";
+				String high52 = "";
+				try {
+					low52 = result.split(" - ")[0];
+					high52 = result.split(" - ")[1];
+				} catch (Exception ex) {
+					low52 = high52 = "-";
+				}
+
+				symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
+				symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
+
+				// Day Range - Get range and split into high/low
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]";
+				result = queryPageItem(htmlPage, xPath);
+
+				String lowD = "";
+				String highD = "";
+				try {
+					lowD = result.split(" - ")[0];
+					highD = result.split(" - ")[1];
+				} catch (Exception ex) {
+					lowD = highD = "-";
+				}
+
+				symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
+				symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
+
+				// Year to Date Change
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("ytdChange", result.replaceAll("[,%]", "").trim());
+
+				// TimeStamp
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
 			}
-
-			symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
-			symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
-
-			// Day Range - Get range and split into high/low
-			xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]";
-			result = queryPageItem(htmlPage, xPath);
-
-			String lowD = "";
-			String highD = "";
-			try {
-				lowD = result.split(" - ")[0];
-				highD = result.split(" - ")[1];
-			} catch (Exception ex) {
-				lowD = highD = "-";
-			}
-
-			symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
-			symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
-
-			// Year to Date Change
-			xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]";
-			result = queryPageItem(htmlPage, xPath);
-			symbolData.put("ytdChange", result.replaceAll("[,%]", "").trim());
-
-			// TimeStamp
-			xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
-			result = queryPageItem(htmlPage, xPath);
-			symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
 
 			// If we are in debug mode, display the values of the symbol
 			if (Debug.query() == true) {
