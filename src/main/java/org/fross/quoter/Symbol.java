@@ -26,33 +26,42 @@
  ***************************************************************************************************************/
 package org.fross.quoter;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.fross.library.Debug;
-import org.fross.library.Format;
 import org.fross.library.Output;
-import org.fross.library.URLOperations;
 import org.fusesource.jansi.Ansi;
+import org.jsoup.HttpStatusException;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import us.codecraft.xsoup.Xsoup;
 
 public class Symbol {
-	HashMap<String, String> symbolData = new HashMap<String, String>();
+	HashMap<String, String> symbolData = new HashMap<>();
 
 	/**
 	 * Symbol Constructor(): Initialize class with a symbol to process
 	 * 
 	 * @param symb
 	 */
-	public Symbol(String symb, String token) {
-		this.symbolData = getQuote(symb, token);
+	public Symbol(String symb) {
+		getSymbolData(symb);
+	}
+
+	/**
+	 * queryPageItem():Find the specific value in the provided doc with the xPath given
+	 * 
+	 * @param doc
+	 * @param xPath
+	 * @return
+	 */
+	protected static String queryPageItem(Document doc, String xPath) {
+		List<Element> elements = Xsoup.compile(xPath).evaluate(doc).getElements();
+		return elements.get(0).text();
 	}
 
 	/**
@@ -65,10 +74,9 @@ public class Symbol {
 		try {
 			return this.symbolData.get(field);
 		} catch (Exception ex) {
-			Output.fatalError("Could not query '" + field + "' field in security data", 2);
-			return "error";
+			Output.printColorln(Ansi.Color.RED, "Could not query '" + field + "' field in security data");
+			throw new IllegalArgumentException();
 		}
-
 	}
 
 	/**
@@ -102,129 +110,99 @@ public class Symbol {
 		return returnList;
 	}
 
-	/**
-	 * EpochTime2String(): Take a Long number as a time epoch and return a human readable string
-	 * 
-	 * @param epochTime
-	 * @return
-	 */
-	protected static String epochTime2String(Long epochTime) {
-		String returnString;
+	private void getSymbolData(String symb) {
+		String URL = "https://www.marketwatch.com/investing/stock/SYMBOLHERE";
+		Document htmlPage = null;
 
-		// Convert Epoch to Simple Date String
+		// Add the provided symbol to the URL template
+		URL = URL.replaceAll("SYMBOLHERE", symb);
+		Output.debugPrint("Symbol URL rewritten to: " + URL);
+
 		try {
-			Date d = new Date(epochTime);
-			DateFormat dFormat = new SimpleDateFormat("EEEEE MMMMM dd yyyy hh:mma z");
-			returnString = dFormat.format(d);
-		} catch (NullPointerException Ex) {
-			throw new NullPointerException();
-		}
-
-		return (returnString);
-	}
-
-	/**
-	 * epochTime2String(): Take a string and return a human readable date string
-	 * 
-	 * @param epochTime
-	 * @return
-	 */
-	protected static String epochTime2String(String epochTime) {
-		String result = String.format("%.0f", Double.parseDouble(epochTime));
-		return (epochTime2String(Long.parseLong(result)));
-	}
-
-	/**
-	 * getQuote: Get a stock quote from IEXCloud.io and return an array of key data
-	 * 
-	 * @param symb
-	 * @param Token
-	 * @return
-	 */
-	private static HashMap<String, String> getQuote(String symb, String token) {
-		String QUOTEURLTEMPLATE = Main.IEXCloudBaseURL + "/stable/stock/SYMBOLHERE/quote?token=TOKENHERE";
-		String quoteURL = "";
-		String quoteDetail = "";
-		HashMap<String, String> returnData = new HashMap<String, String>();
-
-		// Set the default status value to 'ok'. Will update to 'error' if there are issues
-		returnData.put("status", "ok");
-
-		// Rewrite the template URL with the provided values
-		Output.debugPrint("Processing Symbol: '" + symb + "'");
-		quoteURL = QUOTEURLTEMPLATE.replaceAll("SYMBOLHERE", symb);
-		quoteURL = quoteURL.replaceAll("TOKENHERE", token);
-		Output.debugPrint("Rewritten URL: " + quoteURL);
-
-		// Query IEXCloud's REST API and get the security information in JSON format
-		try {
-			quoteDetail = URLOperations.ReadURL(quoteURL);
-
-		} catch (Exception ex) {
-			returnData.put("symbol", symb);
-			returnData.put("status", "Error");
-			return returnData;
-		}
-		Output.debugPrint("\nRaw Data from REST API call:\n" + quoteDetail + "\n");
-
-		// Decode the JSON and extract the desired data
-		try {
-			GsonBuilder builder = new GsonBuilder();
-			Gson gson = builder.create();
-
-			// In Gson, convert the JSON into a map
-			@SuppressWarnings("unchecked")
-			Map<String, Object> gsonMap = gson.fromJson(quoteDetail, Map.class);
-
-			// Loop through the <String,Object> map and convert it to a <String, String> hashmap
-			for (Map.Entry<String, Object> i : gsonMap.entrySet()) {
-				String key = i.getKey();
-				try {
-					returnData.put(key, gsonMap.get(key).toString());
-
-				} catch (NullPointerException ex) {
-					returnData.put(key, "-");
-				}
-			}
-
-			// Process the time fields to be human readable
+			// Download and parse the the webpage with xsoup
 			try {
-				if (returnData.get("latestUpdate") != "-")
-					returnData.put("latestUpdate", Symbol.epochTime2String(returnData.get("latestUpdate")));
-				if (returnData.get("openTime") != "-")
-					returnData.put("openTime", Symbol.epochTime2String(returnData.get("openTime")));
-				if (returnData.get("closeTime") != "-")
-					returnData.put("closeTime", Symbol.epochTime2String(returnData.get("closeTime")));
-				if (returnData.get("highTime") != "-")
-					returnData.put("highTime", Symbol.epochTime2String(returnData.get("highTime")));
-				if (returnData.get("lowTime") != "-")
-					returnData.put("lowTime", Symbol.epochTime2String(returnData.get("lowTime")));
-			} catch (Exception Ex) {
-				// Leave them as dashes if there is an error
+				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
+			} catch (HttpStatusException ex) {
+				this.symbolData.put("status", "error");
 			}
 
-			// Format Market Cap, volume, and previous volume into a more easily read string
-			if (returnData.get("marketCap") != "-")
-				returnData.put("marketCap", Format.Comma(Double.valueOf(returnData.get("marketCap")).longValue()));
-			if (returnData.get("latestVolume") != "-")
-				returnData.put("latestVolume", Format.Comma(Double.valueOf(returnData.get("latestVolume")).longValue()));
-			if (returnData.get("previousVolume") != "-")
-				returnData.put("previousVolume", Format.Comma(Double.valueOf(returnData.get("previousVolume")).longValue()));
+			// Provide a status & name field
+			this.symbolData.put("symbol", symb.toUpperCase());
+			this.symbolData.put("status", "ok");
 
-			// If we are in debug mode, display the values we are returning
+			// Market is OPEN
+			Output.debugPrint("Market is currently OPEN");
+
+			// Current Price
+			String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+			String result = queryPageItem(htmlPage, xPath);
+			symbolData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+
+			// Change
+			xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
+			result = queryPageItem(htmlPage, xPath);
+			symbolData.put("change", result.replaceAll("[,%]", "").trim());
+
+			// Change Percent
+			xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
+			result = queryPageItem(htmlPage, xPath);
+			symbolData.put("changePercent", result.replaceAll("[,%]", "").trim());
+
+			// 52 Week High / Low - Get range and split into high/low
+			xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
+			result = queryPageItem(htmlPage, xPath);
+
+			String low52 = "";
+			String high52 = "";
+			try {
+				low52 = result.split(" - ")[0];
+				high52 = result.split(" - ")[1];
+			} catch (Exception ex) {
+				low52 = high52 = "-";
+			}
+
+			symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
+			symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
+
+			// Day Range - Get range and split into high/low
+			xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]";
+			result = queryPageItem(htmlPage, xPath);
+
+			String lowD = "";
+			String highD = "";
+			try {
+				lowD = result.split(" - ")[0];
+				highD = result.split(" - ")[1];
+			} catch (Exception ex) {
+				lowD = highD = "-";
+			}
+
+			symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
+			symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
+
+			// Year to Date Change
+			xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]";
+			result = queryPageItem(htmlPage, xPath);
+			symbolData.put("ytdChange", result.replaceAll("[,%]", "").trim());
+
+			// TimeStamp
+			xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
+			result = queryPageItem(htmlPage, xPath);
+			symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
+
+			// If we are in debug mode, display the values of the symbol
 			if (Debug.query() == true) {
-				Output.debugPrint("Data Returned from Web:");
-				for (Map.Entry<String, String> i : returnData.entrySet()) {
-					String key = i.getKey();
-					Output.debugPrint("    " + key + ": " + returnData.get(key));
+				Output.debugPrint("Symbol Data Results:");
+				for (String i : symbolData.keySet()) {
+					Output.debugPrint("  - " + i + ": " + this.get(i));
 				}
 			}
 
 		} catch (Exception ex) {
-			Output.printColorln(Ansi.Color.RED, "Error parsing JSON from IEX Cloud:\n" + ex.getMessage());
-			returnData.put("status", "Error");
+			Output.printColorln(Ansi.Color.RED, "Unable to get data for " + symb + "\n" + ex.getMessage());
+			this.symbolData.put("status", "error");
 		}
 
-		return returnData;
 	}
+
 }

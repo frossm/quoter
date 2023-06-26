@@ -27,6 +27,8 @@
 
 package org.fross.quoter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.fross.library.Debug;
@@ -40,7 +42,75 @@ import org.jsoup.nodes.Element;
 import us.codecraft.xsoup.Xsoup;
 
 public class Index {
+	HashMap<String, String> indexData = new HashMap<>();
 	static boolean marketOpen;
+
+	/**
+	 * Symbol Constructor(): Initialize class with a symbol to process
+	 * 
+	 * @param symb
+	 */
+	public Index(String idx) {
+		getIndex(idx);
+	}
+
+	/**
+	 * queryPageItem():Find the specific value in the provided doc with the xPath given
+	 * 
+	 * @param doc
+	 * @param xPath
+	 * @return
+	 */
+	protected static String queryPageItem(Document doc, String xPath) {
+		List<Element> elements = Xsoup.compile(xPath).evaluate(doc).getElements();
+		return elements.get(0).text();
+	}
+
+	/**
+	 * get(): Returns security detail based on passed field
+	 * 
+	 * @param field
+	 * @return
+	 */
+	protected String get(String field) {
+		try {
+			return this.indexData.get(field);
+		} catch (Exception ex) {
+			Output.printColorln(Ansi.Color.RED, "Could not query '" + field + "' field in security data");
+			throw new IllegalArgumentException();
+		}
+	}
+
+	/**
+	 * put(): Update a value in the objects symbolData HashMap
+	 * 
+	 * @param field
+	 * @param value
+	 * @return
+	 */
+	protected boolean put(String field, String value) {
+		try {
+			indexData.put(field, value);
+		} catch (Exception ex) {
+			return false;
+		}
+		return true;
+	}
+
+	/**
+	 * getAllFieldNames(): Return an array of all of the keys in the HashMap
+	 * 
+	 * @return
+	 */
+	protected List<String> getAllFieldNames() {
+		List<String> returnList = new ArrayList<String>();
+
+		for (String i : this.indexData.keySet()) {
+			returnList.add(i);
+		}
+
+		return returnList;
+	}
 
 	/**
 	 * GetIndex: Returns an array of Strings that contains the Dow, Nasdaq, and S&P data. Unfortunately I have to scrape a web
@@ -51,23 +121,20 @@ public class Index {
 	 * @param idx
 	 * @return
 	 */
-	protected static String[] getIndex(String idx) {
-		String[] retArray = new String[7];
-		String URLTEMPLATE = "https://www.marketwatch.com/investing/index/SYMBOLHERE";
-		String URL = "ERROR";
-		String[] xPathList = new String[7];
+	private void getIndex(String idx) {
+		String URL = "https://www.marketwatch.com/investing/index/SYMBOLHERE";
 		Document htmlPage = null;
 
 		// Ensure a valid value was passed
 		switch (idx.toUpperCase()) {
 		case "DOW":
-			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", "djia");
+			URL = URL.replaceAll("SYMBOLHERE", "djia");
 			break;
 		case "NASDAQ":
-			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", "comp");
+			URL = URL.replaceAll("SYMBOLHERE", "comp");
 			break;
 		case "S&P":
-			URL = URLTEMPLATE.replaceAll("SYMBOLHERE", "spx");
+			URL = URL.replaceAll("SYMBOLHERE", "spx");
 			break;
 		default:
 			Output.fatalError("Call to getIndex() must be 'DOW', 'NASDAQ', or 'S&P'", 4);
@@ -81,15 +148,16 @@ public class Index {
 			try {
 				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
 			} catch (HttpStatusException ex) {
-				Output.fatalError("Unable to connect to: " + URL + "\n" + ex.getMessage(), 4);
+				this.indexData.put("status", "error");
 			}
 
-			// Set the first element of the return array to the index name
-			retArray[0] = idx;
+			// Add the name to the hash
+			this.indexData.put("index", idx);
+			this.indexData.put("status", "ok");
 
 			// Determine if the market is open or closed
 			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
-			if (queryPageItem(htmlPage, marketOpenXPath).contains("Closed") == true) {
+			if (Symbol.queryPageItem(htmlPage, marketOpenXPath).contains("Closed") == true) {
 				marketOpen = false;
 			} else {
 				marketOpen = true;
@@ -101,52 +169,75 @@ public class Index {
 				Output.debugPrint("Market is currently CLOSED");
 
 				// Current Price
-				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span";
+				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span";
+				String result = queryPageItem(htmlPage, xPath);
+				indexData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+
 				// Change
-				xPathList[2] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]";
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("change", result.replaceAll("[,%]", "").trim());
+
 				// Change Percent
-				xPathList[3] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]";
-				// 52 Week High
-				xPathList[4] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
-				// 52 Week Low
-				xPathList[5] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("changePercent", result.replaceAll("[,%]", "").trim());
+
+				// 52 Week Range
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				result = queryPageItem(htmlPage, xPath);
+
+				String w52Low = result.split(" - ")[0];
+				String w52High = result.split(" - ")[1];
+
+				indexData.put("week52Low", w52Low.replaceAll("[,%]", "").trim());
+				indexData.put("week52High", w52High.replaceAll("[,%]", "").trim());
+
 				// Year to Date
-				xPathList[6] = "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("ytd", result.replaceAll("[,%]", "").trim());
 
 			} else {
 				// Market is OPEN
 				Output.debugPrint("Market is currently OPEN");
 
 				// Current Price
-				xPathList[1] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+				String result = queryPageItem(htmlPage, xPath);
+				indexData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+
 				// Change
-				xPathList[2] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("change", result.replaceAll("[,%]", "").trim());
+
 				// Change Percent
-				xPathList[3] = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
-				// 52 Week High
-				xPathList[4] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
-				// 52 Week Low
-				xPathList[5] = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("changePercent", result.replaceAll("[,%]", "").trim());
+
+				// 52 Week Range
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
+				result = queryPageItem(htmlPage, xPath);
+
+				String w52Low = result.split(" - ")[0];
+				String w52High = result.split(" - ")[1];
+
+				indexData.put("week52Low", w52Low.replaceAll("[,%]", "").trim());
+				indexData.put("week52High", w52High.replaceAll("[,%]", "").trim());
+
 				// Year to Date
-				xPathList[6] = "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("ytd", result.replaceAll("[,%]", "").trim());
 			}
-
-			// Populate the return array with the values pointed to by the XPath locations
-			// Remove any commas or percent signs from the output
-			for (int i = 1; i < xPathList.length; i++) {
-				retArray[i] = queryPageItem(htmlPage, xPathList[i]);
-				retArray[i] = retArray[i].replaceAll("[,%]", "").trim();
-			}
-
-			// Assign the 52 Week high and low since the return is a range
-			retArray[4] = retArray[4].split(" - ")[1];
-			retArray[5] = retArray[5].split(" - ")[0];
 
 			// If we are in debug mode, display the values we are returning
 			if (Debug.query() == true) {
 				Output.debugPrint("Index Data Results:");
-				for (int i = 0; i < retArray.length; i++) {
-					Output.debugPrint("   " + i + ": " + retArray[i]);
+				for (String i : indexData.keySet()) {
+					Output.debugPrint("  - " + i + ": " + this.get(i));
 				}
 			}
 
@@ -154,19 +245,6 @@ public class Index {
 			Output.printColorln(Ansi.Color.RED, "Unable to get Index data for " + idx + "\n" + ex.getMessage());
 		}
 
-		return retArray;
-	}
-
-	/**
-	 * queryPageItem():Find the specific value in the provided doc with the xPath given
-	 * 
-	 * @param doc
-	 * @param xPath
-	 * @return
-	 */
-	public static String queryPageItem(Document doc, String xPath) {
-		List<Element> elements = Xsoup.compile(xPath).evaluate(doc).getElements();
-		return elements.get(0).text();
 	}
 
 }

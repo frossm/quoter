@@ -30,12 +30,10 @@ package org.fross.quoter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import org.fross.library.Debug;
-import org.fross.library.Format;
 import org.fross.library.GitHub;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
@@ -53,9 +51,6 @@ public class Main {
 	public static String COPYRIGHT;
 	public static final String PROPERTIES_FILE = "app.properties";
 	public static final String PREFS_SAVED_SYMBOLS = "savedsymbols";
-	public static final String IEXCLOUDPRODURL = "https://cloud.iexapis.com";
-	public static final String IEXCLOUDSANDBOXURL = "https://sandbox.iexapis.com";
-	public static String IEXCloudBaseURL = IEXCLOUDPRODURL;
 
 	// Class Variables
 	protected static final CommandLineParser cli = new CommandLineParser();
@@ -67,20 +62,8 @@ public class Main {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		final String PREFS_IEXCLOUDPRODTOKEN = "iexcloudtoken";
-		final String PREFS_IEXCLOUDSBOXTOKEN = "iexcloudsboxtoken";
-		String IEXCloudToken = "";
 		FileExporter exporter = null;
 		
-		Output.printColorln(Ansi.Color.CYAN,"\n--------------------------------------------------------------------------");
-		Output.printColorln(Ansi.Color.RED, "IMPORTANT NOTE:");
-		Output.printColorln(Ansi.Color.YELLOW, "On June 15th, 2023 IEXCloud will no longer be offering free access");
-		Output.printColorln(Ansi.Color.YELLOW, "to their financial data. I, and I believe most of you, are on the free plan.");
-		Output.printColorln(Ansi.Color.YELLOW, "Therefore, Quoter will no longer be able to grab stock quotes from IEXCloud.");
-		Output.printColorln(Ansi.Color.YELLOW, "Indexes will continue to work and I'll start to investigate another source");
-		Output.printColorln(Ansi.Color.YELLOW, "for free quotes.  This is very disappointing...");
-		Output.printColorln(Ansi.Color.CYAN,"--------------------------------------------------------------------------\n");
-
 		// Process application level properties file
 		// Update properties from Maven at build time:
 		// https://stackoverflow.com/questions/3697449/retrieve-version-from-maven-pom-xml-in-code
@@ -129,42 +112,9 @@ public class Main {
 			System.exit(0);
 		}
 
-		// CLI: Turn on Sandbox Mode
-		if (cli.clSandbox == true) {
-			IEXCloudBaseURL = IEXCLOUDSANDBOXURL;
-		}
-
-		// CLI: Configure IEXCloud Secret Key
-		if (cli.clConfigure == true) {
-			Scanner scanner = new Scanner(System.in);
-			if (cli.clSandbox == true) {
-				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token for the Sandbox environment: ");
-				Prefs.set(PREFS_IEXCLOUDSBOXTOKEN, scanner.next());
-				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Sandbox Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN) + "'");
-			} else {
-				Output.printColorln(Ansi.Color.WHITE, "Enter the IEXcloud.io Secret Token: ");
-				Prefs.set(PREFS_IEXCLOUDPRODTOKEN, scanner.next());
-				Output.printColorln(Ansi.Color.YELLOW, "IEXCloud.io Secret Production Token Set To: '" + Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN) + "'");
-			}
-			scanner.close();
-			System.exit(0);
-		}
-
-		// CLI: Display the currently configured IEXCloud secret key
-		if (cli.clKeyDisplay == true) {
-			Output.println("Sandbox Environment Key:\t" + Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN));
-			Output.println("Production Environment Key:\t" + Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN));
-			System.exit(0);
-		}
-
 		// CLI: Export Data
 		if (cli.clExport.isEmpty() == false) {
 			exporter = new FileExporter(cli.clExport);
-		}
-
-		// CLI: Display IEXCloud Credit Information
-		if (cli.clIEXCredits == true) {
-			quoteConsoleOutput.DisplayIEXQuota(Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN));
 		}
 
 		// CLI: Display Version & Latest GitHub Release
@@ -180,16 +130,6 @@ public class Main {
 			Prefs.remove(PREFS_SAVED_SYMBOLS);
 			Output.printColor(Ansi.Color.YELLOW, "Saved securities have been removed\n");
 			System.exit(0);
-		}
-
-		// CLI: Read the preferences and make sure that a production API key has been entered with the -c option
-		if (cli.clSandbox == true) {
-			IEXCloudToken = Prefs.queryString(PREFS_IEXCLOUDSBOXTOKEN);
-		} else {
-			IEXCloudToken = Prefs.queryString(PREFS_IEXCLOUDPRODTOKEN);
-		}
-		if (IEXCloudToken == "Error") {
-			Output.fatalError("No iexcloud.io secret token provided.  Use '-c' option to configure.", 1);
 		}
 
 		// CLI: Disable color output
@@ -234,7 +174,7 @@ public class Main {
 		}
 
 		// Fetch and display ticker information
-		quoteConsoleOutput.invokeSymbolOutput(IEXCloudToken, exporter);
+		quoteConsoleOutput.invokeSymbolOutput(exporter);
 
 		// Perform async fetches and display ticker information until user cancels application
 		if (cli.clAutoRefresh > 0) {
@@ -243,7 +183,7 @@ public class Main {
 				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used with exporting data to file.");
 				System.exit(0);
 			}
-			final FetchLatestTask asyncTimer = new FetchLatestTask(IEXCloudToken, exporter);
+			final FetchLatestTask asyncTimer = new FetchLatestTask(exporter);
 			new Timer().schedule(asyncTimer, cli.clAutoRefresh * 1000, cli.clAutoRefresh * 1000);
 		}
 
@@ -256,12 +196,9 @@ public class Main {
 	 *
 	 */
 	private static class FetchLatestTask extends TimerTask {
-
-		private String IEXCloudToken;
 		private FileExporter exporter;
 
-		public FetchLatestTask(final String IEXCloudToken, final FileExporter exporter) {
-			this.IEXCloudToken = IEXCloudToken;
+		public FetchLatestTask(final FileExporter exporter) {
 			this.exporter = exporter;
 		}
 
@@ -269,12 +206,11 @@ public class Main {
 		public void run() {
 			Output.debugPrint("Invoking auto-refresh.");
 			flushConsole();
-			quoteConsoleOutput.invokeSymbolOutput(IEXCloudToken, exporter);
+			quoteConsoleOutput.invokeSymbolOutput(exporter);
 		}
 	}
 
 	private static void flushConsole() {
-		//System.out.print("\033[H\033[2J");
 		Output.clearScreen();
 		System.out.flush();
 	}

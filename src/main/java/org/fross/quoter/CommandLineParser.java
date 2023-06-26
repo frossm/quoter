@@ -38,36 +38,22 @@ public class CommandLineParser {
 	// Define command line options that can be used
 	// ---------------------------------------------------------------------------------------------
 
-	@Parameter(names = { "-h", "-?", "--help" }, help = true, description = "Display Quoter help and exit")
-	protected boolean clHelp = false;
-
-	@Parameter(names = { "-v", "--version" }, description = "Show current program version and latest release on GitHub")
-	protected boolean clVersion = false;
-
-	@Parameter(names = { "-D", "--debug" }, description = "Turn on Debug mode to display extra program information")
-	protected boolean clDebug = false;
-
+	// Configuration
 	@Parameter(names = { "-z", "--no-color" }, description = "Disable colorized output")
 	protected boolean clNoColor = false;
 
-	@Parameter(names = { "-b", "--sandbox" }, description = "Leverage IEXCloud Sandbox instead of production")
-	protected boolean clSandbox = false;
-
-	@Parameter(names = { "-c", "--configure" }, description = "Configure Quoter with IEXCloud Secret Key")
-	protected boolean clConfigure = false;
-
-	@Parameter(names = { "-k", "--key-display" }, description = "Display the current IEXCloud Secret Key and Exit")
-	protected boolean clKeyDisplay = false;
-
-	@Parameter(names = { "-n", "--hide-index" }, description = "Do not display index information")
-	protected boolean clHideIndex = false;
-
 	@Parameter(names = { "-w", "--width" }, description = "Set screen width in columns for 3 month trend display")
 	protected int clWidth = 120;
+	@Parameter(names = { "-n", "--hide-index" }, description = "Do not display index information")
+	protected boolean clHideIndex = false;
 
 	@Parameter(names = { "-x", "--export" }, description = "Export data to the provided filename")
 	protected String clExport = "";
 
+	@Parameter(names = { "-a", "--auto-refresh" }, description = "Set a refresh time for quotes in seconds", validateWith = AutoRefreshValidator.class)
+	protected long clAutoRefresh = 0L;
+
+	// Saved Favorites
 	@Parameter(names = { "-s", "--save" }, description = " Save securities provided as favorites and show them automatically")
 	protected boolean clSave = false;
 
@@ -80,18 +66,17 @@ public class CommandLineParser {
 	@Parameter(names = { "-i", "--ignore-favorites" }, description = "Ignore favorites for this execution")
 	protected boolean clIgnoreFavorites = false;
 
-	@Parameter(names = { "-d", "--detailed" }, description = "Include more detailed information on each security")
-	protected boolean clDetailedOutput = false;
+	// Misc
+	@Parameter(names = { "-D", "--debug" }, description = "Turn on Debug mode to display extra program information")
+	protected boolean clDebug = false;
 
-	@Parameter(names = { "-t", "--trend" }, description = "Include more detailed information on each security")
-	protected boolean clTrend = false;
+	@Parameter(names = { "-v", "--version" }, description = "Show current program version and latest release on GitHub")
+	protected boolean clVersion = false;
 
-	@Parameter(names = { "-I", "--credits" }, description = "Display current IEXCloud credits. They reset monthly")
-	protected boolean clIEXCredits = false;
+	@Parameter(names = { "-h", "-?", "--help" }, help = true, description = "Display Quoter help and exit")
+	protected boolean clHelp = false;
 
-	@Parameter(names = { "-a", "--auto-refresh" }, description = "Set a refresh time for quotes in seconds", validateWith = AutoRefreshValidator.class)
-	protected long clAutoRefresh = 0L;
-
+	// Symbols
 	@Parameter(description = "Stock Symbols")
 	protected List<String> symbolList = new ArrayList<>();
 
