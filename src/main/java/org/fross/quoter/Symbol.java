@@ -130,6 +130,15 @@ public class Symbol {
 			// Provide a status & name field
 			this.symbolData.put("symbol", symb.toUpperCase());
 			this.symbolData.put("status", "ok");
+			
+			// Determine if the market is open or closed
+			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
+			String openResult = Symbol.queryPageItem(htmlPage, marketOpenXPath).toLowerCase();
+			if (Symbol.queryPageItem(htmlPage, marketOpenXPath).toLowerCase().contains("open") == true) {
+				marketOpen = true;
+			} else {
+				marketOpen = false;
+			}
 
 			// MarketWatch has different XPaths depending if the market is open or closed
 			if (marketOpen == false) {
