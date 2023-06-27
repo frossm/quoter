@@ -143,6 +143,9 @@ public class Index {
 
 		Output.debugPrint("Index URL rewritten to: " + URL);
 
+		// Add index name to hash
+		indexData.put("index", idx);
+
 		try {
 			// Download and parse the the webpage with xsoup
 			try {
@@ -198,6 +201,11 @@ public class Index {
 				result = queryPageItem(htmlPage, xPath);
 				indexData.put("ytd", result.replaceAll("[,%]", "").trim());
 
+				// TimeStamp
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("timeStamp", result.replaceAll("[,%]", "").trim());
+
 			} else {
 				// Market is OPEN
 				Output.debugPrint("Market is currently OPEN");
@@ -231,6 +239,12 @@ public class Index {
 				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
 				result = queryPageItem(htmlPage, xPath);
 				indexData.put("ytd", result.replaceAll("[,%]", "").trim());
+
+				// TimeStamp
+				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("timeStamp", result.replaceAll("[,%]", "").trim());
+
 			}
 
 			// If we are in debug mode, display the values we are returning
@@ -242,7 +256,7 @@ public class Index {
 			}
 
 		} catch (Exception ex) {
-			Output.printColorln(Ansi.Color.RED, "Unable to get Index data for " + idx + "\n" + ex.getMessage());
+			indexData.put("status", "error");
 		}
 
 	}

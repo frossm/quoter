@@ -70,7 +70,7 @@ public class CommandLineParser {
 	@Parameter(names = { "-D", "--debug" }, description = "Turn on Debug mode to display extra program information")
 	protected boolean clDebug = false;
 
-	@Parameter(names = { "-v", "--version" }, description = "Show current program version and latest release on GitHub")
+	@Parameter(names = { "-v", "--version" }, description = "Show current program version and the latest release on GitHub")
 	protected boolean clVersion = false;
 
 	@Parameter(names = { "-h", "-?", "--help" }, help = true, description = "Display Quoter help and exit")

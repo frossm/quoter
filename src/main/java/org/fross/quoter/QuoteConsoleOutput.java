@@ -45,11 +45,9 @@ public class QuoteConsoleOutput {
 				String[] outString = new String[9];
 				Symbol symbolObj = new Symbol(currentSymbol);
 
-				// Validate the provided quote is valid
-				// If invalid, remove it from symbol list so it doesn't get processed later with trend or export
-				if (symbolObj.get("status").compareTo("error") == 0) {
-					// Display error
-					Output.printColorln(Ansi.Color.BLUE, "No information for '" + symbolObj.get("symbol") + "'");
+				// Check to see if there was an error getting symbol data
+				if (symbolObj.get("status") != "ok") {
+					Output.printColorln(Ansi.Color.BLUE, "'" + currentSymbol + "' is invalid");
 
 					// Remove this invalid symbol from the list and continue to the next iteration
 					j.remove();
@@ -142,6 +140,9 @@ public class QuoteConsoleOutput {
 
 				// Start a new line for the next security
 				Output.println("");
+				
+				// Set the time stamp
+				timeStamp = symbolObj.get("timeStamp");
 
 				// If export is chosen, dump this security's data to the export file
 //				if (cli.clExport.isEmpty() == false && exporter.canWrite()) {
@@ -165,6 +166,12 @@ public class QuoteConsoleOutput {
 				Index indexObj = new Index(indexList[i]);
 
 				Output.debugPrint("Getting Index data for: " + indexList[i]);
+				
+				// Check to see if the index object has an error status
+				if (indexObj.get("status") != "ok") {
+					Output.printColorln(Ansi.Color.BLUE, "'" + indexList[i] + "' data could not be retrieved");
+					continue;
+				}
 
 				try {
 					// Determine the color based on the change amount
@@ -199,6 +206,9 @@ public class QuoteConsoleOutput {
 					for (int k = 0; k < outString.length; k++) {
 						Output.printColor(outputColor, outString[k]);
 					}
+					
+					// Showing the index so use the index timestamp
+					timeStamp = indexObj.get("timeStamp");
 
 					// Start a new line for the next index
 					Output.println("");
@@ -208,7 +218,7 @@ public class QuoteConsoleOutput {
 //						exporter.exportIndexes(result);
 //					}
 				} catch (Exception ex) {
-					Output.printColorln(Ansi.Color.RED, outString[0] + ": No Data");
+					indexObj.put("status", "error");
 				}
 			}
 		}
@@ -221,7 +231,13 @@ public class QuoteConsoleOutput {
 			Output.printColorln(Ansi.Color.YELLOW, "CLOSED");
 		}
 
-		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + " and may be 15min delayed");
+		if (!timeStamp.isEmpty()) {
+			timeStamp = timeStamp.replaceAll(" p\\.m\\.", "pm");
+		} else {
+			timeStamp = "--";
+		}
+		
+		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + " Eastern. Quotes are delayed.");
 
 		// Display detailed stock information if selected with the -d switch
 //		if (cli.clDetailedOutput && !cli.symbolList.isEmpty()) {

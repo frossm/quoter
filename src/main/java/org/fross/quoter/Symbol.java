@@ -264,7 +264,7 @@ public class Symbol {
 			}
 
 		} catch (Exception ex) {
-			Output.printColorln(Ansi.Color.RED, "Unable to get data for " + symb + "\n" + ex.getMessage());
+			// Most likely an invalid symbol
 			this.symbolData.put("status", "error");
 		}
 
