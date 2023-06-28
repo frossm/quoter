@@ -63,7 +63,7 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		FileExporter exporter = null;
-		
+
 		// Process application level properties file
 		// Update properties from Maven at build time:
 		// https://stackoverflow.com/questions/3697449/retrieve-version-from-maven-pom-xml-in-code

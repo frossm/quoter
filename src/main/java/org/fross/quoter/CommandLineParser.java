@@ -47,9 +47,6 @@ public class CommandLineParser {
 	@Parameter(names = { "-n", "--hide-index" }, description = "Do not display index information")
 	protected boolean clHideIndex = false;
 
-	@Parameter(names = { "-x", "--export" }, description = "Export data to the provided filename")
-	protected String clExport = "";
-
 	@Parameter(names = { "-a", "--auto-refresh" }, description = "Set a refresh time for quotes in seconds", validateWith = AutoRefreshValidator.class)
 	protected long clAutoRefresh = 0L;
 
@@ -65,6 +62,13 @@ public class CommandLineParser {
 
 	@Parameter(names = { "-i", "--ignore-favorites" }, description = "Ignore favorites for this execution")
 	protected boolean clIgnoreFavorites = false;
+
+	// Security Information
+	@Parameter(names = { "-t", "--trend" }, description = "Display daily graph of historical data")
+	protected boolean clTrend = false;
+
+	@Parameter(names = { "-x", "--export" }, description = "Export data to the provided filename")
+	protected String clExport = "";
 
 	// Misc
 	@Parameter(names = { "-D", "--debug" }, description = "Turn on Debug mode to display extra program information")

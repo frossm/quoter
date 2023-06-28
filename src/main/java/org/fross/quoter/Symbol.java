@@ -133,7 +133,6 @@ public class Symbol {
 			
 			// Determine if the market is open or closed
 			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
-			String openResult = Symbol.queryPageItem(htmlPage, marketOpenXPath).toLowerCase();
 			if (Symbol.queryPageItem(htmlPage, marketOpenXPath).toLowerCase().contains("open") == true) {
 				marketOpen = true;
 			} else {
@@ -146,14 +145,14 @@ public class Symbol {
 				Output.debugPrint("Market is currently CLOSED");
 
 				// Current Price
-				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
+				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[1]";
 				String result = queryPageItem(htmlPage, xPath);
-				symbolData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+				symbolData.put("latestPrice", result.replaceAll("[$,%]", "").trim());
 
 				// Change
 				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[2]";
 				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("change", result.replaceAll("[,%]", "").trim());
+				symbolData.put("change", result.replaceAll("[$,%]", "").trim());
 
 				// Change Percent
 				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[3]";

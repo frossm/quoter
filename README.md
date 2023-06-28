@@ -16,7 +16,6 @@ I live in the US and quoter is configured to pull indexes from the three common 
 |-z | Disable colorized output|
 |-w COLUMNS| Set a custom width for the trending display.  This is the number of columns the output should use.  I have quoter aliased and I call it with my current column width|
 |-n| Hide the index display and just show the stock quotes.  If no stocks are provided, then nothing will happen|
-|-x FileName| Export the results into the specified file in CSV format.  Note it needs to be a location can can be written to by the user|
 |-a TIME| Auto refresh the screen every `TIME` seconds until application is cancelled with Ctrl-C. Cannot be used when exporting to CSV and the screen is cleared at every refresh||
 
 ### Saved Favorites
@@ -26,6 +25,12 @@ I live in the US and quoter is configured to pull indexes from the three common 
 |-l | List the current saved favorites|
 |-r | Remove saved favorites and exit program.  If you'd like them back you'll simply need to re-save them with the `-s` flag|
 |-i | Ignore saved favorites for this execution.  They will remain saved|
+
+#### Security Information
+|Option|Description|
+|------|-----------|
+|-t|After the initial quote information, display a six month historical view of daily high, low, and close values. Please see the discussion on trending below
+|-x FileName| Export the results into the specified file in CSV format.  Note it needs to be a location can can be written to by the user|
 
 #### Miscellaneous
 |Option|Description|

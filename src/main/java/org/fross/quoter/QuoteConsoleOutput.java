@@ -140,7 +140,7 @@ public class QuoteConsoleOutput {
 
 				// Start a new line for the next security
 				Output.println("");
-				
+
 				// Set the time stamp
 				timeStamp = symbolObj.get("timeStamp");
 
@@ -166,7 +166,7 @@ public class QuoteConsoleOutput {
 				Index indexObj = new Index(indexList[i]);
 
 				Output.debugPrint("Getting Index data for: " + indexList[i]);
-				
+
 				// Check to see if the index object has an error status
 				if (indexObj.get("status") != "ok") {
 					Output.printColorln(Ansi.Color.BLUE, "'" + indexList[i] + "' data could not be retrieved");
@@ -206,7 +206,7 @@ public class QuoteConsoleOutput {
 					for (int k = 0; k < outString.length; k++) {
 						Output.printColor(outputColor, outString[k]);
 					}
-					
+
 					// Showing the index so use the index timestamp
 					timeStamp = indexObj.get("timeStamp");
 
@@ -236,7 +236,7 @@ public class QuoteConsoleOutput {
 		} else {
 			timeStamp = "--";
 		}
-		
+
 		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + " Eastern. Quotes are delayed.");
 
 		// Display detailed stock information if selected with the -d switch
@@ -277,20 +277,19 @@ public class QuoteConsoleOutput {
 //				Output.println("");
 //			}
 //		}
-//
-//		// Display trending data if -t was provided and there is at least one valid symbol
-//		if (cli.clTrend == true) {
-//			if (!cli.symbolList.isEmpty()) {
-//				for (String i : cli.symbolList) {
-//					HistoricalQuotes.displayTrendingMap(i, IEXCloudToken);
-//					if (cli.clSandbox == true) {
-//						Output.printColorln(Ansi.Color.RED, Format.CenterText(cli.clWidth, "**** SANDBOX MODE ENABLED - DATA IS INCORRECT ****"));
-//					}
-//				}
-//			} else {
-//				Output.printColorln(Ansi.Color.RED, "\nUnable to display security trend (-t) as no securities have been provided. Please see help (-h)");
-//			}
-//		}
+
+		// Display trending data if -t was provided and there is at least one valid symbol
+		if (cli.clTrend == true) {
+			if (!cli.symbolList.isEmpty()) {
+				for (String i : cli.symbolList) {
+					HistoricalQuotes hc = new HistoricalQuotes(i);
+					hc.displayTrend(i);
+				}
+
+			} else {
+				Output.printColorln(Ansi.Color.RED, "\nUnable to display security trend (-t) as no securities have been provided. Please see help (-h)");
+			}
+		}
 
 		// Flush and close export file if needed
 		if (cli.clExport.isEmpty() == false) {

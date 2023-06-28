@@ -1,5 +1,5 @@
 name: quoter
-version: '5.0.3'
+version: '5.0.4'
 summary: Command line utility to pull stock and index quotes
 description: |
   Quoter fetches online stock quotes and index data for easy display on
