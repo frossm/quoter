@@ -152,6 +152,7 @@ public class Index {
 				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
 			} catch (HttpStatusException ex) {
 				this.indexData.put("status", "error");
+				return;
 			}
 
 			// Add the name to the hash
@@ -196,10 +197,15 @@ public class Index {
 				indexData.put("week52Low", w52Low.replaceAll("[,%]", "").trim());
 				indexData.put("week52High", w52High.replaceAll("[,%]", "").trim());
 
-				// Year to Date
+				// Year to Date Change Percent
 				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
 				result = queryPageItem(htmlPage, xPath);
-				indexData.put("ytd", result.replaceAll("[,%]", "").trim());
+				indexData.put("ytdChangePercent", result.replaceAll("[,%]", "").trim());
+
+				// One Year Change Percent
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("oneYearChangePercent", result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
 				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
@@ -238,7 +244,12 @@ public class Index {
 				// Year to Date
 				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
 				result = queryPageItem(htmlPage, xPath);
-				indexData.put("ytd", result.replaceAll("[,%]", "").trim());
+				indexData.put("ytdChangePercent", result.replaceAll("[,%]", "").trim());
+
+				// One Year Change Percent
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
+				result = queryPageItem(htmlPage, xPath);
+				indexData.put("oneYearChangePercent", result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
 				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";

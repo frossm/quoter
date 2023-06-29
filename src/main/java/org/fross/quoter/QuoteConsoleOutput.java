@@ -6,7 +6,6 @@ import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
 
 public class QuoteConsoleOutput {
-
 	final private CommandLineParser cli;
 
 	public QuoteConsoleOutput(final CommandLineParser cli) {
@@ -28,9 +27,9 @@ public class QuoteConsoleOutput {
 
 		// If symbols were entered, display the header for them
 		if (cli.symbolList.size() > 0) {
-			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow       YTD");
-			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
+			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
+			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow      YTD%    1Year%");
+			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
 		}
 
 		// Display the data for the symbols entered. If no symbols were entered, just
@@ -42,7 +41,7 @@ public class QuoteConsoleOutput {
 
 			while (j.hasNext()) {
 				currentSymbol = j.next();
-				String[] outString = new String[9];
+				String[] outString = new String[10];
 				Symbol symbolObj = new Symbol(currentSymbol);
 
 				// Check to see if there was an error getting symbol data
@@ -110,9 +109,16 @@ public class QuoteConsoleOutput {
 
 					// Year to date
 					try {
-						outString[8] = String.format("%+9.2f%%", Float.valueOf(symbolObj.get("ytdChange")));
+						outString[8] = String.format("%+9.2f%%", Float.valueOf(symbolObj.get("ytdChangePercent")));
 					} catch (NumberFormatException Ex) {
 						outString[8] = String.format("%9s", "-");
+					}
+
+					// Year to date
+					try {
+						outString[9] = String.format("%+9.2f%%", Float.valueOf(symbolObj.get("oneYearChangePercent")));
+					} catch (NumberFormatException Ex) {
+						outString[9] = String.format("%9s", "-");
 					}
 
 					// Time Stamp
@@ -155,14 +161,14 @@ public class QuoteConsoleOutput {
 		// Unless disabled, display the index data
 		if (cli.clHideIndex == false) {
 			// Display Index Output Header
-			Output.printColorln(Ansi.Color.CYAN, "\n-------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow      YTD%");
-			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------");
+			Output.printColorln(Ansi.Color.CYAN, "\n----------------------------------------------------------------------------------------");
+			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow      YTD%    1Year%");
+			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
 
 			// Loop through the three indexes and display the results
 			String[] indexList = { "DOW", "NASDAQ", "S&P" };
 			for (int i = 0; i < indexList.length; i++) {
-				String[] outString = new String[7];
+				String[] outString = new String[8];
 				Index indexObj = new Index(indexList[i]);
 
 				Output.debugPrint("Getting Index data for: " + indexList[i]);
@@ -199,15 +205,18 @@ public class QuoteConsoleOutput {
 					// 52Week Low
 					outString[5] = String.format("%,13.2f", Float.valueOf(indexObj.get("week52Low")));
 
-					// Year to Date
-					outString[6] = String.format("%+9.2f%%", Float.valueOf(indexObj.get("ytd")));
+					// Year to Date Percent Change
+					outString[6] = String.format("%+9.2f%%", Float.valueOf(indexObj.get("ytdChangePercent")));
+
+					// One Year Percent Change
+					outString[7] = String.format("%+9.2f%%", Float.valueOf(indexObj.get("oneYearChangePercent")));
 
 					// Display Index results to the screen
 					for (int k = 0; k < outString.length; k++) {
 						Output.printColor(outputColor, outString[k]);
 					}
 
-					// Showing the index so use the index timestamp
+					// Showing the index so use the index time stamp
 					timeStamp = indexObj.get("timeStamp");
 
 					// Start a new line for the next index
@@ -231,8 +240,10 @@ public class QuoteConsoleOutput {
 			Output.printColorln(Ansi.Color.YELLOW, "CLOSED");
 		}
 
+		// Remove the periods from a.m. or p.m.
 		if (!timeStamp.isEmpty()) {
-			timeStamp = timeStamp.replaceAll(" p\\.m\\.", "pm");
+			timeStamp = timeStamp.replaceAll(" [Pp]\\.[Mm]\\.", "pm");
+			timeStamp = timeStamp.replaceAll(" [Aa]\\.[Mm]\\.", "am");
 		} else {
 			timeStamp = "--";
 		}

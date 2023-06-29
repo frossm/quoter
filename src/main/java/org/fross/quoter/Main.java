@@ -180,7 +180,7 @@ public class Main {
 		if (cli.clAutoRefresh > 0) {
 			Output.debugPrint("Starting auto-refresh async timer.");
 			if (!cli.clExport.isEmpty()) {
-				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used with exporting data to file.");
+				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used when exporting data to file.");
 				System.exit(0);
 			}
 			final FetchLatestTask asyncTimer = new FetchLatestTask(exporter);

@@ -125,12 +125,13 @@ public class Symbol {
 				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
 			} catch (HttpStatusException ex) {
 				this.symbolData.put("status", "error");
+				return;
 			}
 
 			// Provide a status & name field
 			this.symbolData.put("symbol", symb.toUpperCase());
 			this.symbolData.put("status", "ok");
-			
+
 			// Determine if the market is open or closed
 			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
 			if (Symbol.queryPageItem(htmlPage, marketOpenXPath).toLowerCase().contains("open") == true) {
@@ -194,13 +195,18 @@ public class Symbol {
 				// Year to Date Change
 				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]";
 				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("ytdChange", result.replaceAll("[,%]", "").trim());
+				symbolData.put("ytdChangePercent", result.replaceAll("[,%]", "").trim());
+
+				// One Year Change Percent
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("oneYearChangePercent", result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
 				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
 				result = queryPageItem(htmlPage, xPath);
 				symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
-				
+
 			} else {
 				// Market is OPEN
 				Output.debugPrint("Market is currently OPEN");
@@ -255,7 +261,12 @@ public class Symbol {
 				// Year to Date Change
 				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]";
 				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("ytdChange", result.replaceAll("[,%]", "").trim());
+				symbolData.put("ytdChangePercent", result.replaceAll("[,%]", "").trim());
+
+				// One Year Change Percent
+				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("oneYearChangePercent", result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
 				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
