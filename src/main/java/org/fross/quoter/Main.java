@@ -51,6 +51,7 @@ public class Main {
 	public static String COPYRIGHT;
 	public static final String PROPERTIES_FILE = "app.properties";
 	public static final String PREFS_SAVED_SYMBOLS = "savedsymbols";
+	public static final int DEFAULT_TREND_DURATION = 90;
 
 	// Class Variables
 	protected static final CommandLineParser cli = new CommandLineParser();
@@ -115,6 +116,15 @@ public class Main {
 		// CLI: Export Data
 		if (cli.clExport.isEmpty() == false) {
 			exporter = new FileExporter(cli.clExport);
+		}
+
+		// CLI: Trend Duration
+		// If there is no preference, set it to the default. If one is provided set prefs to it
+		if (Prefs.queryInt("trendduration") == 0) {
+			Prefs.set("trendduration", DEFAULT_TREND_DURATION);
+		}
+		if (cli.clTrendDuration != 0) {
+			Prefs.set("trendduration", cli.clTrendDuration);
 		}
 
 		// CLI: Display Version & Latest GitHub Release

@@ -62,6 +62,16 @@ public class Prefs {
 	public static Double queryDouble(String key) {
 		return prefs.getDouble(key, 0);
 	}
+	
+	/**
+	 * QueryInt(): Returns an int preference item
+	 * 
+	 * @param key
+	 * @return
+	 */
+	public static int queryInt(String key) {
+		return prefs.getInt(key, 0);
+	}	
 
 	/**
 	 * QueryString(): Returns a String preference item

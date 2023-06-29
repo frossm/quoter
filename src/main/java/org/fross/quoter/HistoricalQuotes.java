@@ -41,7 +41,7 @@ public class HistoricalQuotes {
 	Map<String, Float[]> resultMap = new TreeMap<String, Float[]>();
 
 	// Number of days to go back from today in the trend
-	final int NUM_DAYS_IN_TREND = 100;
+	final int NUM_DAYS_IN_TREND = Prefs.queryInt("trendduration");
 
 	/**
 	 * Constructor
