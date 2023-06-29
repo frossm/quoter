@@ -3,7 +3,7 @@
 
 	<groupId>org.fross</groupId>
 	<artifactId>quoter</artifactId>
-	<version>5.0.5</version>
+	<version>5.0.6</version>
 	<packaging>jar</packaging>
 
 	<name>quoter</name>
@@ -148,6 +148,35 @@
 						</replacement>
 					</replacements>
 				</configuration>
+			</plugin>
+			
+			<!-- ============================================================================================== -->
+			<!-- For Linux machines, chmod the final jar file to be executable by the OS                        -->
+			<!-- Install binfmt-support to support this in Linux. I like to directly be able to run jar files   -->
+			<!-- Comment out this plugin if you don't want this                                                 -->
+			<!-- https://mvnrepository.com/artifact/org.codehaus.mojo/exec-maven-plugin                         -->
+			<!-- ============================================================================================== -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>3.1.0</version>
+				<executions>
+					<execution>
+						<id>chmod</id>
+						<phase>package</phase>
+						<goals>
+							<goal>exec</goal>
+						</goals>
+						<configuration>
+							<executable>chmod</executable>
+							<arguments>
+								<argument>+x</argument>
+								<argument>
+									${project.build.directory}/${project.name}.jar</argument>
+							</arguments>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 
 		</plugins>
