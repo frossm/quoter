@@ -80,16 +80,17 @@ public class FileExporter {
 	/**
 	 * exportSecurities(): Dump the security symbol data to the export file
 	 * 
-	 * @param symbolData
+	 * @param symbolObj
 	 * @return
 	 */
-	public boolean exportSecurities(Symbol symbolData) {
+	public boolean exportSecurities(Symbol symbolObj) {
 		try {
 			// Export the header row
-			List<String> fields = symbolData.getAllFieldNames();
+			List<String> fields = symbolObj.getAllFieldNames();
 			if (this.exportSymbolHeaderWritten == false) {
 				for (String i : fields) {
-					exportFileFW.append(i + ",");
+					if (!i.matches("[Ss]tatus"))
+						exportFileFW.append(i + ",");
 				}
 				exportFileFW.append("\n");
 				this.exportSymbolHeaderWritten = true;
@@ -98,8 +99,9 @@ public class FileExporter {
 			// Export the symbol data
 			for (String i : fields) {
 				// If the data has a ',' in it remove it
-				String item = symbolData.get(i).replaceAll(",", "");
-				exportFileFW.append(item + ",");
+				String item = symbolObj.get(i).replaceAll(",", "");
+				if (!symbolObj.get(i).matches("[Oo][Kk]"))
+					exportFileFW.append(item + ",");
 			}
 			exportFileFW.append("\n");
 
@@ -113,19 +115,25 @@ public class FileExporter {
 	/**
 	 * exportIndexes(): Dump the index data to the export file
 	 */
-	public void exportIndexes(String[] indexData) {
+	public void exportIndexes(Index indexObj) {
 		try {
+			exportFileFW.append("\n");
 			// Dump the header information to the export file
+			List<String> fields = indexObj.getAllFieldNames();
 			if (this.exportIndexHeaderWritten == false) {
-				exportFileFW.append("\nSymbol,Current,Chng,Chng%,52WeekHigh,52WeekLow\n");
+				for (String i : fields) {
+					if (!i.matches("[Ss]tatus"))
+						exportFileFW.append(i + ",");
+				}
+				exportFileFW.append("\n");
 				this.exportIndexHeaderWritten = true;
 			}
 
 			// Dump the index data
-			for (int k = 0; k < indexData.length; k++) {
-				exportFileFW.append("\"" + indexData[k] + "\"" + ",");
+			for (String key : indexObj.getAllFieldNames()) {
+				if (!indexObj.get(key).matches("[Oo][Kk]"))
+					exportFileFW.append("\"" + indexObj.get(key) + "\"" + ",");
 			}
-			exportFileFW.append("\n");
 
 		} catch (IOException ex) {
 			Output.printColorln(Ansi.Color.RED, "Error writing to export file: " + ex.getMessage());

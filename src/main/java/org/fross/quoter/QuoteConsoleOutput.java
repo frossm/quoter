@@ -20,7 +20,7 @@ public class QuoteConsoleOutput {
 	 * @param exporter
 	 */
 	public void invokeSymbolOutput(FileExporter exporter) {
-		// Store the timestamp
+		// Store the time stamp
 		String timeStamp = "";
 
 		// Display the header
@@ -145,9 +145,9 @@ public class QuoteConsoleOutput {
 				timeStamp = symbolObj.get("timeStamp");
 
 				// If export is chosen, dump this security's data to the export file
-//				if (cli.clExport.isEmpty() == false && exporter.canWrite()) {
-//					exporter.exportSecurities(symbolData);
-//				}
+				if (cli.clExport.isEmpty() == false && exporter.canWrite()) {
+					exporter.exportSecurities(symbolObj);
+				}
 			}
 
 		}
@@ -214,9 +214,9 @@ public class QuoteConsoleOutput {
 					Output.println("");
 
 					// If export is chosen, dump this index's data to the export file
-//					if (cli.clExport.isEmpty() == false && exporter.canWrite()) {
-//						exporter.exportIndexes(result);
-//					}
+					if (cli.clExport.isEmpty() == false && exporter.canWrite()) {
+						exporter.exportIndexes(indexObj);
+					}
 				} catch (Exception ex) {
 					indexObj.put("status", "error");
 				}
@@ -238,45 +238,6 @@ public class QuoteConsoleOutput {
 		}
 
 		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + " Eastern. Quotes are delayed.");
-
-		// Display detailed stock information if selected with the -d switch
-//		if (cli.clDetailedOutput && !cli.symbolList.isEmpty()) {
-//			final int HEADERWIDTH = 80;
-//			String[] companyFields = { "symbol", "companyName", "exchange", "industry", "website", "description", "CEO", "securityName", "issueType", "sector",
-//					"primarySicCode", "employees", "address", "address2", "city", "state", "zip", "country", "phone" };
-//
-//			String[] symbolFields = { "open", "openTime", "close", "closeTime", "high", "highTime", "low", "lowTime", "latestPrice", "latestVolume",
-//					"previousClose", "previousVolume", "change", "changePercent", "agTotalVolume", "marketCap", "peRatio", "week52High", "week52Low" };
-//
-//			Output.printColorln(Ansi.Color.WHITE, "\nDetailed Security Information:");
-//
-//			// Display detail of each symbol provided on command line
-//			for (String symb : cli.symbolList) {
-//				// Query company data
-//				IEXCloudAPICall companyDetail = new IEXCloudAPICall(Main.IEXCloudBaseURL + "/stable/stock/" + symb + "/company", IEXCloudToken);
-//
-//				// Query symbol data
-//				Symbol symbolDetail = new Symbol(symb, IEXCloudToken);
-//
-//				// Display Header
-//				Output.printColorln(Ansi.Color.CYAN, "-".repeat(HEADERWIDTH));
-//				Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " / " + companyDetail.get("companyName"));
-//				Output.printColorln(Ansi.Color.CYAN, "-".repeat(HEADERWIDTH));
-//
-//				// Display company information
-//				for (String field : companyFields) {
-//					Output.printColor(Ansi.Color.WHITE, " " + String.format("%-16s", Format.Capitalize(field) + ":") + " ");
-//					Output.printColorln(Ansi.Color.CYAN, " " + companyDetail.get(field));
-//				}
-//				Output.println("");
-//
-//				// Loop through each detailed field and display it
-//				for (String field : symbolFields) {
-//					Output.printColorln(Ansi.Color.WHITE, " " + String.format("%-16s", Format.Capitalize(field) + ":") + "  " + symbolDetail.get(field));
-//				}
-//				Output.println("");
-//			}
-//		}
 
 		// Display trending data if -t was provided and there is at least one valid symbol
 		if (cli.clTrend == true) {
