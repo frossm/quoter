@@ -6,8 +6,8 @@ description: |
   the command line.  Quotes and index values are scrapped from a financial
   website.
 
-  Quoter can also display three month trends and detailed company information.
-  See the Snap Store screen shots for examples.
+  Quoter can also display daily trend which details daily highs, lows, and 
+  close information. See the Snap Store screen shots for examples.
 
   Lastly, the source code and a more elaborate readme is available on 
   GitHub and the program help (execute with -h switch) will show more
@@ -17,7 +17,7 @@ description: |
 
 grade: stable
 confinement: strict
-base: core18
+base: core22
 
 title: Quoter
 website: https://github.com/frossm/quoter
@@ -29,27 +29,52 @@ license: MIT
 # Enable faszter LZO compression
 compression: lzo
 
+# Ignore useless library warnings
+lint:
+  ignore:
+    - library
+
+
 apps:
    quoter:
-      command: bin/java -Djava.util.prefs.userRoot="$SNAP_USER_DATA" -jar $SNAP/jar/quoter.jar
+      command: quoter-wrapper
       plugs:
          - network
          - home
 
 parts:
+   wrapper:
+      plugin: dump
+      source: snap/local
+      source-type: local
+      
    library:
       plugin: maven
       source: https://github.com/frossm/library.git
       source-type: git
       source-tag: 'v2023.05.21'
-      maven-options: [install]
+      maven-parameters:
+        - install
+
+      build-packages:
+        - maven
+        - openjdk-11-jdk-headless
 
    quoter:
       plugin: maven
       source: https://github.com/frossm/quoter.git
       source-branch: master
       source-type: git
-      after: [library]
+      after:
+        - library
+
+      build-packages:
+        - maven
+        - openjdk-11-jdk-headless
+
+      stage-packages:
+        - openjdk-11-jre-headless
+
       override-prime: |
          snapcraftctl prime
          rm -vf usr/lib/jvm/java-11-openjdk-*/lib/security/blacklisted.certs

@@ -1,0 +1,5 @@
+#!/bin/bash
+#
+# Script is a wrapper which runs quoter in a bash script with the needed options
+#
+exec $SNAP/bin/java -Djava.util.prefs.userRoot="$SNAP_USER_DATA" -jar $SNAP/jar/quoter.jar "$@"
