@@ -97,8 +97,9 @@ public class Main {
 		}
 
 		// CLI: Debug Switch
-		if (cli.clDebug == true)
+		if (cli.clDebug == true) {
 			Debug.enable();
+		}
 
 		// CLI: list Favorites
 		if (cli.clListFavorites == true) {
@@ -125,6 +126,8 @@ public class Main {
 		}
 		if (cli.clTrendDuration != 0) {
 			Prefs.set("trendduration", cli.clTrendDuration);
+			Output.printColorln(Ansi.Color.YELLOW, "Default trend duration has been set for " + cli.clTrendDuration + " days");
+			System.exit(0);
 		}
 
 		// CLI: Display Version & Latest GitHub Release

@@ -44,13 +44,13 @@ public class CommandLineParser {
 
 	@Parameter(names = { "-w", "--width" }, description = "Set screen width in columns for 3 month trend display")
 	protected int clWidth = 120;
-	
+
 	@Parameter(names = { "-n", "--hide-index" }, description = "Do not display index information")
 	protected boolean clHideIndex = false;
 
 	@Parameter(names = { "-a", "--auto-refresh" }, description = "Set a refresh time for quotes in seconds", validateWith = AutoRefreshValidator.class)
 	protected int clAutoRefresh = 0;
-	
+
 	@Parameter(names = { "-d", "--trend-duration" }, description = "Set the number of historical days to include in the trend")
 	protected int clTrendDuration = 0;
 

@@ -30,8 +30,7 @@ package org.fross.quoter;
 import java.util.prefs.Preferences;
 
 /**
- * Prefs: Holds the logic and calls to the java preferences system. Used to save
- * and restore the stacks between sessions.
+ * Prefs: Holds the logic and calls to the java preferences system. Used to save and restore the stacks between sessions.
  * 
  * @author michael.d.fross
  *
@@ -62,7 +61,7 @@ public class Prefs {
 	public static Double queryDouble(String key) {
 		return prefs.getDouble(key, 0);
 	}
-	
+
 	/**
 	 * QueryInt(): Returns an int preference item
 	 * 
@@ -71,7 +70,7 @@ public class Prefs {
 	 */
 	public static int queryInt(String key) {
 		return prefs.getInt(key, 0);
-	}	
+	}
 
 	/**
 	 * QueryString(): Returns a String preference item
@@ -122,9 +121,10 @@ public class Prefs {
 	public static void set(String key, String value) {
 		prefs.put(key, value);
 	}
-	
+
 	/**
 	 * remove(): Remove the provided preference
+	 * 
 	 * @param key
 	 */
 	public static void remove(String key) {
