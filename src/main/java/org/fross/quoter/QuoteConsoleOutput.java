@@ -1,6 +1,9 @@
 package org.fross.quoter;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
@@ -269,9 +272,34 @@ public class QuoteConsoleOutput {
 			Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
 		}
 
+		// If auto refresh is on, display a message and a count down timer
 		if (cli.clAutoRefresh > 0) {
-			Output.printColorln(Ansi.Color.RED, String.format("\nAuto-Refresh enabled for %d seconds. Press 'CTRL + C' to exit.", cli.clAutoRefresh));
+			Output.printColorln(Ansi.Color.RED, String.format("\nAuto-Refresh enabled for %d seconds. Press 'CTRL + C' to exit\n", cli.clAutoRefresh));
+
+			final int countDownLength = 60;
+			int countDown = cli.clAutoRefresh;
+			int numSlots = countDownLength / cli.clAutoRefresh;
+
+			while (countDown > 0) {
+				System.out.print(ansi().cursorLeft(5000));		// Use a large number so it hits the front of the line
+
+				Output.printColor(Ansi.Color.WHITE, "Refresh in " + String.format("%02d", countDown) + " seconds:  " + "|" + "-".repeat(countDown * numSlots));
+				Output.printColor(Ansi.Color.YELLOW, "o");
+				Output.printColor(Ansi.Color.WHITE, " ".repeat(countDownLength - (countDown * numSlots)));
+				Output.printColor(Ansi.Color.WHITE, "|");
+
+				// Sleep for 1 second
+				try {
+					TimeUnit.MILLISECONDS.sleep(1000);
+				} catch (InterruptedException ex) {
+					System.out.println("exception");
+				}
+
+				countDown--;
+			}
+			Output.printColorln(Ansi.Color.WHITE, "\nRefreshing...");
 		}
+
 	}
 
 }
