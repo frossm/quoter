@@ -66,7 +66,7 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -r        Remove saved favorites");
 		Output.printColorln(Ansi.Color.WHITE, "  -i        Ignore favorites for this execution");
 
-		Output.printColorln(Ansi.Color.YELLOW, "\nSaved Favorites:");
+		Output.printColorln(Ansi.Color.YELLOW, "\nAdditional Features:");
 		Output.printColorln(Ansi.Color.WHITE, "  -t        Display daily trending historical data");
 		Output.printColorln(Ansi.Color.WHITE, "  -x FILE   Export data to the provided filename");
 
