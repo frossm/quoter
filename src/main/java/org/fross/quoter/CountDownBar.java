@@ -36,7 +36,7 @@ import org.fusesource.jansi.Ansi;
 public class CountDownBar extends Thread {
 	private int countDown = 30;
 
-	// Constructor: Sets the time for the countdown in seconds
+	// Constructor: Sets the time for the count down in seconds
 	public CountDownBar(int sec) {
 		this.countDown = sec;
 	}

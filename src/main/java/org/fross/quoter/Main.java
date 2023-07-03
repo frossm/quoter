@@ -199,7 +199,7 @@ public class Main {
 			final FetchLatestTask asyncTimer = new FetchLatestTask(exporter);
 
 			// Schedule the timer. Set it for a bit more than what is selected so it happens after the count down bar
-			new Timer().schedule(asyncTimer, cli.clAutoRefresh * 1000 + 350, cli.clAutoRefresh * 1000 + 350);
+			new Timer().schedule(asyncTimer, cli.clAutoRefresh * 1000, cli.clAutoRefresh * 1000);
 		}
 
 	} // END OF MAIN

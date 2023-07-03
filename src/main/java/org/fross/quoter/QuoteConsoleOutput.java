@@ -272,9 +272,6 @@ public class QuoteConsoleOutput {
 		// If auto refresh is on, display a message and a count down timer
 		if (cli.clAutoRefresh > 0) {
 			Output.printColorln(Ansi.Color.RED, String.format("\nAuto-Refresh enabled for %d seconds. Press 'CTRL + C' to exit\n", cli.clAutoRefresh));
-
-			CountDownBar cdb = new CountDownBar(cli.clAutoRefresh);
-			cdb.start();
 		}
 
 	}
