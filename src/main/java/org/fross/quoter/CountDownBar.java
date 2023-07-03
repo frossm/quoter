@@ -53,7 +53,7 @@ public class CountDownBar extends Thread {
 		int countDown = this.countDown;
 		int numSlots = countDownLength / this.countDown;
 
-		while (countDown > 0) {
+		while (countDown >= 0) {
 			System.out.print(ansi().cursorLeft(5000));		// Use a large number so it hits the front of the line
 
 			Output.printColor(Ansi.Color.WHITE,
@@ -70,6 +70,8 @@ public class CountDownBar extends Thread {
 
 			countDown--;
 		}
+		
+		// Stop the count down
 		this.interrupt();
 
 	}

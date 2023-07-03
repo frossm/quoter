@@ -1,9 +1,6 @@
 package org.fross.quoter;
 
-import static org.fusesource.jansi.Ansi.ansi;
-
 import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
