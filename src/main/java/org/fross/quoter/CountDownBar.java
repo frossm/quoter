@@ -34,10 +34,12 @@ import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
 
 public class CountDownBar extends Thread {
+	private int countDownOrig = 30;
 	private int countDown = 30;
 
 	// Constructor: Sets the time for the count down in seconds
 	public CountDownBar(int sec) {
+		this.countDownOrig = sec;
 		this.countDown = sec;
 	}
 
@@ -74,6 +76,10 @@ public class CountDownBar extends Thread {
 		// Stop the count down
 		this.interrupt();
 
+	}
+	
+	public void reset() {
+		this.countDown = this.countDownOrig;
 	}
 
 }

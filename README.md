@@ -57,9 +57,9 @@ If you frequently check the same set of securities, as I do, you can save them i
 Running Quoter with `-r` will remove any saved quotes.  Running with `-i` will ignore the saved quotes for that execution. Running with a `-l` will list your current saved favorites.
 
 ## Trending
-<img align="right" width="200" src="https://github.com/frossm/quoter/raw/master/graphics/PostIt-512x512.jpg">This powerful feature will display approximately three months of trending data.   The dates are on the Y axis, an the cost is on the X axis.
+<img align="right" width="200" src="https://github.com/frossm/quoter/raw/master/graphics/PostIt-512x512.jpg">This powerful feature will display the requested (with `-d`) days to trend.  The default is 90 days.   The dates are on the Y axis, an the cost is on the X axis, you just tilt your head to the right (like you were eating a taco) and you'll be set :-)
 
-It's executed by giving Quoter the **`-t`** command line switch.  If there are 5 symbols on the command line, it will trend them all.
+It's executed by giving Quoter the **`-t`** command line switch.  If there are 5 symbols on the command line, it will trend them all in sequence.
 
 The display will show you the last three months of data with the daily range and the close price.
 

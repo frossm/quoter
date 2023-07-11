@@ -1,5 +1,10 @@
 package org.fross.quoter;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Iterator;
 
 import org.fross.library.Output;
@@ -233,22 +238,42 @@ public class QuoteConsoleOutput {
 		}
 
 		// Display the open/closed status of the market
-		Output.printColor(Ansi.Color.CYAN, "\nThe US index markets are currently: ");
+		Output.printColor(Ansi.Color.CYAN, "\nThe US index markets are currently:  ");
 		if (Index.marketOpen == true) {
 			Output.printColorln(Ansi.Color.YELLOW, "OPEN");
 		} else {
 			Output.printColorln(Ansi.Color.YELLOW, "CLOSED");
 		}
 
-		// Remove the periods from a.m. or p.m.
+		// Convert to local time & time zone
 		if (!timeStamp.isEmpty()) {
-			timeStamp = timeStamp.replaceAll(" [Pp]\\.[Mm]\\.", "pm");
-			timeStamp = timeStamp.replaceAll(" [Aa]\\.[Mm]\\.", "am");
-		} else {
-			timeStamp = "--";
+			try {
+				// Remove the periods from a.m. & p.m. Also make them upper case required by the formatter
+				if (!timeStamp.isEmpty()) {
+					timeStamp = timeStamp.replaceAll(" [Pp]\\.[Mm]\\.", "PM");
+					timeStamp = timeStamp.replaceAll(" [Aa]\\.[Mm]\\.", "AM");
+				} else {
+					timeStamp = "--";
+					throw new DateTimeParseException(null, null, 0);
+				}
+
+				// Parse the time stamp into a LocalDateTime object & set the to the Eastern time zone
+				LocalDateTime ldt = LocalDateTime.parse(timeStamp, DateTimeFormatter.ofPattern("MMM dd yyyy h:mma"));
+				ZonedDateTime zdtSrc = ldt.atZone(ZoneId.of("America/New_York"));
+
+				// Get local time zone for this JVM from the JVM system properties
+				ZoneId destTimeZone = ZoneId.of(System.getProperty("user.timezone"));
+				ZonedDateTime zdtDest = zdtSrc.withZoneSameInstant(destTimeZone);
+
+				// Build the updated time stamp
+				timeStamp = zdtDest.format(DateTimeFormatter.ofPattern("MMM dd yyyy hh:mm a z (O)"));
+				
+			} catch (DateTimeParseException ex) {
+				// Take no action and just use the original timeStamp as received from the financial website
+			}
 		}
 
-		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + " Eastern. Quotes are delayed.");
+		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + ". Quotes are delayed.");
 
 		// Display trending data if -t was provided and there is at least one valid symbol
 		if (cli.clTrend == true) {

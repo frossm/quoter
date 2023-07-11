@@ -3,7 +3,7 @@
 
 	<groupId>org.fross</groupId>
 	<artifactId>quoter</artifactId>
-	<version>5.0.9</version>
+	<version>5.0.10</version>
 	<packaging>jar</packaging>
 
 	<name>quoter</name>
@@ -229,7 +229,7 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.10.0-M1</version>
+			<version>5.10.0-RC1</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
