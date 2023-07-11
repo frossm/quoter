@@ -206,6 +206,11 @@ public class Symbol {
 				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
 				result = queryPageItem(htmlPage, xPath);
 				symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
+				
+				// Full Name of Company
+				xPath = "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("fullname", result.trim());
 
 			} else {
 				// Market is OPEN
@@ -272,6 +277,11 @@ public class Symbol {
 				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
 				result = queryPageItem(htmlPage, xPath);
 				symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
+				
+				// Full Name of Company
+				xPath = "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1";
+				result = queryPageItem(htmlPage, xPath);
+				symbolData.put("fullname", result.trim());
 			}
 
 			// If we are in debug mode, display the values of the symbol

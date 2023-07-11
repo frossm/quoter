@@ -26,6 +26,7 @@
  ***************************************************************************************************************/
 package org.fross.quoter;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
@@ -35,10 +36,11 @@ class SymbolTest {
 
 	// Look through a list of symbols and ensure all the right fields are present
 	@Test
-	void test() {
+	void testFields() {
 		String[] testSymbols = { "IBM", "TSLA", "GOOG" };
+		String[] symbolFullName = { "International Business Machines Corp.", "Tesla Inc.", "Alphabet Inc. Cl C" };
 		String[] testFields = { "symbol", "latestPrice", "change", "changePercent", "dayHigh", "dayLow", "ytdChangePercent", "oneYearChangePercent",
-				"timeStamp", "week52High", "week52Low", "status" };
+				"timeStamp", "week52High", "week52Low", "fullname", "status" };
 
 		// Loop through each symbol we are testing
 		for (int i = 0; i < testSymbols.length; i++) {
@@ -53,8 +55,9 @@ class SymbolTest {
 					fail("'" + testFields[i] + "' does not exist");
 				}
 			}
+
+			// Since the names shouldn't change, lets test a few of the fullname fields
+			assertEquals(symb.get("fullname"), symbolFullName[i]);
 		}
-
 	}
-
 }
