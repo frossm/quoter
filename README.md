@@ -17,7 +17,7 @@ I live in the US and quoter is configured to pull indexes from the three common 
 |-w COLUMNS| Set a custom width for the trending display.  This is the number of columns the output should use.  I have quoter aliased and I call it with my current column width|
 |-n| Hide the index display and just show the stock quotes.  If no stocks are provided, then nothing will happen|
 |-a SEC| Auto refresh the screen every `SEC` seconds until application is cancelled with Ctrl-C. Cannot be used when exporting to CSV and the screen is cleared at every refresh|
-|-d DAYS| Trend duration. Set the number of days to include in the historical trend display `-t`. The default is 90 days so you'll get approximately three months of trend data. This setting is saved in the preferences system and is "sticky". If it's set to 30 days, for example, the next time trend is run it will show 30 days. It can be changed by re-running Quoter with the `-d DAYS` switch.
+|-d DAYS| Trend duration. Set the number of days to include in the historical trend display `-t`. The default is 90 days so you'll get approximately three months of trend data. This setting is saved in the preferences system and is "sticky". If it's set to 30 days, for example, the next time trend is run it will show 30 days. It can be changed by re-running Quoter with the `-d DAYS` switch. The maximum trending duration is 99 days.|
 
 #### Saved Favorites
 |Option|Description|

@@ -29,6 +29,8 @@ package org.fross.quoter;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fross.library.Output;
+
 import com.beust.jcommander.IParameterValidator;
 import com.beust.jcommander.Parameter;
 import com.beust.jcommander.ParameterException;
@@ -51,7 +53,8 @@ public class CommandLineParser {
 	@Parameter(names = { "-a", "--auto-refresh" }, description = "Set a refresh time for quotes in seconds", validateWith = AutoRefreshValidator.class)
 	protected int clAutoRefresh = 0;
 
-	@Parameter(names = { "-d", "--trend-duration" }, description = "Set the number of historical days to include in the trend")
+	@Parameter(names = { "-d",
+			"--trend-duration" }, description = "Set the number of historical days to include in the trend", validateWith = TrendDurationValidator.class)
 	protected int clTrendDuration = 0;
 
 	// Saved Favorites
@@ -103,6 +106,26 @@ public class CommandLineParser {
 				}
 			} catch (Exception e) {
 				throw new ParameterException(String.format("Option %s must be a whole number greater than 0 if used. Value Provided: %s", name, value));
+			}
+		}
+	}
+
+	// Validate the trending duration value provided is between 1 and 99
+	final static public class TrendDurationValidator implements IParameterValidator {
+		public TrendDurationValidator() {
+
+		}
+
+		@Override
+		public void validate(String name, String value) {
+			int intVal;
+			try {
+				intVal = Integer.parseInt(value);
+				if (intVal < 1 || intVal > 99) {
+					Output.fatalError("Trend duration can not be '" + value + "'.  Value must be between 1 and 99", 1);
+				}
+			} catch (Exception e) {
+				Output.fatalError("Trend duration can not be '" + value + "'.  Value must be between 1 and 99", 1);
 			}
 		}
 	}

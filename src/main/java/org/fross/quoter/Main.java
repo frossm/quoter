@@ -96,12 +96,16 @@ public class Main {
 			System.exit(0);
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: Debug Switch
+		// -----------------------------------------------------------------
 		if (cli.clDebug == true) {
 			Debug.enable();
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: list Favorites
+		// -----------------------------------------------------------------
 		if (cli.clListFavorites == true) {
 			Output.printColorln(Ansi.Color.YELLOW, "Current Favorites:");
 			for (String i : Prefs.queryString(PREFS_SAVED_SYMBOLS).split(" ")) {
@@ -114,13 +118,17 @@ public class Main {
 			System.exit(0);
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: Export Data
+		// -----------------------------------------------------------------
 		if (cli.clExport.isEmpty() == false) {
 			exporter = new FileExporter(cli.clExport);
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: Trend Duration
 		// If there is no preference, set it to the default. If one is provided set prefs to it
+		// -----------------------------------------------------------------
 		if (Prefs.queryInt("trendduration") == 0) {
 			Prefs.set("trendduration", DEFAULT_TREND_DURATION);
 		}
@@ -130,7 +138,9 @@ public class Main {
 			System.exit(0);
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: Display Version & Latest GitHub Release
+		// -----------------------------------------------------------------
 		if (cli.clVersion == true) {
 			Output.printColorln(Ansi.Color.YELLOW, "\nCurrent Quoter version:   v" + Main.VERSION);
 			Output.printColorln(Ansi.Color.WHITE, "Latest Release on GitHub: " + GitHub.updateCheck("quoter"));
@@ -138,25 +148,33 @@ public class Main {
 			System.exit(0);
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: Remove saved securities
+		// -----------------------------------------------------------------
 		if (cli.clRemoveFavorites == true) {
 			Prefs.remove(PREFS_SAVED_SYMBOLS);
 			Output.printColor(Ansi.Color.YELLOW, "Saved securities have been removed\n");
 			System.exit(0);
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: Disable color output
+		// -----------------------------------------------------------------
 		if (cli.clNoColor == true) {
 			Output.enableColor(false);
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: Show Help and Exit
+		// -----------------------------------------------------------------
 		if (cli.clHelp == true) {
 			Help.Display();
 			System.exit(0);
 		}
 
+		// -----------------------------------------------------------------
 		// CLI: In debug mode, show the number of symbols listed on the command line
+		// -----------------------------------------------------------------
 		Output.debugPrint("Number of Symbols entered on command line: " + cli.symbolList.size());
 
 		// ---- END Command Line Parsing -------------------------------------------------------------

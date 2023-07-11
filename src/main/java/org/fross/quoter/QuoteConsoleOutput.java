@@ -240,9 +240,9 @@ public class QuoteConsoleOutput {
 		// Display the open/closed status of the market
 		Output.printColor(Ansi.Color.CYAN, "\nThe US index markets are currently:  ");
 		if (Index.marketOpen == true) {
-			Output.printColorln(Ansi.Color.YELLOW, "OPEN");
+			Output.printColorln(Ansi.Color.YELLOW, "- OPEN -");
 		} else {
-			Output.printColorln(Ansi.Color.YELLOW, "CLOSED");
+			Output.printColorln(Ansi.Color.YELLOW, "- CLOSED -");
 		}
 
 		// Convert to local time & time zone
