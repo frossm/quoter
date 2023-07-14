@@ -175,7 +175,7 @@ public class Main {
 		// -----------------------------------------------------------------
 		// CLI: In debug mode, show the number of symbols listed on the command line
 		// -----------------------------------------------------------------
-		Output.debugPrint("Number of Symbols entered on command line: " + cli.symbolList.size());
+		Output.debugPrintln("Number of Symbols entered on command line: " + cli.symbolList.size());
 
 		// ---- END Command Line Parsing -------------------------------------------------------------
 
@@ -195,7 +195,7 @@ public class Main {
 
 		// Add any saved symbols to the list of symbols to process
 		if (cli.clIgnoreFavorites == false) {
-			Output.debugPrint("Adding saved symbols: '" + Prefs.queryString(PREFS_SAVED_SYMBOLS) + "'");
+			Output.debugPrintln("Adding saved symbols: '" + Prefs.queryString(PREFS_SAVED_SYMBOLS) + "'");
 			String[] savedSymbols = Prefs.queryString(PREFS_SAVED_SYMBOLS).split(" ");
 			for (String i : savedSymbols) {
 				if (i != "Error") {
@@ -209,7 +209,7 @@ public class Main {
 
 		// Perform async fetches and display ticker information until user cancels application
 		if (cli.clAutoRefresh > 0) {
-			Output.debugPrint("Starting auto-refresh async timer.");
+			Output.debugPrintln("Starting auto-refresh async timer.");
 			if (!cli.clExport.isEmpty()) {
 				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used when exporting data to file.");
 				System.exit(0);
@@ -237,7 +237,7 @@ public class Main {
 
 		@Override
 		public void run() {
-			Output.debugPrint("Invoking auto-refresh.");
+			Output.debugPrintln("Invoking auto-refresh.");
 			flushConsole();
 			quoteConsoleOutput.invokeSymbolOutput(exporter);
 		}

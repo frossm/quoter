@@ -117,7 +117,7 @@ public class Symbol {
 
 		// Add the provided symbol to the URL template
 		URL = URL.replaceAll("SYMBOLHERE", symb);
-		Output.debugPrint("Symbol URL rewritten to: " + URL);
+		Output.debugPrintln("Symbol URL rewritten to: " + URL);
 
 		try {
 			// Download and parse the the webpage with xsoup
@@ -143,7 +143,7 @@ public class Symbol {
 			// MarketWatch has different XPaths depending if the market is open or closed
 			if (marketOpen == false) {
 				// Market is CLOSED
-				Output.debugPrint("Market is currently CLOSED");
+				Output.debugPrintln("Market is currently CLOSED");
 
 				// Current Price
 				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[1]";
@@ -214,7 +214,7 @@ public class Symbol {
 
 			} else {
 				// Market is OPEN
-				Output.debugPrint("Market is currently OPEN");
+				Output.debugPrintln("Market is currently OPEN");
 
 				// Current Price
 				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
@@ -286,9 +286,9 @@ public class Symbol {
 
 			// If we are in debug mode, display the values of the symbol
 			if (Debug.query() == true) {
-				Output.debugPrint("Symbol Data Results:");
+				Output.debugPrintln("Symbol Data Results:");
 				for (String i : symbolData.keySet()) {
-					Output.debugPrint("  - " + i + ": " + this.get(i));
+					Output.debugPrintln("  - " + i + ": " + this.get(i));
 				}
 			}
 

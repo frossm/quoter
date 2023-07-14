@@ -141,7 +141,7 @@ public class Index {
 			break;
 		}
 
-		Output.debugPrint("Index URL rewritten to: " + URL);
+		Output.debugPrintln("Index URL rewritten to: " + URL);
 
 		// Add index name to hash
 		indexData.put("index", idx);
@@ -170,7 +170,7 @@ public class Index {
 			// MarketWatch has different XPaths depending if the market is open or closed
 			if (marketOpen == false) {
 				// Market is CLOSED
-				Output.debugPrint("Market is currently CLOSED");
+				Output.debugPrintln("Market is currently CLOSED");
 
 				// Current Price
 				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span";
@@ -214,7 +214,7 @@ public class Index {
 
 			} else {
 				// Market is OPEN
-				Output.debugPrint("Market is currently OPEN");
+				Output.debugPrintln("Market is currently OPEN");
 
 				// Current Price
 				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
@@ -260,9 +260,9 @@ public class Index {
 
 			// If we are in debug mode, display the values we are returning
 			if (Debug.query() == true) {
-				Output.debugPrint("Index Data Results:");
+				Output.debugPrintln("Index Data Results:");
 				for (String i : indexData.keySet()) {
-					Output.debugPrint("  - " + i + ": " + this.get(i));
+					Output.debugPrintln("  - " + i + ": " + this.get(i));
 				}
 			}
 

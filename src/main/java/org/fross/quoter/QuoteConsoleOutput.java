@@ -176,7 +176,7 @@ public class QuoteConsoleOutput {
 				String[] outString = new String[8];
 				Index indexObj = new Index(indexList[i]);
 
-				Output.debugPrint("Getting Index data for: " + indexList[i]);
+				Output.debugPrintln("Getting Index data for: " + indexList[i]);
 
 				// Check to see if the index object has an error status
 				if (indexObj.get("status") != "ok") {

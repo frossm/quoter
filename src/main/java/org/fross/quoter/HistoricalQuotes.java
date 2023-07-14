@@ -65,19 +65,19 @@ public class HistoricalQuotes {
 
 		// Set the end date to today's date
 		String endDate = Date.getCurrentMonth() + "/" + Date.getCurrentDay() + "/" + Date.getCurrentYear();
-		Output.debugPrint("Trending End Date set to: " + endDate);
+		Output.debugPrintln("Trending End Date set to: " + endDate);
 
 		// Set the start date to today minus NUM_DAYS_IN_TREND
 		LocalDateTime now = LocalDateTime.now();
 		now = now.minusDays(NUM_DAYS_IN_TREND);
 		String startDate = String.format("%02d", now.getMonthValue()) + "/" + now.getDayOfMonth() + "/" + now.getYear();
-		Output.debugPrint("Trending Start Date set to: " + startDate);
+		Output.debugPrintln("Trending Start Date set to: " + startDate);
 
 		// Add the symbol, start, and end dates to the URL
 		quoteURL = quoteURL.replaceAll("SYMBOL", symb);
 		quoteURL = quoteURL.replaceAll("STARTDATE", startDate);
 		quoteURL = quoteURL.replaceAll("ENDDATE", endDate);
-		Output.debugPrint("Rewritten trending URL:\n" + quoteURL);
+		Output.debugPrintln("Rewritten trending URL:\n" + quoteURL);
 
 		// Download the historical data. Fields: Date,Open,High,Low,Close,Volume
 		String historicalDataBlob = "";
@@ -228,8 +228,8 @@ public class HistoricalQuotes {
 		Float sv = smallestMapValue(resultMap);
 		String svStr = String.format("%.2f", sv);		// sv String to 2 decimals
 
-		Output.debugPrint("Largest Value in Historical Data:  " + lv);
-		Output.debugPrint("Smallest Value in Historical Data: " + sv);
+		Output.debugPrintln("Largest Value in Historical Data:  " + lv);
+		Output.debugPrintln("Smallest Value in Historical Data: " + sv);
 
 		// Create a symbol object with IEXCloud Data
 		Symbol symbolData = new Symbol(symb);
@@ -238,12 +238,12 @@ public class HistoricalQuotes {
 		lengthOfCurrentPrice = symbolData.get("latestPrice").toString().length();
 		graphWidth = Main.cli.clWidth - 10 - (lengthOfCurrentPrice * 3 + 10);
 
-		Output.debugPrint("Trending Graph Width set to: " + graphWidth);
+		Output.debugPrintln("Trending Graph Width set to: " + graphWidth);
 
 		// Determine how many spaces per dollar
 		slotsPerCostUnit = graphWidth / (lv - sv);
-		Output.debugPrint("Map Slots: " + graphWidth);
-		Output.debugPrint("Slots per Cost Unit: " + slotsPerCostUnit);
+		Output.debugPrintln("Map Slots: " + graphWidth);
+		Output.debugPrintln("Slots per Cost Unit: " + slotsPerCostUnit);
 
 		// Display the symbol informational header
 		Output.printColorln(Ansi.Color.WHITE, "\n\n+--" + String.format("%02d", NUM_DAYS_IN_TREND) + " Day Trend"
