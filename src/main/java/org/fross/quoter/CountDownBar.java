@@ -72,14 +72,42 @@ public class CountDownBar extends Thread {
 
 			countDown--;
 		}
-		
+
 		// Stop the count down
 		this.interrupt();
 
 	}
-	
+
+	/**
+	 * reset(): Reset the countdown timer back to the originally submitted number of seconds
+	 */
 	public void reset() {
 		this.countDown = this.countDownOrig;
+	}
+
+	/**
+	 * main(): Simply here to test the spinner
+	 * 
+	 * THIS IS NOT CURRENTLY WORKING - THE CHARACTERS ARE GARBLED
+	 * 
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		int testDuration;
+
+		try {
+			testDuration = Integer.valueOf(args[0]);
+		} catch (ArrayIndexOutOfBoundsException ex) {
+			testDuration = 20;
+		}
+
+		Output.printColorln(Ansi.Color.YELLOW, String.format("Running countdown timere for %d seconds:\n", testDuration));
+
+		// Define and start the count down bar
+		CountDownBar cdb = new CountDownBar(testDuration);
+
+		cdb.start();
+
 	}
 
 }
