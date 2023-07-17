@@ -42,6 +42,7 @@ import us.codecraft.xsoup.Xsoup;
 
 public class Symbol {
 	HashMap<String, String> symbolData = new HashMap<>();
+	XPathLookup xPathLookup = new XPathLookup();
 
 	/**
 	 * Symbol Constructor(): Initialize class with a symbol to process
@@ -133,8 +134,7 @@ public class Symbol {
 			this.symbolData.put("status", "ok");
 
 			// Determine if the market is open or closed
-			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
-			if (Symbol.queryPageItem(htmlPage, marketOpenXPath).toLowerCase().contains("open") == true) {
+			if (Symbol.queryPageItem(htmlPage, xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase().contains("open") == true) {
 				marketOpen = true;
 			} else {
 				marketOpen = false;
@@ -146,23 +146,23 @@ public class Symbol {
 				Output.debugPrintln("Market is currently CLOSED");
 
 				// Current Price
-				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[1]";
-				String result = queryPageItem(htmlPage, xPath);
-				symbolData.put("latestPrice", result.replaceAll("[$,%]", "").trim());
+				String key = "latestPrice";
+				String result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				symbolData.put(key, result.replaceAll("[$,%]", "").trim());
 
 				// Change
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[2]";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("change", result.replaceAll("[$,%]", "").trim());
+				key = "change";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				symbolData.put(key, result.replaceAll("[$,%]", "").trim());
 
 				// Change Percent
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[3]";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("changePercent", result.replaceAll("[,%]", "").trim());
+				key = "changePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// 52 Week High / Low - Get range and split into high/low
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
-				result = queryPageItem(htmlPage, xPath);
+				key = "52weekRange";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
 
 				String low52 = "";
 				String high52 = "";
@@ -177,8 +177,8 @@ public class Symbol {
 				symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
 
 				// Day Range - Get range and split into high/low
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]";
-				result = queryPageItem(htmlPage, xPath);
+				key = "dayRange";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
 
 				String lowD = "";
 				String highD = "";
@@ -193,47 +193,47 @@ public class Symbol {
 				symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
 
 				// Year to Date Change
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("ytdChangePercent", result.replaceAll("[,%]", "").trim());
+				key = "ytdChangePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// One Year Change Percent
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("oneYearChangePercent", result.replaceAll("[,%]", "").trim());
+				key = "oneYearChangePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
-				
+				key = "timeStamp";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+
 				// Full Name of Company
-				xPath = "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("fullname", result.trim());
+				key = "fullname";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				symbolData.put(key, result.trim());
 
 			} else {
 				// Market is OPEN
 				Output.debugPrintln("Market is currently OPEN");
 
 				// Current Price
-				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
-				String result = queryPageItem(htmlPage, xPath);
-				symbolData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+				String key = "latestPrice";
+				String result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("change", result.replaceAll("[,%]", "").trim());
+				key = "change";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change Percent
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("changePercent", result.replaceAll("[,%]", "").trim());
+				key = "changePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// 52 Week High / Low - Get range and split into high/low
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
-				result = queryPageItem(htmlPage, xPath);
+				key = "52weekRange";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
 
 				String low52 = "";
 				String high52 = "";
@@ -248,8 +248,8 @@ public class Symbol {
 				symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
 
 				// Day Range - Get range and split into high/low
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]";
-				result = queryPageItem(htmlPage, xPath);
+				key = "dayRange";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
 
 				String lowD = "";
 				String highD = "";
@@ -264,24 +264,24 @@ public class Symbol {
 				symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
 
 				// Year to Date Change
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("ytdChangePercent", result.replaceAll("[,%]", "").trim());
+				key = "ytdChangePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// One Year Change Percent
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("oneYearChangePercent", result.replaceAll("[,%]", "").trim());
+				key = "oneYearChangePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("timeStamp", result.replaceAll("[,%]", "").trim());
-				
+				key = "timeStamp";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+
 				// Full Name of Company
-				xPath = "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1";
-				result = queryPageItem(htmlPage, xPath);
-				symbolData.put("fullname", result.trim());
+				key = "fullname";
+				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				symbolData.put(key, result.trim());
 			}
 
 			// If we are in debug mode, display the values of the symbol

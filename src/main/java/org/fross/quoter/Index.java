@@ -44,6 +44,7 @@ import us.codecraft.xsoup.Xsoup;
 public class Index {
 	HashMap<String, String> indexData = new HashMap<>();
 	static boolean marketOpen;
+	XPathLookup xPathLookup = new XPathLookup();
 
 	/**
 	 * Symbol Constructor(): Initialize class with a symbol to process
@@ -142,7 +143,6 @@ public class Index {
 		}
 
 		Output.debugPrintln("Index URL rewritten to: " + URL);
-
 		// Add index name to hash
 		indexData.put("index", idx);
 
@@ -160,8 +160,7 @@ public class Index {
 			this.indexData.put("status", "ok");
 
 			// Determine if the market is open or closed
-			String marketOpenXPath = "/html/body/div[3]/div[2]/div[3]/div/small/div";
-			if (Symbol.queryPageItem(htmlPage, marketOpenXPath).contains("Closed") == true) {
+			if (Symbol.queryPageItem(htmlPage, xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase().contains("closed") == true) {
 				marketOpen = false;
 			} else {
 				marketOpen = true;
@@ -173,23 +172,23 @@ public class Index {
 				Output.debugPrintln("Market is currently CLOSED");
 
 				// Current Price
-				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span";
-				String result = queryPageItem(htmlPage, xPath);
-				indexData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+				String key = "latestPrice";
+				String result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("change", result.replaceAll("[,%]", "").trim());
+				key = "change";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change Percent
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("changePercent", result.replaceAll("[,%]", "").trim());
+				key = "changePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// 52 Week Range
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
-				result = queryPageItem(htmlPage, xPath);
+				key = "52weekRange";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
 
 				String w52Low = result.split(" - ")[0];
 				String w52High = result.split(" - ")[1];
@@ -198,42 +197,42 @@ public class Index {
 				indexData.put("week52High", w52High.replaceAll("[,%]", "").trim());
 
 				// Year to Date Change Percent
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("ytdChangePercent", result.replaceAll("[,%]", "").trim());
+				key = "ytdChangePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// One Year Change Percent
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("oneYearChangePercent", result.replaceAll("[,%]", "").trim());
+				key = "oneYearChangePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("timeStamp", result.replaceAll("[,%]", "").trim());
+				key = "timeStamp";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 			} else {
 				// Market is OPEN
 				Output.debugPrintln("Market is currently OPEN");
 
 				// Current Price
-				String xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote";
-				String result = queryPageItem(htmlPage, xPath);
-				indexData.put("latestPrice", result.replaceAll("[,%]", "").trim());
+				String key = "latestPrice";
+				String result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote";
-				result = queryPageItem(htmlPage, xPath);
+				key = "change";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
 				indexData.put("change", result.replaceAll("[,%]", "").trim());
 
 				// Change Percent
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("changePercent", result.replaceAll("[,%]", "").trim());
+				key = "changePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// 52 Week Range
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]";
-				result = queryPageItem(htmlPage, xPath);
+				key = "52weekRange";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
 
 				String w52Low = result.split(" - ")[0];
 				String w52High = result.split(" - ")[1];
@@ -242,19 +241,19 @@ public class Index {
 				indexData.put("week52High", w52High.replaceAll("[,%]", "").trim());
 
 				// Year to Date
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("ytdChangePercent", result.replaceAll("[,%]", "").trim());
+				key = "ytdChangePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// One Year Change Percent
-				xPath = "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("oneYearChangePercent", result.replaceAll("[,%]", "").trim());
+				key = "oneYearChangePercent";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
-				xPath = "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote";
-				result = queryPageItem(htmlPage, xPath);
-				indexData.put("timeStamp", result.replaceAll("[,%]", "").trim());
+				key = "timeStamp";
+				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 			}
 
