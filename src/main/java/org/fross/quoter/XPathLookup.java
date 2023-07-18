@@ -3,19 +3,19 @@
  * 
  * Quoter is a command line program that display stock quotes and index data.
  * 
- * *  Copyright (c) 2019-2022 Michael Fross
+ * Copyright (c) 2019-2022 Michael Fross
  *
- *  Permission is hereby granted, free of charge, to any person obtaining a copy
- *  of this software and associated documentation files (the "Software"), to deal
- *  in the Software without restriction, including without limitation the rights
- *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- *  copies of the Software, and to permit persons to whom the Software is
- *  furnished to do so, subject to the following conditions:
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
- *  The above copyright notice and this permission notice shall be included in all
- *  copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -39,7 +39,7 @@ public class XPathLookup {
 	 */
 	public XPathLookup() {
 		// ---------------------------------------------------------------------------------
-		// Symbols with market CLOSED
+		// xPaths: Symbols with market CLOSED
 		// ---------------------------------------------------------------------------------
 		symbolClosed.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[1]");
 		symbolClosed.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[2]");
@@ -52,7 +52,7 @@ public class XPathLookup {
 		symbolClosed.put("fullname", "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1");
 
 		// ---------------------------------------------------------------------------------
-		// Symbols with market OPEN
+		// xPaths: Symbols with market OPEN
 		// ---------------------------------------------------------------------------------
 		symbolOpen.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote");
 		symbolOpen.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote");
@@ -65,7 +65,7 @@ public class XPathLookup {
 		symbolOpen.put("fullname", "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1");
 
 		// ---------------------------------------------------------------------------------
-		// Indexes with market CLOSED
+		// xPaths: Indexes with market CLOSED
 		// ---------------------------------------------------------------------------------
 		indexClosed.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span");
 		indexClosed.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]");
@@ -76,7 +76,7 @@ public class XPathLookup {
 		indexClosed.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
 
 		// ---------------------------------------------------------------------------------
-		// Indexes with market OPEN
+		// xPaths: Indexes with market OPEN
 		// ---------------------------------------------------------------------------------
 		indexOpen.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote");
 		indexOpen.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote");
@@ -91,7 +91,7 @@ public class XPathLookup {
 	}
 
 	/**
-	 * lookupSymbolOpen(): Returns the xPath string as maped to the provided key
+	 * lookupSymbolOpen(): Returns the xPath string as mapped to the provided key
 	 * 
 	 * @param key
 	 * @return
@@ -101,7 +101,7 @@ public class XPathLookup {
 	}
 
 	/**
-	 * lookupSymbolClosed(): Returns the xPath string as maped to the provided key
+	 * lookupSymbolClosed(): Returns the xPath string as mapped to the provided key
 	 * 
 	 * @param key
 	 * @return
@@ -111,7 +111,7 @@ public class XPathLookup {
 	}
 
 	/**
-	 * lookupIndexOpen(): Returns the xPath string as maped to the provided key
+	 * lookupIndexOpen(): Returns the xPath string as mapped to the provided key
 	 * 
 	 * @param key
 	 * @return
@@ -121,7 +121,7 @@ public class XPathLookup {
 	}
 
 	/**
-	 * lookupIndexClosed(): Returns the xPath string as maped to the provided key
+	 * lookupIndexClosed(): Returns the xPath string as mapped to the provided key
 	 * 
 	 * @param key
 	 * @return
