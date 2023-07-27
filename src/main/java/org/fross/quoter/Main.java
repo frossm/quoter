@@ -27,13 +27,15 @@
 
 package org.fross.quoter;
 
+import static org.fusesource.jansi.Ansi.ansi;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 import org.fross.library.Debug;
+import org.fross.library.Format;
 import org.fross.library.GitHub;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
@@ -204,47 +206,60 @@ public class Main {
 			}
 		}
 
-		// Fetch and display ticker information
-		quoteConsoleOutput.invokeSymbolOutput(exporter);
+		// Fetch and display the ticker / index information
+		quoteConsoleOutput.displayOutput(exporter);
 
-		// Perform async fetches and display ticker information until user cancels application
+		// Auto-refresh is enabled. Re-display the data every cli.clAutoRefresh seconds
 		if (cli.clAutoRefresh > 0) {
-			Output.debugPrintln("Starting auto-refresh async timer.");
-			if (!cli.clExport.isEmpty()) {
-				Output.printColorln(Ansi.Color.RED, "Auto-Refresh flag cannot be used when exporting data to file.");
-				System.exit(0);
+			boolean continueCountdown = true;
+
+			while (continueCountdown == true) {
+				int countDown = cli.clAutoRefresh;
+
+				Output.println("");
+
+				// Start a thread and look for the 'ENTER' key to be hit
+				EnterPressed ep = new EnterPressed();
+				ep.start();
+
+				while (countDown > 0 && continueCountdown == true) {
+					Output.printColor(Ansi.Color.RED,
+							Format.CenterText(88, String.format("----- Quoter auto-refreshing in %02d seconds.  Press 'ENTER' to exit -----", countDown)));
+
+					// Sleep for 1 second
+					try {
+						TimeUnit.MILLISECONDS.sleep(1000);
+					} catch (InterruptedException ex) {
+						Output.fatalError("Error during auto-refresh count down", 0);
+					}
+
+					// Erase the line. Use a large number so it hits the front of the line
+					System.out.print(ansi().cursorLeft(5000));
+
+					// Decrement the count down timer by 1 second
+					countDown--;
+
+					// Check the EnterPressed thread and see if, well, enter was pressed
+					if (ep.queryEnterPressed() == true) {
+						continueCountdown = false;
+						ep.interrupt();
+					}
+
+				}
+
+				// Clear the screen before we display the next iteration
+				if (continueCountdown == true) {
+					Output.clearScreen();
+					System.out.flush();
+
+					// Display another set of output
+					quoteConsoleOutput.displayOutput(exporter);
+				}
+
 			}
-			final FetchLatestTask asyncTimer = new FetchLatestTask(exporter);
 
-			// Schedule the timer. Set it for a bit more than what is selected so it happens after the count down bar
-			new Timer().schedule(asyncTimer, cli.clAutoRefresh * 1000, cli.clAutoRefresh * 1000);
 		}
 
-	} // END OF MAIN
-
-	/**
-	 * FetchLatestTask(): Setup timed task to refresh Quoter
-	 * 
-	 * @author pgalasti
-	 *
-	 */
-	private static class FetchLatestTask extends TimerTask {
-		private FileExporter exporter;
-
-		public FetchLatestTask(final FileExporter exporter) {
-			this.exporter = exporter;
-		}
-
-		@Override
-		public void run() {
-			Output.debugPrintln("Invoking auto-refresh.");
-			flushConsole();
-			quoteConsoleOutput.invokeSymbolOutput(exporter);
-		}
 	}
 
-	private static void flushConsole() {
-		Output.clearScreen();
-		System.out.flush();
-	}
 }

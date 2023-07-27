@@ -23,7 +23,7 @@ public class QuoteConsoleOutput {
 	 * @param IEXCloudToken
 	 * @param exporter
 	 */
-	public void invokeSymbolOutput(FileExporter exporter) {
+	public void displayOutput(FileExporter exporter) {
 		// Store the time stamp
 		String timeStamp = "";
 
@@ -267,7 +267,7 @@ public class QuoteConsoleOutput {
 
 				// Build the updated time stamp
 				timeStamp = zdtDest.format(DateTimeFormatter.ofPattern("MMM dd yyyy hh:mm a z (O)"));
-				
+
 			} catch (DateTimeParseException ex) {
 				// Take no action and just use the original timeStamp as received from the financial website
 			}
@@ -292,11 +292,6 @@ public class QuoteConsoleOutput {
 		if (cli.clExport.isEmpty() == false) {
 			exporter.close();
 			Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
-		}
-
-		// If auto refresh is on, display a message and a count down timer
-		if (cli.clAutoRefresh > 0) {
-			Output.printColorln(Ansi.Color.RED, String.format("\nAuto-Refresh enabled for %d seconds. Press 'CTRL + C' to exit\n", cli.clAutoRefresh));
 		}
 
 	}

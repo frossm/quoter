@@ -45,10 +45,10 @@ public class Help {
 	 */
 	public static void Display() {
 		Output.printColorln(Ansi.Color.CYAN, "\n+" + "-".repeat(HEADERWIDTH - 2) + "+");
-		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, "Quoter  v" + Main.VERSION) + "+");
+		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, "Quoter v" + Main.VERSION) + "+");
 		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, Main.COPYRIGHT) + "+");
 		Output.printColorln(Ansi.Color.CYAN, "+" + "-".repeat(HEADERWIDTH - 2) + "+");
-		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Quoter displays stock quotes, US index data, and more"));
+		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Quoter displays stock quotes & US index data, and more"));
 		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Hompage: https://github.com/frossm/quoter") + "\n");
 
 		Output.printColorln(Ansi.Color.YELLOW, "Command Line Options");
@@ -57,18 +57,18 @@ public class Help {
 		Output.printColorln(Ansi.Color.WHITE, "  -z        Disable colorized output");
 		Output.printColorln(Ansi.Color.WHITE, "  -w WIDTH  Width, in columns, of the trending display");
 		Output.printColorln(Ansi.Color.WHITE, "  -n        Hide the Index information and just show the stock quotes");
-		Output.printColorln(Ansi.Color.WHITE, "  -a SEC    Set a refresh time for quotes in seconds");
-		Output.printColorln(Ansi.Color.WHITE, "  -d DAYS   Set duration of trend display. Default is 90 days of historical data");
+		Output.printColorln(Ansi.Color.WHITE, "  -a SEC    Set a auto-refresh time for quotes in seconds. Ex: '-a 300' is a 5 min refresh");
+		Output.printColorln(Ansi.Color.WHITE, "  -d DAYS   Set persistent duration of trend display. Default is 90 days of historical data");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nSaved Favorites:");
-		Output.printColorln(Ansi.Color.WHITE, "  -s        Save securities provided as favorites and show them automatically");
+		Output.printColorln(Ansi.Color.WHITE, "  -s        Save the securities provided as favorites and show them automatically");
 		Output.printColorln(Ansi.Color.WHITE, "  -l        List currently saved favorites");
-		Output.printColorln(Ansi.Color.WHITE, "  -r        Remove saved favorites");
+		Output.printColorln(Ansi.Color.WHITE, "  -r        Remove all saved favorites");
 		Output.printColorln(Ansi.Color.WHITE, "  -i        Ignore favorites for this execution");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nAdditional Features:");
-		Output.printColorln(Ansi.Color.WHITE, "  -t        Display daily trending historical data");
-		Output.printColorln(Ansi.Color.WHITE, "  -x FILE   Export data to the provided filename");
+		Output.printColorln(Ansi.Color.WHITE, "  -t        Display daily trending historical data with a duration set with '-d'");
+		Output.printColorln(Ansi.Color.WHITE, "  -x FILE   Export data to the provided filename. Export will contain a header row");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nMisc:");
 		Output.printColorln(Ansi.Color.WHITE, "  -D        Start in debug mode and display details for developers");
@@ -77,10 +77,10 @@ public class Help {
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nNotes:");
 		Output.printColorln(Ansi.Color.WHITE, "  - Quoter security and index data is pulled from a financial website");
-		Output.printColorln(Ansi.Color.WHITE, "  - If the website changes it's structure Quoter could break.  I'll update it should that occur.");
+		Output.printColorln(Ansi.Color.WHITE, "  - If the website changes it's structure Quoter could break.  I'll update it should that occur");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nSNAP Installation Notes:");
 		Output.printColorln(Ansi.Color.WHITE, "  - To export data, you must assign Quoter access to your home directory via:");
-		Output.printColorln(Ansi.Color.CYAN, "  - sudo snap connect quoter:home");
+		Output.printColorln(Ansi.Color.WHITE, "    snap connect quoter:home");
 	}
 }
