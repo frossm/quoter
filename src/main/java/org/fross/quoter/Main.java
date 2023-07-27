@@ -211,18 +211,20 @@ public class Main {
 
 		// Auto-refresh is enabled. Re-display the data every cli.clAutoRefresh seconds
 		if (cli.clAutoRefresh > 0) {
-			boolean continueCountdown = true;
-
-			while (continueCountdown == true) {
+			// Continuous loop displaying the output until user hits enter. The EnterPressed thread picks that up and exits the program
+			while (true) {
 				int countDown = cli.clAutoRefresh;
 
 				Output.println("");
 
-				// Start a thread and look for the 'ENTER' key to be hit
+				// Start a thread and look for the 'ENTER' key to be hit - then exit quoter
 				EnterPressed ep = new EnterPressed();
 				ep.start();
 
-				while (countDown > 0 && continueCountdown == true) {
+				while (countDown > 0) {
+					// Erase the line. Use a large number so it hits the front of the line
+					System.out.print(ansi().cursorLeft(5000));
+
 					Output.printColor(Ansi.Color.RED,
 							Format.CenterText(88, String.format("----- Quoter auto-refreshing in %02d seconds.  Press 'ENTER' to exit -----", countDown)));
 
@@ -233,28 +235,16 @@ public class Main {
 						Output.fatalError("Error during auto-refresh count down", 0);
 					}
 
-					// Erase the line. Use a large number so it hits the front of the line
-					System.out.print(ansi().cursorLeft(5000));
-
 					// Decrement the count down timer by 1 second
 					countDown--;
-
-					// Check the EnterPressed thread and see if, well, enter was pressed
-					if (ep.queryEnterPressed() == true) {
-						continueCountdown = false;
-						ep.interrupt();
-					}
-
 				}
 
 				// Clear the screen before we display the next iteration
-				if (continueCountdown == true) {
-					Output.clearScreen();
-					System.out.flush();
+				Output.clearScreen();
+				System.out.flush();
 
-					// Display another set of output
-					quoteConsoleOutput.displayOutput(exporter);
-				}
+				// Display another set of output
+				quoteConsoleOutput.displayOutput(exporter);
 
 			}
 

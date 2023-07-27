@@ -26,6 +26,11 @@
  ***************************************************************************************************************/
 package org.fross.quoter;
 
+import java.io.Console;
+
+import org.fross.library.Output;
+import org.fusesource.jansi.Ansi;
+
 public class EnterPressed extends Thread {
 	boolean enterPressed;
 
@@ -39,16 +44,20 @@ public class EnterPressed extends Thread {
 	 */
 	@Override
 	public void run() {
-		// Check for a key press
+		// Check for entered text
 		try {
-			if (System.in.read() != -1) {
+			Console c = System.console();
+
+			if (c.readLine() != null) {
 				this.enterPressed = true;
+				Output.printColorln(Ansi.Color.CYAN, "Exiting...");
+
+				// This seems sloppy, but having Main check the status wasn't working reliably
+				System.exit(0);
 			}
 
-			System.in.reset();
-
 		} catch (Exception ex) {
-			// Just move on...
+			// Just keeping 'er movin'
 		}
 	}
 
