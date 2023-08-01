@@ -258,7 +258,7 @@ public class QuoteConsoleOutput {
 				}
 
 				// Parse the time stamp into a LocalDateTime object & set the to the Eastern time zone
-				LocalDateTime ldt = LocalDateTime.parse(timeStamp, DateTimeFormatter.ofPattern("MMM dd yyyy h:mma"));
+				LocalDateTime ldt = LocalDateTime.parse(timeStamp, DateTimeFormatter.ofPattern("MMM d yyyy h:mma"));
 				ZonedDateTime zdtSrc = ldt.atZone(ZoneId.of("America/New_York"));
 
 				// Get local time zone for this JVM from the JVM system properties
@@ -269,11 +269,15 @@ public class QuoteConsoleOutput {
 				timeStamp = zdtDest.format(DateTimeFormatter.ofPattern("MMM dd yyyy hh:mm a z (O)"));
 
 			} catch (DateTimeParseException ex) {
-				// Take no action and just use the original timeStamp as received from the financial website
+				// Just take the original time stamp from the financial website after adding the time zone
+				timeStamp = timeStamp + " Eastern Time";
 			}
 		}
 
-		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + ". Quotes are delayed.");
+		// Display the time stamp
+		Output.printColor(Ansi.Color.CYAN, "Data as of ");
+		Output.printColor(Ansi.Color.WHITE, timeStamp);
+		Output.printColorln(Ansi.Color.CYAN, ". Quotes are delayed.");
 
 		// Display trending data if -t was provided and there is at least one valid symbol
 		if (cli.clTrend == true) {
