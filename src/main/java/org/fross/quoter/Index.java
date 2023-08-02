@@ -43,7 +43,7 @@ import us.codecraft.xsoup.Xsoup;
 
 public class Index {
 	HashMap<String, String> indexData = new HashMap<>();
-	static boolean marketOpen;
+	private boolean marketOpen;
 	XPathLookup xPathLookup = new XPathLookup();
 
 	/**
@@ -55,6 +55,15 @@ public class Index {
 		getIndex(idx);
 	}
 
+	/**
+	 * MarketOpen(): Returns if the US index market is currently open
+	 * 
+	 * @return
+	 */
+	public boolean queryMarketOpen() {
+		return marketOpen;
+	}
+	
 	/**
 	 * queryPageItem():Find the specific value in the provided doc with the xPath given
 	 * 

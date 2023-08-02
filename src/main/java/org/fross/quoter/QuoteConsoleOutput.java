@@ -238,8 +238,8 @@ public class QuoteConsoleOutput {
 		}
 
 		// Display the open/closed status of the market
-		Output.printColor(Ansi.Color.CYAN, "\nThe US index markets are currently:  ");
-		if (Index.marketOpen == true) {
+		Output.printColor(Ansi.Color.CYAN, "\nThe US markets are currently:  ");
+		if (new Index("DOW").queryMarketOpen() == true) {
 			Output.printColorln(Ansi.Color.YELLOW, "~ OPEN ~");
 		} else {
 			Output.printColorln(Ansi.Color.YELLOW, "~ CLOSED ~");
@@ -266,7 +266,7 @@ public class QuoteConsoleOutput {
 				ZonedDateTime zdtDest = zdtSrc.withZoneSameInstant(destTimeZone);
 
 				// Build the updated time stamp
-				timeStamp = zdtDest.format(DateTimeFormatter.ofPattern("MMM dd yyyy hh:mm a z (O)"));
+				timeStamp = zdtDest.format(DateTimeFormatter.ofPattern("MMM dd yyyy hh:mma z (O)"));
 
 			} catch (DateTimeParseException ex) {
 				// Just take the original time stamp from the financial website after adding the time zone
@@ -274,6 +274,10 @@ public class QuoteConsoleOutput {
 			}
 		}
 
+		// Changed the AM/PM to lower case as I think it looks better
+		timeStamp = timeStamp.replaceAll("PM","pm");
+		timeStamp = timeStamp.replaceAll("AM","am");
+		
 		// Display the time stamp
 		Output.printColor(Ansi.Color.CYAN, "Data as of ");
 		Output.printColor(Ansi.Color.WHITE, timeStamp);
