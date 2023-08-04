@@ -225,7 +225,7 @@ public class Main {
 					// Erase the line. Use a large number so it hits the front of the line
 					System.out.print(ansi().cursorLeft(5000));
 
-					Output.printColor(Ansi.Color.RED,
+					Output.printColor(Ansi.Color.CYAN,
 							Format.CenterText(88, String.format("----- Quoter auto-refreshing in %02d seconds.  Press 'ENTER' to exit -----", countDown)));
 
 					// Sleep for 1 second

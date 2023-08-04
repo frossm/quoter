@@ -247,6 +247,8 @@ public class QuoteConsoleOutput {
 
 		// Convert to local time & time zone
 		if (!timeStamp.isEmpty()) {
+			Output.debugPrintln("Original Time Stamp from Website: " + timeStamp);
+
 			try {
 				// Remove the periods from a.m. & p.m. Also make them upper case required by the formatter
 				if (!timeStamp.isEmpty()) {
@@ -275,13 +277,11 @@ public class QuoteConsoleOutput {
 		}
 
 		// Changed the AM/PM to lower case as I think it looks better
-		timeStamp = timeStamp.replaceAll("PM","pm");
-		timeStamp = timeStamp.replaceAll("AM","am");
-		
+		timeStamp = timeStamp.replaceAll("PM", "pm");
+		timeStamp = timeStamp.replaceAll("AM", "am");
+
 		// Display the time stamp
-		Output.printColor(Ansi.Color.CYAN, "Data as of ");
-		Output.printColor(Ansi.Color.WHITE, timeStamp);
-		Output.printColorln(Ansi.Color.CYAN, ". Quotes are delayed.");
+		Output.printColor(Ansi.Color.CYAN, "Data as of " + timeStamp + ". Quotes are delayed.");
 
 		// Display trending data if -t was provided and there is at least one valid symbol
 		if (cli.clTrend == true) {
@@ -299,7 +299,7 @@ public class QuoteConsoleOutput {
 		// Flush and close export file if needed
 		if (cli.clExport.isEmpty() == false) {
 			exporter.close();
-			Output.printColor(Ansi.Color.CYAN, "\nData Export Complete to '" + exporter.queryExportFilename() + "'\n");
+			Output.printColorln(Ansi.Color.YELLOW, "\nData export has completed to file: '" + exporter.queryExportFilename() + "'");
 		}
 
 	}

@@ -14,17 +14,17 @@ I live in the US and quoter is configured to pull indexes from the three common 
 |Option|Description|
 |------|-----------|
 |-z | Disable colorized output|
-|-w COLUMNS| Set a custom width for the trending display.  This is the number of columns the output should use.  I have quoter aliased and I call it with my current column width|
+|-w COLUMNS| Set a custom width for the trending display.  This is the number of columns the output should use.  I have Quoter aliased and I call it with my current column width minus a few characters|
 |-n| Hide the index display and just show the stock quotes.  If no stocks are provided, then nothing will happen|
-|-a SEC| Auto refresh the screen every `SEC` seconds until application is cancelled with Ctrl-C. Cannot be used when exporting to CSV and the screen is cleared at every refresh|
+|-a SEC| Auto refresh the screen every `SEC` seconds until application is cancelled by hitting `Enter` or `Ctrl-C`. The screen will be cleared at each refresh|
 |-d DAYS| Trend duration. Set the number of days to include in the historical trend display `-t`. The default is 90 days so you'll get approximately three months of trend data. This setting is saved in the preferences system and is "sticky". If it's set to 30 days, for example, the next time trend is run it will show 30 days. It can be changed by re-running Quoter with the `-d DAYS` switch. The maximum trending duration is 99 days.|
 
 #### Saved Favorites
 |Option|Description|
 |------|-----------|
-|-s | Save the securities provided into the preferences system as a favorite that will be executed each time Quoter is run.  If a `-d` Detailed or `-t` Trend is requested, the saved securities will be included.  If an symbol is added on the command line it will be shown along with those that are saved.  If `-s` is provided and there are already saved securities, the current list will overwrite the existing list |
+|-s | Save the securities provided into the preferences system as a favorite that will be executed each time Quoter is run.  If the `-t` Trend display is requested, the saved securities will be included.  If an symbol is added on the command line it will be shown along with those that are saved.  If `-s` is provided and there are already saved securities, the current list will overwrite the existing list |
 |-l | List the current saved favorites|
-|-r | Remove saved favorites and exit program.  If you'd like them back you'll simply need to re-save them with the `-s` flag|
+|-r | Remove the saved favorites and exit.  If you'd like them back you'll simply need to re-save them with the `-s` flag|
 |-i | Ignore saved favorites for this execution.  They will remain saved|
 
 #### Security Information
@@ -85,7 +85,7 @@ If you are going to use the export capability, you'll need to give the snap acce
 
 This is obviously not meant to be a large financial package.  It's just a small utility that I wanted to use to tell me if I'll ever be able to retire :-)   If you have suggestions or idea, please let me know.
 
-quoter at fross dot org.
+quoter at fross dot org
 
 ## License
 

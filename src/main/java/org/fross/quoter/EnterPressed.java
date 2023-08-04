@@ -44,13 +44,13 @@ public class EnterPressed extends Thread {
 	 */
 	@Override
 	public void run() {
-		// Check for entered text
+		// Check for the enter key being pressed
 		try {
 			Console c = System.console();
 
 			if (c.readLine() != null) {
 				this.enterPressed = true;
-				Output.printColorln(Ansi.Color.CYAN, "Exiting...");
+				Output.printColorln(Ansi.Color.DEFAULT, "\nExiting...");
 
 				// This seems sloppy, but having Main check the status wasn't working reliably
 				System.exit(0);
