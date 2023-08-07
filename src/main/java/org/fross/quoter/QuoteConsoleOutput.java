@@ -281,7 +281,7 @@ public class QuoteConsoleOutput {
 		timeStamp = timeStamp.replaceAll("AM", "am");
 
 		// Display the time stamp
-		Output.printColor(Ansi.Color.CYAN, "Data as of " + timeStamp + ". Quotes are delayed.");
+		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + ". Quotes are delayed.");
 
 		// Display trending data if -t was provided and there is at least one valid symbol
 		if (cli.clTrend == true) {

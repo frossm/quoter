@@ -295,14 +295,19 @@ public class Symbol {
 
 	}
 
+	/**
+	 * setOptionalField(): Handles error conditions for those fields that do not have a valid value from the website
+	 * 
+	 * @param htmlPage
+	 * @param key
+	 * @param marketStatus
+	 */
 	private void setOptionalField(final Document htmlPage, final String key, final MarketStatus marketStatus) {
 		try {
 			final String result = queryPageItem(htmlPage,
-					marketStatus == MarketStatus.Closed ?
-							xPathLookup.lookupSymbolClosed(key) :
-							xPathLookup.lookupSymbolOpen(key)
-			);
+					marketStatus == MarketStatus.Closed ? xPathLookup.lookupSymbolClosed(key) : xPathLookup.lookupSymbolOpen(key));
 			symbolData.put(key, result.replaceAll("[,%]", "").trim());
+
 		} catch (Exception e) {
 			Output.debugPrintln("Failed to fetch key: " + key + " from page. Setting value as '---'");
 			symbolData.put(key, "---");
@@ -310,8 +315,7 @@ public class Symbol {
 	}
 
 	private enum MarketStatus {
-		Open,
-		Closed
+		Open, Closed
 	}
 
 }
