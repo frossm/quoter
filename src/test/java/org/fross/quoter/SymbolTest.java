@@ -37,8 +37,8 @@ class SymbolTest {
 	// Look through a list of symbols and ensure all the right fields are present
 	@Test
 	void testFields() {
-		String[] testSymbols = { "IBM", "TSLA", "GOOG" };
-		String[] symbolFullName = { "International Business Machines Corp.", "Tesla Inc.", "Alphabet Inc. Cl C" };
+		String[] testSymbols = { "IBM", "TSLA", "GOOG", "IVV" };
+		String[] symbolFullName = { "International Business Machines Corp.", "Tesla Inc.", "Alphabet Inc. Cl C", "iShares Core S&P 500 ETF" };
 		String[] testFields = { "symbol", "latestPrice", "change", "changePercent", "dayHigh", "dayLow", "ytdChangePercent", "oneYearChangePercent",
 				"timeStamp", "week52High", "week52Low", "fullname", "status" };
 

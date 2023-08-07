@@ -194,13 +194,11 @@ public class Symbol {
 
 				// Year to Date Change
 				key = "ytdChangePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				this.setOptionalField(htmlPage, key, MarketStatus.Closed);
 
 				// One Year Change Percent
 				key = "oneYearChangePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				this.setOptionalField(htmlPage, key, MarketStatus.Closed);
 
 				// TimeStamp
 				key = "timeStamp";
@@ -265,13 +263,11 @@ public class Symbol {
 
 				// Year to Date Change
 				key = "ytdChangePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				this.setOptionalField(htmlPage, key, MarketStatus.Open);
 
 				// One Year Change Percent
 				key = "oneYearChangePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				this.setOptionalField(htmlPage, key, MarketStatus.Open);
 
 				// TimeStamp
 				key = "timeStamp";
@@ -297,6 +293,25 @@ public class Symbol {
 			this.symbolData.put("status", "error");
 		}
 
+	}
+
+	private void setOptionalField(final Document htmlPage, final String key, final MarketStatus marketStatus) {
+		try {
+			final String result = queryPageItem(htmlPage,
+					marketStatus == MarketStatus.Closed ?
+							xPathLookup.lookupSymbolClosed(key) :
+							xPathLookup.lookupSymbolOpen(key)
+			);
+			symbolData.put(key, result.replaceAll("[,%]", "").trim());
+		} catch (Exception e) {
+			Output.debugPrintln("Failed to fetch key: " + key + " from page. Setting value as '---'");
+			symbolData.put(key, "---");
+		}
+	}
+
+	private enum MarketStatus {
+		Open,
+		Closed
 	}
 
 }
