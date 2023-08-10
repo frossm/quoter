@@ -3,11 +3,11 @@
 
 	<groupId>org.fross</groupId>
 	<artifactId>quoter</artifactId>
-	<version>5.0.20</version>
+	<version>5.0.21</version>
 	<packaging>jar</packaging>
 
 	<name>quoter</name>
-	<description>Simple console based program to display stock quotes and index data</description>
+	<description>A simple console based program to display stock quotes, US core index data, and historical trending</description>
 	<url>https://fross.org</url>
 
 	<developers>

@@ -24,7 +24,6 @@
  * SOFTWARE.
  *   
  ***************************************************************************************************************/
-
 package org.fross.quoter;
 
 import static org.fusesource.jansi.Ansi.ansi;

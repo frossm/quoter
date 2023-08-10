@@ -89,7 +89,7 @@ public class Symbol {
 	 */
 	protected boolean put(String field, String value) {
 		try {
-			symbolData.put(field, value);
+			this.symbolData.put(field, value);
 		} catch (Exception ex) {
 			return false;
 		}
@@ -134,7 +134,7 @@ public class Symbol {
 			this.symbolData.put("status", "ok");
 
 			// Determine if the market is open or closed
-			if (Symbol.queryPageItem(htmlPage, xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase().contains("open") == true) {
+			if (Symbol.queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase().contains("open") == true) {
 				marketOpen = true;
 			} else {
 				marketOpen = false;
@@ -147,22 +147,22 @@ public class Symbol {
 
 				// Current Price
 				String key = "latestPrice";
-				String result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
-				symbolData.put(key, result.replaceAll("[$,%]", "").trim());
+				String result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
+				this.symbolData.put(key, result.replaceAll("[$,%]", "").trim());
 
 				// Change
 				key = "change";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
-				symbolData.put(key, result.replaceAll("[$,%]", "").trim());
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
+				this.symbolData.put(key, result.replaceAll("[$,%]", "").trim());
 
 				// Change Percent
 				key = "changePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
+				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// 52 Week High / Low - Get range and split into high/low
 				key = "52weekRange";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
 
 				String low52 = "";
 				String high52 = "";
@@ -173,12 +173,12 @@ public class Symbol {
 					low52 = high52 = "-";
 				}
 
-				symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
-				symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
+				this.symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
+				this.symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
 
 				// Day Range - Get range and split into high/low
 				key = "dayRange";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
 
 				String lowD = "";
 				String highD = "";
@@ -189,8 +189,8 @@ public class Symbol {
 					lowD = highD = "-";
 				}
 
-				symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
-				symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
+				this.symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
+				this.symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
 
 				// Year to Date Change
 				key = "ytdChangePercent";
@@ -202,13 +202,13 @@ public class Symbol {
 
 				// TimeStamp
 				key = "timeStamp";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
+				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Full Name of Company
 				key = "fullname";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolClosed(key));
-				symbolData.put(key, result.trim());
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
+				this.symbolData.put(key, result.trim());
 
 			} else {
 				// Market is OPEN
@@ -216,22 +216,22 @@ public class Symbol {
 
 				// Current Price
 				String key = "latestPrice";
-				String result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				String result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change
 				key = "change";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change Percent
 				key = "changePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// 52 Week High / Low - Get range and split into high/low
 				key = "52weekRange";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
 
 				String low52 = "";
 				String high52 = "";
@@ -242,12 +242,12 @@ public class Symbol {
 					low52 = high52 = "-";
 				}
 
-				symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
-				symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
+				this.symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
+				this.symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
 
 				// Day Range - Get range and split into high/low
 				key = "dayRange";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
 
 				String lowD = "";
 				String highD = "";
@@ -258,8 +258,8 @@ public class Symbol {
 					lowD = highD = "-";
 				}
 
-				symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
-				symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
+				this.symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
+				this.symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
 
 				// Year to Date Change
 				key = "ytdChangePercent";
@@ -271,19 +271,19 @@ public class Symbol {
 
 				// TimeStamp
 				key = "timeStamp";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
-				symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Full Name of Company
 				key = "fullname";
-				result = queryPageItem(htmlPage, xPathLookup.lookupSymbolOpen(key));
-				symbolData.put(key, result.trim());
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				this.symbolData.put(key, result.trim());
 			}
 
 			// If we are in debug mode, display the values of the symbol
 			if (Debug.query() == true) {
 				Output.debugPrintln("Symbol Data Results:");
-				for (String i : symbolData.keySet()) {
+				for (String i : this.symbolData.keySet()) {
 					Output.debugPrintln("  - " + i + ": " + this.get(i));
 				}
 			}
@@ -305,7 +305,7 @@ public class Symbol {
 	private void setOptionalField(final Document htmlPage, final String key, final MarketStatus marketStatus) {
 		try {
 			final String result = queryPageItem(htmlPage,
-					marketStatus == MarketStatus.Closed ? xPathLookup.lookupSymbolClosed(key) : xPathLookup.lookupSymbolOpen(key));
+					marketStatus == MarketStatus.Closed ? this.xPathLookup.lookupSymbolClosed(key) : this.xPathLookup.lookupSymbolOpen(key));
 			symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 		} catch (Exception e) {

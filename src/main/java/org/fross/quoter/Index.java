@@ -63,7 +63,7 @@ public class Index {
 	public boolean queryMarketOpen() {
 		return marketOpen;
 	}
-	
+
 	/**
 	 * queryPageItem():Find the specific value in the provided doc with the xPath given
 	 * 
@@ -169,7 +169,7 @@ public class Index {
 			this.indexData.put("status", "ok");
 
 			// Determine if the market is open or closed
-			if (Symbol.queryPageItem(htmlPage, xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase().contains("closed") == true) {
+			if (Symbol.queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase().contains("closed") == true) {
 				marketOpen = false;
 			} else {
 				marketOpen = true;
@@ -182,22 +182,22 @@ public class Index {
 
 				// Current Price
 				String key = "latestPrice";
-				String result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				String result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change
 				key = "change";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change Percent
 				key = "changePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// 52 Week Range
 				key = "52weekRange";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
 
 				String w52Low = result.split(" - ")[0];
 				String w52High = result.split(" - ")[1];
@@ -207,17 +207,17 @@ public class Index {
 
 				// Year to Date Change Percent
 				key = "ytdChangePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// One Year Change Percent
 				key = "oneYearChangePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
 				key = "timeStamp";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexClosed(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 			} else {
@@ -226,22 +226,22 @@ public class Index {
 
 				// Current Price
 				String key = "latestPrice";
-				String result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				String result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change
 				key = "change";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
 				indexData.put("change", result.replaceAll("[,%]", "").trim());
 
 				// Change Percent
 				key = "changePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// 52 Week Range
 				key = "52weekRange";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
 
 				String w52Low = result.split(" - ")[0];
 				String w52High = result.split(" - ")[1];
@@ -251,17 +251,17 @@ public class Index {
 
 				// Year to Date
 				key = "ytdChangePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// One Year Change Percent
 				key = "oneYearChangePercent";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
 				key = "timeStamp";
-				result = queryPageItem(htmlPage, xPathLookup.lookupIndexOpen(key));
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
 				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
 			}

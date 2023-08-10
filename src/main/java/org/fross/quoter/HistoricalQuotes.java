@@ -246,8 +246,7 @@ public class HistoricalQuotes {
 		Output.debugPrintln("Slots per Cost Unit: " + slotsPerCostUnit);
 
 		// Display the symbol informational header
-		Output.printColorln(Ansi.Color.WHITE, "\n\n+--" + String.format("%02d", NUM_DAYS_IN_TREND) + " Day Trend"
-				+ "-".repeat(graphWidth - 2) + "+");
+		Output.printColorln(Ansi.Color.WHITE, "\n\n+--" + String.format("%02d", NUM_DAYS_IN_TREND) + " Day Trend" + "-".repeat(graphWidth - 2) + "+");
 		Output.printColorln(Ansi.Color.YELLOW, symb.toUpperCase() + " : " + symbolData.get("fullname"));
 		Output.printColorln(Ansi.Color.YELLOW, "Current Price:   " + symbolData.get("latestPrice"));
 		Output.printColorln(Ansi.Color.YELLOW, NUM_DAYS_IN_TREND + " Day Low:     " + String.format("%,.2f", sv));

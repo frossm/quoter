@@ -1,3 +1,29 @@
+/**************************************************************************************************************
+ * Quoter.jar
+ * 
+ * Quoter is a command line program that display stock quotes and index data.
+ * 
+ *  Copyright (c) 2019-2022 Michael Fross
+ *
+ *  Permission is hereby granted, free of charge, to any person obtaining a copy
+ *  of this software and associated documentation files (the "Software"), to deal
+ *  in the Software without restriction, including without limitation the rights
+ *  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ *  copies of the Software, and to permit persons to whom the Software is
+ *  furnished to do so, subject to the following conditions:
+ *
+ *  The above copyright notice and this permission notice shall be included in all
+ *  copies or substantial portions of the Software.
+ *
+ *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *   
+ ***************************************************************************************************************/
 package org.fross.quoter;
 
 import java.time.LocalDateTime;
@@ -238,11 +264,11 @@ public class QuoteConsoleOutput {
 		}
 
 		// Display the open/closed status of the market
-		Output.printColor(Ansi.Color.CYAN, "\nThe US markets are currently:  ");
+		Output.printColor(Ansi.Color.WHITE, "\nThe US markets are currently:  ");
 		if (new Index("DOW").queryMarketOpen() == true) {
-			Output.printColorln(Ansi.Color.YELLOW, "~ OPEN ~");
+			Output.printColorln(Ansi.Color.YELLOW, "-= OPEN =-");
 		} else {
-			Output.printColorln(Ansi.Color.YELLOW, "~ CLOSED ~");
+			Output.printColorln(Ansi.Color.YELLOW, "-= CLOSED =-");
 		}
 
 		// Convert to local time & time zone
@@ -281,7 +307,7 @@ public class QuoteConsoleOutput {
 		timeStamp = timeStamp.replaceAll("AM", "am");
 
 		// Display the time stamp
-		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + ". Quotes are delayed.");
+		Output.printColorln(Ansi.Color.WHITE, "Data as of " + timeStamp + ". Quotes are delayed.");
 
 		// Display trending data if -t was provided and there is at least one valid symbol
 		if (cli.clTrend == true) {

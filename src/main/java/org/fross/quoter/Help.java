@@ -41,14 +41,14 @@ public class Help {
 	static final int HEADERWIDTH = 72;
 
 	/**
-	 * Display(): Prints help in color using the JCDP library in the output module.
+	 * Display(): Prints help in color using the JCDP library in the output module
 	 */
 	public static void Display() {
 		Output.printColorln(Ansi.Color.CYAN, "\n+" + "-".repeat(HEADERWIDTH - 2) + "+");
 		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, "Quoter v" + Main.VERSION) + "+");
 		Output.printColorln(Ansi.Color.CYAN, "+" + Format.CenterText(HEADERWIDTH - 2, Main.COPYRIGHT) + "+");
 		Output.printColorln(Ansi.Color.CYAN, "+" + "-".repeat(HEADERWIDTH - 2) + "+");
-		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Quoter displays stock quotes & US index data, and more"));
+		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Quoter displays stock quotes, US index data, and trends"));
 		Output.printColorln(Ansi.Color.CYAN, Format.CenterText(HEADERWIDTH - 2, "Hompage: https://github.com/frossm/quoter") + "\n");
 
 		Output.printColorln(Ansi.Color.YELLOW, "Command Line Options");
@@ -72,7 +72,7 @@ public class Help {
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nMisc:");
 		Output.printColorln(Ansi.Color.WHITE, "  -D        Start in debug mode and display details for developers");
-		Output.printColorln(Ansi.Color.WHITE, "  -v        Display program version and lastest GitHub release and exit");
+		Output.printColorln(Ansi.Color.WHITE, "  -v        Display program version and the lastest release on GitHub");
 		Output.printColorln(Ansi.Color.WHITE, "  -? | -h   Display this help information");
 
 		Output.printColorln(Ansi.Color.YELLOW, "\nNotes:");

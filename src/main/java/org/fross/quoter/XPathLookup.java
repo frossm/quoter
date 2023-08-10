@@ -41,52 +41,52 @@ public class XPathLookup {
 		// ---------------------------------------------------------------------------------
 		// xPaths: Symbols with market CLOSED
 		// ---------------------------------------------------------------------------------
-		symbolClosed.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[1]");
-		symbolClosed.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[2]");
-		symbolClosed.put("changePercent", "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[3]");
-		symbolClosed.put("52weekRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]");
-		symbolClosed.put("dayRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]");
-		symbolClosed.put("ytdChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]");
-		symbolClosed.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
-		symbolClosed.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
-		symbolClosed.put("fullname", "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1");
+		this.symbolClosed.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[1]");
+		this.symbolClosed.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[2]");
+		this.symbolClosed.put("changePercent", "/html/body/div[3]/div[2]/div[3]/div/div[4]/table/tbody/tr/td[3]");
+		this.symbolClosed.put("52weekRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]");
+		this.symbolClosed.put("dayRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]");
+		this.symbolClosed.put("ytdChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]");
+		this.symbolClosed.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
+		this.symbolClosed.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
+		this.symbolClosed.put("fullname", "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1");
 
 		// ---------------------------------------------------------------------------------
 		// xPaths: Symbols with market OPEN
 		// ---------------------------------------------------------------------------------
-		symbolOpen.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote");
-		symbolOpen.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote");
-		symbolOpen.put("changePercent", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote");
-		symbolOpen.put("52weekRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]");
-		symbolOpen.put("dayRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]");
-		symbolOpen.put("ytdChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]");
-		symbolOpen.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
-		symbolOpen.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
-		symbolOpen.put("fullname", "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1");
+		this.symbolOpen.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote");
+		this.symbolOpen.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote");
+		this.symbolOpen.put("changePercent", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote");
+		this.symbolOpen.put("52weekRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]");
+		this.symbolOpen.put("dayRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[2]/span[1]");
+		this.symbolOpen.put("ytdChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[4]/td[2]/ul/li[1]");
+		this.symbolOpen.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
+		this.symbolOpen.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
+		this.symbolOpen.put("fullname", "/html/body/div[3]/div[2]/div[2]/div/div[2]/h1");
 
 		// ---------------------------------------------------------------------------------
 		// xPaths: Indexes with market CLOSED
 		// ---------------------------------------------------------------------------------
-		indexClosed.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span");
-		indexClosed.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]");
-		indexClosed.put("changePercent", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]");
-		indexClosed.put("52weekRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]");
-		indexClosed.put("ytdChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
-		indexClosed.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
-		indexClosed.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
+		this.indexClosed.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/span");
+		this.indexClosed.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]");
+		this.indexClosed.put("changePercent", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]");
+		this.indexClosed.put("52weekRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]");
+		this.indexClosed.put("ytdChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
+		this.indexClosed.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
+		this.indexClosed.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
 
 		// ---------------------------------------------------------------------------------
 		// xPaths: Indexes with market OPEN
 		// ---------------------------------------------------------------------------------
-		indexOpen.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote");
-		indexOpen.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote");
-		indexOpen.put("changePercent", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote");
-		indexOpen.put("52weekRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]");
-		indexOpen.put("ytdChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]");
-		indexOpen.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
-		indexOpen.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
-		
-		indexOpen.put("marketStatus", "/html/body/div[3]/div[2]/div[3]/div/small/div");
+		this.indexOpen.put("latestPrice", "/html/body/div[3]/div[2]/div[3]/div/div[2]/h2/bg-quote");
+		this.indexOpen.put("change", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[1]/bg-quote");
+		this.indexOpen.put("changePercent", "/html/body/div[3]/div[2]/div[3]/div/div[2]/bg-quote/span[2]/bg-quote");
+		this.indexOpen.put("52weekRange", "/html/body/div[3]/div[6]/div[1]/div[1]/div/ul/li[3]/span[1]");
+		this.indexOpen.put("ytdChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div/table/tbody/tr[4]/td[2]/ul/li[1]");
+		this.indexOpen.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
+		this.indexOpen.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
+
+		this.indexOpen.put("marketStatus", "/html/body/div[3]/div[2]/div[3]/div/small/div");
 
 	}
 
@@ -97,7 +97,7 @@ public class XPathLookup {
 	 * @return
 	 */
 	public String lookupSymbolOpen(String key) {
-		return symbolOpen.get(key);
+		return this.symbolOpen.get(key);
 	}
 
 	/**
@@ -107,7 +107,7 @@ public class XPathLookup {
 	 * @return
 	 */
 	public String lookupSymbolClosed(String key) {
-		return symbolClosed.get(key);
+		return this.symbolClosed.get(key);
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class XPathLookup {
 	 * @return
 	 */
 	public String lookupIndexOpen(String key) {
-		return indexOpen.get(key);
+		return this.indexOpen.get(key);
 	}
 
 	/**
@@ -127,6 +127,6 @@ public class XPathLookup {
 	 * @return
 	 */
 	public String lookupIndexClosed(String key) {
-		return indexClosed.get(key);
+		return this.indexClosed.get(key);
 	}
 }
