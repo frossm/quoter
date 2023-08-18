@@ -210,6 +210,13 @@ public class Main {
 
 		// Auto-refresh is enabled. Re-display the data every cli.clAutoRefresh seconds
 		if (cli.clAutoRefresh > 0) {
+			// Ensure export is not turned on as it will fail after the first iteration
+			// TODO: Maybe split index info and symbol info and keep updating each file?  Fix this.
+			if (!cli.clExport.isEmpty()) {
+				Output.printColor(Ansi.Color.RED, "\nExport not compatable for for refreshed values.  Disabling...\n");
+				cli.clExport = "";
+			}
+
 			// Continuous loop displaying the output until user hits enter. The EnterPressed thread picks that up and exits the program
 			while (true) {
 				int countDown = cli.clAutoRefresh;
