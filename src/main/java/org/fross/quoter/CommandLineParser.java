@@ -113,7 +113,6 @@ public class CommandLineParser {
 	// Validate the trending duration value provided is between 1 and 99
 	final static public class TrendDurationValidator implements IParameterValidator {
 		public TrendDurationValidator() {
-
 		}
 
 		@Override

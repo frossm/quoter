@@ -213,7 +213,7 @@ public class Main {
 			// Ensure export is not turned on as it will fail after the first iteration
 			// TODO: Maybe split index info and symbol info and keep updating each file?  Fix this.
 			if (!cli.clExport.isEmpty()) {
-				Output.printColor(Ansi.Color.RED, "\nExport not compatable for for refreshed values.  Disabling...\n");
+				Output.printColor(Ansi.Color.RED, "\nExport not compatable for for refreshed values.  Disabling Export...\n");
 				cli.clExport = "";
 			}
 
