@@ -120,11 +120,11 @@ public class CommandLineParser {
 			int intVal;
 			try {
 				intVal = Integer.parseInt(value);
-				if (intVal < 1 || intVal > 99) {
-					Output.fatalError("Trend duration can not be '" + value + "'.  Value must be between 1 and 99", 1);
+				if (intVal < 1 || intVal > 365) {
+					Output.fatalError("Trend duration can not be '" + value + "'.  Value must be between 1 and 365", 1);
 				}
 			} catch (Exception e) {
-				Output.fatalError("Trend duration can not be '" + value + "'.  Value must be between 1 and 99", 1);
+				Output.fatalError("Trend duration can not be '" + value + "'.  Value must be between 1 and 365", 1);
 			}
 		}
 	}

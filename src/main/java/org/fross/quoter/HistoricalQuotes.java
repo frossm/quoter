@@ -93,9 +93,9 @@ public class HistoricalQuotes {
 
 		// Loop through each day and populate the hash. Data order: Date,Open,High,Low,Close,Volume
 		for (int rowRead = (historicalData.length - 1); rowRead > 0; rowRead--) {
-			// The date is not quoted. Easier to quote the data so the following split works
-			historicalData[rowRead] = historicalData[rowRead].replaceFirst("^", "\"");
-			historicalData[rowRead] = historicalData[rowRead].replaceFirst(",", "\",");
+			// Change the date field to be ISO format instead of US format so the sorted display works
+			// Also quote the date so the future split will work
+			historicalData[rowRead] = historicalData[rowRead].replaceFirst("^(\\d+)\\/(\\d+)\\/(\\d+),", "\"$3-$1-$2\",");
 
 			// Pull the first field (date) and set as the hash key
 			String dateKey = historicalData[rowRead].split(",")[0].replaceAll("\"", "");
