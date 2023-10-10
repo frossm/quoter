@@ -54,12 +54,12 @@ public class QuoteConsoleOutput {
 		String timeStamp = "";
 
 		// Display the header
-		Output.printColorln(Ansi.Color.CYAN, "\nQuoter v" + Main.VERSION + " " + Main.COPYRIGHT);
+		Output.printColorln(Ansi.Color.YELLOW, "\nQuoter v" + Main.VERSION + " " + Main.COPYRIGHT);
 
 		// If symbols were entered, display the header for them
 		if (cli.symbolList.size() > 0) {
 			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow      YTD%    1Year%");
+			Output.printColorln(Ansi.Color.CYAN, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow      YTD%    1Year%");
 			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
 		}
 
@@ -193,7 +193,7 @@ public class QuoteConsoleOutput {
 		if (cli.clHideIndex == false) {
 			// Display Index Output Header
 			Output.printColorln(Ansi.Color.CYAN, "\n----------------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.WHITE, "Index        Current    Change    Change%       52WHigh       52WLow      YTD%    1Year%");
+			Output.printColorln(Ansi.Color.CYAN, "Index        Current    Change    Change%       52WHigh       52WLow      YTD%    1Year%");
 			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
 
 			// Loop through the three indexes and display the results
@@ -264,11 +264,11 @@ public class QuoteConsoleOutput {
 		}
 
 		// Display the open/closed status of the market
-		Output.printColor(Ansi.Color.WHITE, "\nThe US markets are currently:  ");
+		Output.printColor(Ansi.Color.CYAN, "\nThe US markets are currently:  ");
 		if (new Index("DOW").queryMarketOpen() == true) {
-			Output.printColorln(Ansi.Color.YELLOW, "-= OPEN =-");
+			Output.printColorln(Ansi.Color.YELLOW, "~~= OPEN =~~");
 		} else {
-			Output.printColorln(Ansi.Color.YELLOW, "-= CLOSED =-");
+			Output.printColorln(Ansi.Color.YELLOW, "~~= CLOSED =~~");
 		}
 
 		// Convert to local time & time zone
@@ -307,7 +307,7 @@ public class QuoteConsoleOutput {
 		timeStamp = timeStamp.replaceAll("AM", "am");
 
 		// Display the time stamp
-		Output.printColorln(Ansi.Color.WHITE, "Data as of " + timeStamp + ". Quotes are delayed.");
+		Output.printColorln(Ansi.Color.CYAN, "Data as of " + timeStamp + ". Quotes are delayed.");
 
 		// Display trending data if -t was provided and there is at least one valid symbol
 		if (cli.clTrend == true) {
