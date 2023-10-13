@@ -3,7 +3,7 @@
  * 
  * Quoter is a command line program that display stock quotes and index data.
  * 
- *  Copyright (c) 2019-2022 Michael Fross
+ *  Copyright (c) 2019-2023 Michael Fross
  *
  *  Permission is hereby granted, free of charge, to any person obtaining a copy
  *  of this software and associated documentation files (the "Software"), to deal
@@ -266,9 +266,9 @@ public class QuoteConsoleOutput {
 		// Display the open/closed status of the market
 		Output.printColor(Ansi.Color.CYAN, "\nThe US markets are currently:  ");
 		if (new Index("DOW").queryMarketOpen() == true) {
-			Output.printColorln(Ansi.Color.YELLOW, "~~= OPEN =~~");
+			Output.printColorln(Ansi.Color.YELLOW, "==[ OPEN ]==");
 		} else {
-			Output.printColorln(Ansi.Color.YELLOW, "~~= CLOSED =~~");
+			Output.printColorln(Ansi.Color.YELLOW, "==[ CLOSED ]==");
 		}
 
 		// Convert to local time & time zone
