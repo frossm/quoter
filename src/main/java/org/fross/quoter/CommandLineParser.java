@@ -110,7 +110,7 @@ public class CommandLineParser {
 		}
 	}
 
-	// Validate the trending duration value provided is between 1 and 99
+	// Validate the trending duration value provided is between 1 and 365
 	final static public class TrendDurationValidator implements IParameterValidator {
 		public TrendDurationValidator() {
 		}
@@ -121,10 +121,10 @@ public class CommandLineParser {
 			try {
 				intVal = Integer.parseInt(value);
 				if (intVal < 1 || intVal > 365) {
-					Output.fatalError("Trend duration can not be '" + value + "'.  Value must be between 1 and 365", 1);
+					throw new ParameterException("");
 				}
 			} catch (Exception e) {
-				Output.fatalError("Trend duration can not be '" + value + "'.  Value must be between 1 and 365", 1);
+				Output.fatalError("Trend duration can not be '" + value + "'.  Value must be a number between 1 and 365", 1);
 			}
 		}
 	}
