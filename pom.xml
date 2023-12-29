@@ -3,7 +3,7 @@
 
 	<groupId>org.fross</groupId>
 	<artifactId>quoter</artifactId>
-	<version>5.0.26</version>
+	<version>5.0.27</version>
 	<packaging>jar</packaging>
 
 	<name>quoter</name>
@@ -23,7 +23,7 @@
 		<url>fross.org</url>
 	</organization>
 
-	<inceptionYear>2018</inceptionYear>
+	<inceptionYear>2019</inceptionYear>
 
 	<licenses>
 		<license>
