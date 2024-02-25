@@ -114,14 +114,13 @@ public class Symbol {
 	private void getSymbolData(String symb) {
 		String URL = "https://www.marketwatch.com/investing/stock/SYMBOLHERE";
 		Document htmlPage = null;
-		boolean marketOpen = false;
 
 		// Add the provided symbol to the URL template
 		URL = URL.replaceAll("SYMBOLHERE", symb);
 		Output.debugPrintln("Symbol URL rewritten to: " + URL);
 
 		try {
-			// Download and parse the the webpage with xsoup
+			// Download and parse the the webpage with xSoup
 			try {
 				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
 			} catch (HttpStatusException ex) {
@@ -133,15 +132,8 @@ public class Symbol {
 			this.symbolData.put("symbol", symb.toUpperCase());
 			this.symbolData.put("status", "ok");
 
-			// Determine if the market is open or closed
-			if (Symbol.queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase().contains("open") == true) {
-				marketOpen = true;
-			} else {
-				marketOpen = false;
-			}
-
 			// MarketWatch has different XPaths depending if the market is open or closed
-			if (marketOpen == false) {
+			if (MarketState.queryMarketOpen() == false) {
 				// Market is CLOSED
 				Output.debugPrintln("Market is currently CLOSED");
 

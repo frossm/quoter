@@ -3,7 +3,7 @@
 
 	<groupId>org.fross</groupId>
 	<artifactId>quoter</artifactId>
-	<version>5.0.27</version>
+	<version>5.0.28</version>
 	<packaging>jar</packaging>
 
 	<name>quoter</name>
@@ -48,14 +48,36 @@
 		<plugins>
 			<plugin>
 				<!-- ========================================================================================== -->
+				<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-resources-plugin         -->
+				<!-- ========================================================================================== -->
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.3.1</version>
+				<configuration>
+					<propertiesEncoding>${project.build.sourceEncoding}</propertiesEncoding>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<!-- ========================================================================================== -->
 				<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-compiler-plugin          -->
 				<!-- ========================================================================================== -->
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.10.1</version>
+				<version>3.12.1</version>
 				<configuration>
 					<release>${maven.compiler.release}</release>
 				</configuration>
+			</plugin>
+
+			<!-- ========================================================================================== -->
+			<!-- Maven's Automated Testing Surefire plugin                                                  -->
+			<!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-surefire-plugin          -->
+			<!-- ========================================================================================== -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.2.5</version>
 			</plugin>
 
 			<!-- ========================================================================================== -->
@@ -65,7 +87,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-shade-plugin</artifactId>
-				<version>3.3.0</version>
+				<version>3.5.1</version>
 				<executions>
 					<execution>
 						<phase>package</phase>
@@ -79,6 +101,7 @@
 								<filter>
 									<artifact>*:*</artifact>
 									<excludes>
+										<exclude>org.junit.jupiter:junit-jupiter</exclude>
 										<exclude>META-INF/MANIFEST.MF</exclude>
 										<exclude>META-INF/*.SF</exclude>
 										<exclude>META-INF/*.DSA</exclude>
@@ -121,7 +144,7 @@
 
 			<!-- ============================================================================================== -->
 			<!-- Update snapcraft.yaml file to set the program and library versions                             -->
-			<!-- https://mvnrepository.com/artifact/com.google.code.maven-replacer-plugin/maven-replacer-plugin -->
+			<!-- https://code.google.com/archive/p/maven-replacer-plugin/                                       -->
 			<!-- ============================================================================================== -->
 			<plugin>
 				<groupId>com.google.code.maven-replacer-plugin</groupId>
@@ -159,7 +182,7 @@
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
-				<version>3.1.0</version>
+				<version>3.1.1</version>
 				<executions>
 					<execution>
 						<id>chmod</id>
@@ -222,16 +245,17 @@
 		<dependency>
 			<groupId>org.fross</groupId>
 			<artifactId>library</artifactId>
-			<version>2023.07.14</version>
+			<version>2024.01.22</version>
 		</dependency>
 	
 		<!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter</artifactId>
-			<version>5.10.0</version>
+			<version>5.10.2</version>
 			<scope>test</scope>
 		</dependency>
+
 	</dependencies>
 
 </project>

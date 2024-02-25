@@ -1,5 +1,5 @@
 name: quoter
-version: '5.0.27'
+version: '5.0.28'
 summary: Command line utility to pull stock and index quotes
 description: |
   Quoter fetches online stock quotes and index data for easy display on
@@ -52,7 +52,7 @@ parts:
       plugin: maven
       source: https://github.com/frossm/library.git
       source-type: git
-      source-tag: 'v2023.07.14'
+      source-tag: 'v2024.01.22'
       maven-parameters:
         - install
 

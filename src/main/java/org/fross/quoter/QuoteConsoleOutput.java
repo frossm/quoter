@@ -200,9 +200,9 @@ public class QuoteConsoleOutput {
 			String[] indexList = { "DOW", "NASDAQ", "S&P" };
 			for (int i = 0; i < indexList.length; i++) {
 				String[] outString = new String[8];
-				Index indexObj = new Index(indexList[i]);
 
-				Output.debugPrintln("Getting Index data for: " + indexList[i]);
+				Output.debugPrintln("\nDEBUG:  --- Getting Index data for: " + indexList[i] + " ---");
+				Index indexObj = new Index(indexList[i]);
 
 				// Check to see if the index object has an error status
 				if (indexObj.get("status") != "ok") {
@@ -265,7 +265,7 @@ public class QuoteConsoleOutput {
 
 		// Display the open/closed status of the market
 		Output.printColor(Ansi.Color.CYAN, "\nThe US markets are currently:  ");
-		if (new Index("DOW").queryMarketOpen() == true) {
+		if (MarketState.queryMarketOpen() == true) {
 			Output.printColorln(Ansi.Color.YELLOW, "==[ OPEN ]==");
 		} else {
 			Output.printColorln(Ansi.Color.YELLOW, "==[ CLOSED ]==");

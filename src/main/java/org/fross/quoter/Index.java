@@ -43,7 +43,6 @@ import us.codecraft.xsoup.Xsoup;
 
 public class Index {
 	HashMap<String, String> indexData = new HashMap<>();
-	private boolean marketOpen;
 	XPathLookup xPathLookup = new XPathLookup();
 
 	/**
@@ -55,14 +54,6 @@ public class Index {
 		getIndex(idx);
 	}
 
-	/**
-	 * MarketOpen(): Returns if the US index market is currently open
-	 * 
-	 * @return
-	 */
-	public boolean queryMarketOpen() {
-		return marketOpen;
-	}
 
 	/**
 	 * queryPageItem():Find the specific value in the provided doc with the xPath given
@@ -156,7 +147,7 @@ public class Index {
 		indexData.put("index", idx);
 
 		try {
-			// Download and parse the the webpage with xsoup
+			// Download and parse the the webpage with xSoup
 			try {
 				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
 			} catch (HttpStatusException ex) {
@@ -168,15 +159,8 @@ public class Index {
 			this.indexData.put("index", idx);
 			this.indexData.put("status", "ok");
 
-			// Determine if the market is open or closed
-			if (Symbol.queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase().contains("closed") == true) {
-				marketOpen = false;
-			} else {
-				marketOpen = true;
-			}
-
 			// MarketWatch has different XPaths depending if the market is open or closed
-			if (marketOpen == false) {
+			if (MarketState.queryMarketOpen() == false) {
 				// Market is CLOSED
 				Output.debugPrintln("Market is currently CLOSED");
 

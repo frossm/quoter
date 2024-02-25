@@ -86,6 +86,9 @@ public class XPathLookup {
 		this.indexOpen.put("oneYearChangePercent", "/html/body/div[3]/div[6]/div[1]/div[2]/div[1]/table/tbody/tr[5]/td[2]/ul/li[1]");
 		this.indexOpen.put("timeStamp", "/html/body/div[3]/div[2]/div[3]/div/div[1]/span/bg-quote");
 
+		// ---------------------------------------------------------------------------------
+		// xPaths: Market Status from an index page
+		// ---------------------------------------------------------------------------------
 		this.indexOpen.put("marketStatus", "/html/body/div[3]/div[2]/div[3]/div/small/div");
 
 	}
