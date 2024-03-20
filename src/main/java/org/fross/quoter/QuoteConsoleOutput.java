@@ -59,7 +59,7 @@ public class QuoteConsoleOutput {
 		// If symbols were entered, display the header for them
 		if (cli.symbolList.size() > 0) {
 			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.CYAN, "Symbol   Current    Chng   Chng%  DayHigh   Daylow  52WHigh   52WLow      YTD%    1Year%");
+			Output.printColorln(Ansi.Color.CYAN, "Symbol      Latest     Chng    Chng%   52WHigh    52WLow    52WChng     50DAvg   200DAvg");
 			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
 		}
 
@@ -72,7 +72,7 @@ public class QuoteConsoleOutput {
 
 			while (j.hasNext()) {
 				currentSymbol = j.next();
-				String[] outString = new String[10];
+				String[] outString = new String[9];
 				Symbol symbolObj = new Symbol(currentSymbol);
 
 				// Check to see if there was an error getting symbol data
@@ -91,72 +91,65 @@ public class QuoteConsoleOutput {
 
 					// Current
 					try {
-						outString[1] = String.format("%,8.2f", Float.valueOf(symbolObj.get("latestPrice")));
+						outString[1] = String.format("%,10.2f", Float.valueOf(symbolObj.get("latestPrice")));
 					} catch (NumberFormatException Ex) {
-						outString[1] = String.format("%8s", "-");
+						outString[1] = String.format("%10s", "-");
 					}
 
 					// Change Amount
 					try {
-						outString[2] = String.format("%+,8.2f", Float.valueOf(symbolObj.get("change")));
+						outString[2] = String.format("%+,9.2f", Float.valueOf(symbolObj.get("change")));
 					} catch (NumberFormatException Ex) {
-						outString[2] = String.format("%8s", "-");
+						outString[2] = String.format("%9s", "-");
 					}
 
 					// Change Percentage
 					try {
-						outString[3] = String.format("%+,7.2f%%", Float.valueOf(symbolObj.get("changePercent")));
+						outString[3] = String.format("%+,8.2f%%", Float.valueOf(symbolObj.get("changePercent")));
 					} catch (NumberFormatException Ex) {
-						outString[3] = String.format("%8s", "-");
-					}
-
-					// Day High
-					try {
-						outString[4] = String.format("%,9.2f", Float.valueOf(symbolObj.get("dayHigh")));
-					} catch (NumberFormatException Ex) {
-						outString[4] = String.format("%9s", "-");
-					}
-
-					// Day Low
-					try {
-						outString[5] = String.format("%,9.2f", Float.valueOf(symbolObj.get("dayLow")));
-					} catch (NumberFormatException Ex) {
-						outString[5] = String.format("%9s", "-");
+						outString[3] = String.format("%9s", "-");
 					}
 
 					// 52 Week High
 					try {
-						outString[6] = String.format("%,9.2f", Float.valueOf(symbolObj.get("week52High")));
+						outString[4] = String.format("%,10.2f", Float.valueOf(symbolObj.get("52weekHigh")));
 					} catch (NumberFormatException Ex) {
-						outString[6] = String.format("%9s", "-");
+						outString[4] = String.format("%9s", "-");
 					}
 
 					// 52 Week Low
 					try {
-						outString[7] = String.format("%,9.2f", Float.valueOf(symbolObj.get("week52Low")));
+						outString[5] = String.format("%,10.2f", Float.valueOf(symbolObj.get("52weekLow")));
 					} catch (NumberFormatException Ex) {
-						outString[7] = String.format("%9s", "-");
+						outString[5] = String.format("%9s", "-");
 					}
 
-					// Year to date
+					// 52 Week Change Percentage
 					try {
-						outString[8] = String.format("%+9.2f%%", Float.valueOf(symbolObj.get("ytdChangePercent")));
+						outString[6] = String.format("%,10.2f%%", Float.valueOf(symbolObj.get("52weekChange")));
 					} catch (NumberFormatException Ex) {
-						outString[8] = String.format("%9s", "-");
+						outString[6] = String.format("%9s", "-");
 					}
 
-					// Year to date
+					// 50 Day Moving Average
 					try {
-						outString[9] = String.format("%+9.2f%%", Float.valueOf(symbolObj.get("oneYearChangePercent")));
+						outString[7] = String.format("%,11.2f", Float.valueOf(symbolObj.get("50dayAvg")));
 					} catch (NumberFormatException Ex) {
-						outString[9] = String.format("%9s", "-");
+						outString[7] = String.format("%,11s", "-");
+					}
+
+					// 200 Day Moving Average
+					try {
+						outString[8] = String.format("%,10.2f", Float.valueOf(symbolObj.get("200dayAvg")));
+					} catch (NumberFormatException Ex) {
+						outString[8] = String.format("%10s", "-");
 					}
 
 					// Time Stamp
 					timeStamp = symbolObj.get("timeStamp");
 
 				} catch (Exception Ex) {
-					Output.printColorln(Ansi.Color.RED, "Unknown Error Occured formatting secuity output");
+					Output.printColorln(Ansi.Color.RED, "Unknown Error Occured formatting security output");
 				}
 
 				// Determine the color based on the change amount
@@ -192,9 +185,9 @@ public class QuoteConsoleOutput {
 		// Unless disabled, display the index data
 		if (cli.clHideIndex == false) {
 			// Display Index Output Header
-			Output.printColorln(Ansi.Color.CYAN, "\n----------------------------------------------------------------------------------------");
-			Output.printColorln(Ansi.Color.CYAN, "Index        Current    Change    Change%       52WHigh       52WLow      YTD%    1Year%");
-			Output.printColorln(Ansi.Color.CYAN, "----------------------------------------------------------------------------------------");
+			Output.printColorln(Ansi.Color.CYAN, "\n-------------------------------------------------------------------------------------------");
+			Output.printColorln(Ansi.Color.CYAN, "Index        Current   Change   Change%      52WHigh       52WLow      DayHigh       DayLow");
+			Output.printColorln(Ansi.Color.CYAN, "-------------------------------------------------------------------------------------------");
 
 			// Loop through the three indexes and display the results
 			String[] indexList = { "DOW", "NASDAQ", "S&P" };
@@ -225,22 +218,22 @@ public class QuoteConsoleOutput {
 					outString[1] = String.format("%,10.2f", Float.valueOf(indexObj.get("latestPrice")));
 
 					// Change Amount
-					outString[2] = String.format("%+,10.2f", Float.valueOf(indexObj.get("change")));
+					outString[2] = String.format("%+,9.2f", Float.valueOf(indexObj.get("change")));
 
 					// Change Percentage
-					outString[3] = String.format("%+,10.2f%%", Float.valueOf(indexObj.get("changePercent")));
+					outString[3] = String.format("%+,9.2f%%", Float.valueOf(indexObj.get("changePercent")));
 
 					// 52Week High
-					outString[4] = String.format("%,14.2f", Float.valueOf(indexObj.get("week52High")));
+					outString[4] = String.format("%,13.2f", Float.valueOf(indexObj.get("52weekHigh")));
 
 					// 52Week Low
-					outString[5] = String.format("%,13.2f", Float.valueOf(indexObj.get("week52Low")));
+					outString[5] = String.format("%,13.2f", Float.valueOf(indexObj.get("52weekLow")));
 
-					// Year to Date Percent Change
-					outString[6] = String.format("%+9.2f%%", Float.valueOf(indexObj.get("ytdChangePercent")));
+					// Day High
+					outString[6] = String.format("%,13.2f", Float.valueOf(indexObj.get("dayHigh")));
 
-					// One Year Percent Change
-					outString[7] = String.format("%+9.2f%%", Float.valueOf(indexObj.get("oneYearChangePercent")));
+					// Day Low
+					outString[7] = String.format("%,13.2f", Float.valueOf(indexObj.get("dayLow")));
 
 					// Display Index results to the screen
 					for (int k = 0; k < outString.length; k++) {
@@ -278,8 +271,8 @@ public class QuoteConsoleOutput {
 			try {
 				// Remove the periods from a.m. & p.m. Also make them upper case required by the formatter
 				if (!timeStamp.isEmpty()) {
-					timeStamp = timeStamp.replaceAll(" [Pp]\\.[Mm]\\.", "PM");
-					timeStamp = timeStamp.replaceAll(" [Aa]\\.[Mm]\\.", "AM");
+					timeStamp = timeStamp.replaceAll(" ?[Pp]\\.[Mm]\\.", "PM");
+					timeStamp = timeStamp.replaceAll(" ?[Aa]\\.[Mm]\\.", "AM");
 				} else {
 					timeStamp = "--";
 					throw new DateTimeParseException(null, null, 0);

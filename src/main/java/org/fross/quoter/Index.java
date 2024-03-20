@@ -37,13 +37,10 @@ import org.fusesource.jansi.Ansi;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import us.codecraft.xsoup.Xsoup;
 
 public class Index {
 	HashMap<String, String> indexData = new HashMap<>();
-	XPathLookup xPathLookup = new XPathLookup();
+	Config xPathLookup = new Config();
 
 	/**
 	 * Symbol Constructor(): Initialize class with a symbol to process
@@ -54,7 +51,6 @@ public class Index {
 		getIndex(idx);
 	}
 
-
 	/**
 	 * queryPageItem():Find the specific value in the provided doc with the xPath given
 	 * 
@@ -63,8 +59,7 @@ public class Index {
 	 * @return
 	 */
 	protected static String queryPageItem(Document doc, String xPath) {
-		List<Element> elements = Xsoup.compile(xPath).evaluate(doc).getElements();
-		return elements.get(0).text();
+		return doc.selectXpath(xPath).text();
 	}
 
 	/**
@@ -123,19 +118,20 @@ public class Index {
 	 * @return
 	 */
 	private void getIndex(String idx) {
-		String URL = "https://www.marketwatch.com/investing/index/SYMBOLHERE";
+		// String URL = "https://www.marketwatch.com/investing/index/SYMBOLHERE";
+		String URL = "https://finance.yahoo.com/quote/SYMBOLHERE";
 		Document htmlPage = null;
 
 		// Ensure a valid value was passed
 		switch (idx.toUpperCase()) {
 		case "DOW":
-			URL = URL.replaceAll("SYMBOLHERE", "djia");
+			URL = URL.replaceAll("SYMBOLHERE", "%5EDJI");
 			break;
 		case "NASDAQ":
-			URL = URL.replaceAll("SYMBOLHERE", "comp");
+			URL = URL.replaceAll("SYMBOLHERE", "%5EIXIC");
 			break;
 		case "S&P":
-			URL = URL.replaceAll("SYMBOLHERE", "spx");
+			URL = URL.replaceAll("SYMBOLHERE", "%5EGSPC");
 			break;
 		default:
 			Output.fatalError("Call to getIndex() must be 'DOW', 'NASDAQ', or 'S&P'", 4);
@@ -143,13 +139,15 @@ public class Index {
 		}
 
 		Output.debugPrintln("Index URL rewritten to: " + URL);
+
 		// Add index name to hash
 		indexData.put("index", idx);
 
 		try {
 			// Download and parse the the webpage with xSoup
 			try {
-				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
+				htmlPage = Jsoup.connect(URL).timeout(Config.queryURLTimeout()).userAgent(Config.queryUserAgent()).get();
+
 			} catch (HttpStatusException ex) {
 				this.indexData.put("status", "error");
 				return;
@@ -177,7 +175,8 @@ public class Index {
 				// Change Percent
 				key = "changePercent";
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
-				indexData.put(key, result.replaceAll("[,%]", "").trim());
+				result = result.replaceAll("[\\(\\)]", "");
+				indexData.put(key, result.replaceAll("[,%)(]", "").trim());
 
 				// 52 Week Range
 				key = "52weekRange";
@@ -186,23 +185,23 @@ public class Index {
 				String w52Low = result.split(" - ")[0];
 				String w52High = result.split(" - ")[1];
 
-				indexData.put("week52Low", w52Low.replaceAll("[,%]", "").trim());
-				indexData.put("week52High", w52High.replaceAll("[,%]", "").trim());
+				indexData.put("52weekLow", w52Low.replaceAll("[,%]", "").trim());
+				indexData.put("52weekHigh", w52High.replaceAll("[,%]", "").trim());
 
-				// Year to Date Change Percent
-				key = "ytdChangePercent";
+				// Day Week Range
+				key = "dayRange";
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
-				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
-				// One Year Change Percent
-				key = "oneYearChangePercent";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
-				indexData.put(key, result.replaceAll("[,%]", "").trim());
+				String dayLow = result.split(" - ")[0];
+				String dayHigh = result.split(" - ")[1];
+
+				indexData.put("dayLow", dayLow.replaceAll("[,%]", "").trim());
+				indexData.put("dayHigh", dayHigh.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
 				key = "timeStamp";
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexClosed(key));
-				indexData.put(key, result.replaceAll("[,%]", "").trim());
+				indexData.put(key, result.replaceAll("[Aa]t [Cc]lose: ", "").trim());
 
 			} else {
 				// Market is OPEN
@@ -221,7 +220,7 @@ public class Index {
 				// Change Percent
 				key = "changePercent";
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
-				indexData.put(key, result.replaceAll("[,%]", "").trim());
+				indexData.put(key, result.replaceAll("[,%)(]", "").trim());
 
 				// 52 Week Range
 				key = "52weekRange";
@@ -230,18 +229,18 @@ public class Index {
 				String w52Low = result.split(" - ")[0];
 				String w52High = result.split(" - ")[1];
 
-				indexData.put("week52Low", w52Low.replaceAll("[,%]", "").trim());
-				indexData.put("week52High", w52High.replaceAll("[,%]", "").trim());
+				indexData.put("52weekLow", w52Low.replaceAll("[,%]", "").trim());
+				indexData.put("52weekHigh", w52High.replaceAll("[,%]", "").trim());
 
-				// Year to Date
-				key = "ytdChangePercent";
+				// Day Week Range
+				key = "dayRange";
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
-				indexData.put(key, result.replaceAll("[,%]", "").trim());
 
-				// One Year Change Percent
-				key = "oneYearChangePercent";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupIndexOpen(key));
-				indexData.put(key, result.replaceAll("[,%]", "").trim());
+				String dayLow = result.split(" - ")[0];
+				String dayHigh = result.split(" - ")[1];
+
+				indexData.put("dayLow", dayLow.replaceAll("[,%]", "").trim());
+				indexData.put("dayHigh", dayHigh.replaceAll("[,%]", "").trim());
 
 				// TimeStamp
 				key = "timeStamp";

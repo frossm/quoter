@@ -38,7 +38,7 @@ class XPathLookupTest {
 	// Simple test - make sure each of the xPath hash maps have the right number of fields
 	@Test
 	void fieldTest() {
-		XPathLookup xPathLookup = new XPathLookup();
+		Config xPathLookup = new Config();
 
 		assertEquals(9, xPathLookup.symbolClosed.size());
 		assertEquals(9, xPathLookup.symbolOpen.size());
@@ -49,7 +49,7 @@ class XPathLookupTest {
 	// Ensure that some text exists within each lookup value
 	@Test
 	void contentTest() {
-		XPathLookup xPathLookup = new XPathLookup();
+		Config xPathLookup = new Config();
 
 		// lookupSymbolClosed
 		for (String value : xPathLookup.symbolClosed.keySet())
@@ -72,7 +72,7 @@ class XPathLookupTest {
 	// Do a few lookups and just make sure we get non-null back
 	@Test
 	void lookupTests() {
-		XPathLookup xPathLookup = new XPathLookup();
+		Config xPathLookup = new Config();
 
 		// lookupSymbolClosed
 		assertNotNull(xPathLookup.lookupSymbolClosed("latestPrice"));

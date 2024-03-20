@@ -26,40 +26,39 @@
  ***************************************************************************************************************/
 package org.fross.quoter;
 
-import java.io.IOException;
-
 import org.fross.library.Output;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class MarketState {
-
 	/**
 	 * queryMarketOpen(): Returns if the US index market is currently open
 	 * 
 	 * @return
 	 */
 	protected static boolean queryMarketOpen() {
-		String URL = "https://www.marketwatch.com/investing/index/comp";
-		Document htmlPage = null;
-		XPathLookup xPathLookup = new XPathLookup();
+		final String URL = "https://finance.yahoo.com/quote/F/key-statistics";
+		String marketOpenResult = "";
 
-		// Download and parse the the webpage with xSoup
+		// Download and parse the the webpage and parse it with xSoup
 		try {
-			htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
+			Document doc = Jsoup.connect(URL).timeout(Config.queryURLTimeout()).userAgent(Config.queryUserAgent()).get();
+			marketOpenResult = doc.selectXpath(Config.marketStatusXPath).text().toLowerCase();
 
-		} catch (IOException ex) {
-			Output.fatalError("FATAL ERROR: Could not determine if the market is open or closed", 7);
+		} catch (Exception ex) {
+			Output.fatalError("Could not determine if the market is open or closed", 7);
 		}
 
-		String marketOpenResult = Symbol.queryPageItem(htmlPage, xPathLookup.lookupIndexOpen("marketStatus")).toLowerCase();
 		Output.debugPrintln("MarketOpen result: '" + marketOpenResult + "'");
 
-		if (marketOpenResult.contains("closed") == true) {
-			return false;
-		} else {
+		if (marketOpenResult.contains("open") == true)
 			return true;
-		}
+		else if (marketOpenResult.contains("close") == true)
+			return false;
+		else
+			Output.fatalError("FATAL ERROR: Could not determine if the market is opened or closed", 7);
+
+		return false;
 
 	}
 }

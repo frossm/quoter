@@ -26,6 +26,7 @@
  ***************************************************************************************************************/
 package org.fross.quoter;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -33,16 +34,12 @@ import java.util.List;
 import org.fross.library.Debug;
 import org.fross.library.Output;
 import org.fusesource.jansi.Ansi;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-
-import us.codecraft.xsoup.Xsoup;
 
 public class Symbol {
 	HashMap<String, String> symbolData = new HashMap<>();
-	XPathLookup xPathLookup = new XPathLookup();
+	Config xPathLookup = new Config();
 
 	/**
 	 * Symbol Constructor(): Initialize class with a symbol to process
@@ -61,8 +58,7 @@ public class Symbol {
 	 * @return
 	 */
 	protected static String queryPageItem(Document doc, String xPath) {
-		List<Element> elements = Xsoup.compile(xPath).evaluate(doc).getElements();
-		return elements.get(0).text();
+		return doc.selectXpath(xPath).text();
 	}
 
 	/**
@@ -112,7 +108,7 @@ public class Symbol {
 	}
 
 	private void getSymbolData(String symb) {
-		String URL = "https://www.marketwatch.com/investing/stock/SYMBOLHERE";
+		String URL = "https://finance.yahoo.com/quote/SYMBOLHERE/key-statistics";
 		Document htmlPage = null;
 
 		// Add the provided symbol to the URL template
@@ -122,8 +118,9 @@ public class Symbol {
 		try {
 			// Download and parse the the webpage with xSoup
 			try {
-				htmlPage = Jsoup.connect(URL).userAgent("Mozilla").get();
-			} catch (HttpStatusException ex) {
+				htmlPage = Jsoup.connect(URL).timeout(Config.queryURLTimeout()).userAgent(Config.queryUserAgent()).get();
+
+			} catch (IOException ex) {
 				this.symbolData.put("status", "error");
 				return;
 			}
@@ -137,7 +134,7 @@ public class Symbol {
 				// Market is CLOSED
 				Output.debugPrintln("Market is currently CLOSED");
 
-				// Current Price
+				// Latest Price
 				String key = "latestPrice";
 				String result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
 				this.symbolData.put(key, result.replaceAll("[$,%]", "").trim());
@@ -147,55 +144,46 @@ public class Symbol {
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
 				this.symbolData.put(key, result.replaceAll("[$,%]", "").trim());
 
-				// Change Percent
+				// Change Percentage
 				key = "changePercent";
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
-				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				this.symbolData.put(key, result.replaceAll("[,%)(]", "").trim());
 
-				// 52 Week High / Low - Get range and split into high/low
-				key = "52weekRange";
+				// 52 Week High
+				key = "52weekHigh";
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
-
-				String low52 = "";
-				String high52 = "";
-				try {
-					low52 = result.split(" - ")[0];
-					high52 = result.split(" - ")[1];
-				} catch (Exception ex) {
-					low52 = high52 = "-";
-				}
-
-				this.symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
-				this.symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
-
-				// Day Range - Get range and split into high/low
-				key = "dayRange";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
-
-				String lowD = "";
-				String highD = "";
-				try {
-					lowD = result.split(" - ")[0];
-					highD = result.split(" - ")[1];
-				} catch (Exception ex) {
-					lowD = highD = "-";
-				}
-
-				this.symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
-				this.symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
-
-				// Year to Date Change
-				key = "ytdChangePercent";
 				this.setOptionalField(htmlPage, key, MarketStatus.Closed);
 
-				// One Year Change Percent
-				key = "oneYearChangePercent";
+				// 52 Week Low
+				key = "52weekLow";
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
+				this.setOptionalField(htmlPage, key, MarketStatus.Closed);
+
+				// 52 Week Change Percentage
+				try {
+					key = "52weekChange";
+					float high = Float.valueOf(queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen("52weekHigh")));
+					float low = Float.valueOf(queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen("52weekLow")));
+					String chng = String.valueOf((low / high) * 100).trim();
+					this.symbolData.put(key, chng);
+				} catch (Exception ex) {
+					symbolData.put(key, "---");
+				}
+
+				// 50 Day Moving Average
+				key = "50dayAvg";
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
+				this.setOptionalField(htmlPage, key, MarketStatus.Closed);
+
+				// 200 Day Moving Average
+				key = "200dayAvg";
+				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
 				this.setOptionalField(htmlPage, key, MarketStatus.Closed);
 
 				// TimeStamp
 				key = "timeStamp";
 				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolClosed(key));
-				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				this.symbolData.put(key, result.replaceAll("^.*: ", "").trim());
 
 				// Full Name of Company
 				key = "fullname";
@@ -208,67 +196,58 @@ public class Symbol {
 
 				// Current Price
 				String key = "latestPrice";
-				String result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				String result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
 				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change
 				key = "change";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
 				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Change Percent
 				key = "changePercent";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
-				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
+				result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
+				this.symbolData.put(key, result.replaceAll("[,%)(]", "").trim());
 
-				// 52 Week High / Low - Get range and split into high/low
-				key = "52weekRange";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
-
-				String low52 = "";
-				String high52 = "";
-				try {
-					low52 = result.split(" - ")[0];
-					high52 = result.split(" - ")[1];
-				} catch (Exception ex) {
-					low52 = high52 = "-";
-				}
-
-				this.symbolData.put("week52High", high52.replaceAll("[,%]", "").trim());
-				this.symbolData.put("week52Low", low52.replaceAll("[,%]", "").trim());
-
-				// Day Range - Get range and split into high/low
-				key = "dayRange";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
-
-				String lowD = "";
-				String highD = "";
-				try {
-					lowD = result.split(" - ")[0];
-					highD = result.split(" - ")[1];
-				} catch (Exception ex) {
-					lowD = highD = "-";
-				}
-
-				this.symbolData.put("dayHigh", highD.replaceAll("[,%]", "").trim());
-				this.symbolData.put("dayLow", lowD.replaceAll("[,%]", "").trim());
-
-				// Year to Date Change
-				key = "ytdChangePercent";
+				// 52 Week High
+				key = "52weekHigh";
+				result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
 				this.setOptionalField(htmlPage, key, MarketStatus.Open);
 
-				// One Year Change Percent
-				key = "oneYearChangePercent";
+				// 52 Week Low
+				key = "52weekLow";
+				result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
+				this.setOptionalField(htmlPage, key, MarketStatus.Open);
+
+				// 52 Week Change Percentage
+				try {
+					key = "52weekChange";
+					float high = Float.valueOf(queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen("52weekHigh")));
+					float low = Float.valueOf(queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen("52weekLow")));
+					String chng = String.valueOf((low / high) * 100).trim();
+					this.symbolData.put(key, chng);
+				} catch (Exception ex) {
+					symbolData.put(key, "---");
+				}
+
+				// 50 Day Moving Average
+				key = "50dayAvg";
+				result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
+				this.setOptionalField(htmlPage, key, MarketStatus.Open);
+
+				// 200 Day Moving Average
+				key = "200dayAvg";
+				result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
 				this.setOptionalField(htmlPage, key, MarketStatus.Open);
 
 				// TimeStamp
 				key = "timeStamp";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
 				this.symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 				// Full Name of Company
 				key = "fullname";
-				result = queryPageItem(htmlPage, this.xPathLookup.lookupSymbolOpen(key));
+				result = htmlPage.selectXpath(this.xPathLookup.lookupSymbolOpen(key)).text();
 				this.symbolData.put(key, result.trim());
 			}
 
@@ -301,7 +280,7 @@ public class Symbol {
 			symbolData.put(key, result.replaceAll("[,%]", "").trim());
 
 		} catch (Exception e) {
-			Output.debugPrintln("Failed to fetch key: " + key + " from page. Setting value as '---'");
+			Output.debugPrintln("Failed to fetch key: '" + key + "' from page. Setting value as '---'");
 			symbolData.put(key, "---");
 		}
 	}
